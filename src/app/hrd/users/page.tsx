@@ -1,0 +1,372 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Plus, ToggleLeft, ToggleRight, Loader2, X, KeyRound, Check } from "lucide-react";
+
+type Avenue = { id: string; name: string };
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: "DEC" | "DRR";
+  avenue: Avenue | null;
+  isActive: boolean;
+};
+
+const ROLE_COLORS: Record<string, string> = {
+  DEC: "bg-blue-100 text-blue-700",
+  DRR: "bg-purple-100 text-purple-700",
+};
+
+export default function UsersPage() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [avenues, setAvenues] = useState<Avenue[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [toggling, setToggling] = useState<string | null>(null);
+  const [resetUserId, setResetUserId] = useState<string | null>(null);
+  const [resetPassword, setResetPassword] = useState("");
+  const [resetError, setResetError] = useState("");
+  const [resetSuccess, setResetSuccess] = useState(false);
+  const [resetting, setResetting] = useState(false);
+
+  const handleReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetError(""); setResetSuccess(false);
+    if (resetPassword.length < 6) { setResetError("Min 6 characters"); return; }
+    setResetting(true);
+    const res = await fetch("/api/hrd/users/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: resetUserId, newPassword: resetPassword }),
+    });
+    setResetting(false);
+    if (res.ok) { setResetSuccess(true); setResetPassword(""); }
+    else { const d = await res.json(); setResetError(d.error ?? "Failed"); }
+  };
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "DEC",
+    avenueId: "",
+  });
+  const [formError, setFormError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+    const [usersRes, avenuesRes] = await Promise.all([
+      fetch("/api/hrd/users"),
+      fetch("/api/hrd/avenues"),
+    ]);
+    const usersData = await usersRes.json();
+    const avenuesData = await avenuesRes.json();
+    setUsers(usersData.users ?? []);
+    setAvenues(avenuesData.avenues ?? []);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleToggle = async (id: string) => {
+    setToggling(id);
+    await fetch(`/api/hrd/users/${id}`, { method: "PATCH" });
+    await fetchData();
+    setToggling(null);
+  };
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError("");
+    if (!form.name || !form.email || !form.password) {
+      setFormError("Name, email and password are required.");
+      return;
+    }
+    if (form.role === "DEC" && !form.avenueId) {
+      setFormError("Avenue is required for DEC users.");
+      return;
+    }
+    setSubmitting(true);
+    const res = await fetch("/api/hrd/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role,
+        avenueId: form.role === "DEC" ? form.avenueId : undefined,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setFormError(data.error ?? "Failed to create user.");
+    } else {
+      setShowModal(false);
+      setForm({ name: "", email: "", password: "", role: "DEC", avenueId: "" });
+      await fetchData();
+    }
+    setSubmitting(false);
+  };
+
+  return (
+    <div className="p-6 lg:p-8 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Users</h1>
+          <p className="text-[#0D0D0B]/50 text-sm mt-1 font-['Geist']">
+            Manage DEC and DRR accounts
+          </p>
+        </div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="flex items-center gap-2 bg-[#0D0D0B] text-[#AAFF47] px-4 py-2.5 rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+        >
+          <Plus size={15} />
+          Add User
+        </button>
+      </div>
+
+      <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 size={24} className="animate-spin text-[#0D0D0B]/30" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm font-['Geist']">
+              <thead>
+                <tr className="border-b border-black/5 bg-[#F0EDE5]/50">
+                  {["Name", "Email", "Role", "Avenue", "Status", "Actions"].map((h) => (
+                    <th
+                      key={h}
+                      className="text-left px-5 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u, i) => (
+                  <tr
+                    key={u.id}
+                    className={`border-b border-black/5 hover:bg-[#F0EDE5]/20 transition-colors ${
+                      i === users.length - 1 ? "border-none" : ""
+                    }`}
+                  >
+                    <td className="px-5 py-3 font-medium text-[#0D0D0B]">{u.name}</td>
+                    <td className="px-5 py-3 text-[#0D0D0B]/60">{u.email}</td>
+                    <td className="px-5 py-3">
+                      <span
+                        className={`inline-block text-xs font-bold px-2 py-0.5 rounded ${
+                          ROLE_COLORS[u.role] ?? ""
+                        }`}
+                      >
+                        {u.role}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-[#0D0D0B]/60">
+                      {u.avenue?.name ?? "—"}
+                    </td>
+                    <td className="px-5 py-3">
+                      <span
+                        className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${
+                          u.isActive
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-red-100 text-red-600"
+                        }`}
+                      >
+                        {u.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => handleToggle(u.id)}
+                          disabled={toggling === u.id}
+                          className="flex items-center gap-1.5 text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] transition-colors disabled:opacity-40"
+                        >
+                          {toggling === u.id ? (
+                            <Loader2 size={14} className="animate-spin" />
+                          ) : u.isActive ? (
+                            <ToggleRight size={16} className="text-emerald-500" />
+                          ) : (
+                            <ToggleLeft size={16} />
+                          )}
+                          {u.isActive ? "Deactivate" : "Activate"}
+                        </button>
+                        <button
+                          onClick={() => { setResetUserId(u.id); setResetPassword(""); setResetError(""); setResetSuccess(false); }}
+                          className="flex items-center gap-1.5 text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] transition-colors"
+                        >
+                          <KeyRound size={13} /> Reset PW
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {users.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-5 py-10 text-center text-[#0D0D0B]/30">
+                      No users found. Add the first one.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Reset password modal */}
+      {resetUserId && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
+              <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">Reset Password</h2>
+              <button onClick={() => setResetUserId(null)} className="text-[#0D0D0B]/30 hover:text-[#0D0D0B]"><X size={18} /></button>
+            </div>
+            <form onSubmit={handleReset} className="px-6 py-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5">New Password</label>
+                <input type="password" value={resetPassword} onChange={(e) => setResetPassword(e.target.value)} required
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  placeholder="Min 6 characters" />
+              </div>
+              {resetError && <p className="text-red-500 text-xs">{resetError}</p>}
+              {resetSuccess && <p className="text-green-600 text-xs flex items-center gap-1"><Check size={12} /> Password reset successfully</p>}
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setResetUserId(null)}
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors">Cancel</button>
+                <button type="submit" disabled={resetting}
+                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                  {resetting && <Loader2 size={14} className="animate-spin" />} Reset
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
+              <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">
+                Add New User
+              </h2>
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  setFormError("");
+                }}
+                className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <form onSubmit={handleCreate} className="px-6 py-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  placeholder="Jane Doe"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  placeholder="jane@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  placeholder="Min. 8 characters"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                  Role
+                </label>
+                <select
+                  value={form.role}
+                  onChange={(e) => setForm({ ...form, role: e.target.value, avenueId: "" })}
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white"
+                >
+                  <option value="DEC">DEC</option>
+                  <option value="DRR">DRR</option>
+                </select>
+              </div>
+              {form.role === "DEC" && (
+                <div>
+                  <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                    Avenue
+                  </label>
+                  <select
+                    value={form.avenueId}
+                    onChange={(e) => setForm({ ...form, avenueId: e.target.value })}
+                    className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white"
+                  >
+                    <option value="">Select avenue...</option>
+                    {avenues.map((av) => (
+                      <option key={av.id} value={av.id}>
+                        {av.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {formError && (
+                <p className="text-red-500 text-xs font-['Geist']">{formError}</p>
+              )}
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowModal(false);
+                    setFormError("");
+                  }}
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors font-['Geist']"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2"
+                >
+                  {submitting && <Loader2 size={14} className="animate-spin" />}
+                  Create User
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
