@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+
+export const dynamic = 'force-dynamic';
 
 const MONTH_NAMES = [
   "",

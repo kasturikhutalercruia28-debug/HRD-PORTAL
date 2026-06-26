@@ -1,7 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
+
+export const dynamic = 'force-dynamic';
 
 // HRD updates email and/or password for any user
 export async function PATCH(req: NextRequest) {
