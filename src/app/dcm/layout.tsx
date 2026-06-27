@@ -20,9 +20,12 @@ export default async function DcmLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-[#F0EDE5] flex font-['Geist']">
       {/* Sidebar */}
       <aside className="w-56 bg-[#0D0D0B] flex flex-col shrink-0">
-        <div className="px-5 py-6 border-b border-white/10">
-          <span className="font-['Fraunces'] text-[#AAFF47] text-xl font-bold tracking-tight">AARA</span>
-          <p className="text-white/40 text-xs mt-0.5">DCM Portal</p>
+        <div className="px-4 py-4 border-b border-white/10">
+          <div className="bg-white rounded-xl px-3 py-2 mb-3 inline-block shadow-md">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Rotaract District 3141" className="h-7 w-auto" />
+          </div>
+          <p className="text-white/35 text-[10px] font-['Geist'] uppercase tracking-widest">DCM Portal</p>
         </div>
         <nav className="flex-1 px-3 py-4 space-y-1">
           {NAV_LINKS.map(({ href, label, icon: Icon }) => (

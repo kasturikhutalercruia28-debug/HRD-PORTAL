@@ -37,18 +37,12 @@ export default function ClubLayout({ children }: { children: React.ReactNode }) 
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
-        <div className="w-10 h-10 bg-[#AAFF47] rounded-lg flex items-center justify-center">
-          <span className="font-['Fraunces'] font-black text-[#0D0D0B] text-sm">O</span>
+      <div className="px-4 py-4 border-b border-white/10">
+        <div className="bg-white rounded-xl px-3 py-2 mb-3 inline-block shadow-md">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Rotaract District 3141" className="h-7 w-auto" />
         </div>
-        <div>
-          <span className="font-['Fraunces'] font-bold text-[#AAFF47] text-xl tracking-tight">
-            Orientations
-          </span>
-          <p className="text-white/40 text-xs font-['Geist'] leading-none mt-0.5">
-            Club Portal
-          </p>
-        </div>
+        <p className="text-white/35 text-[10px] font-['Geist'] uppercase tracking-widest">Club Portal</p>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
