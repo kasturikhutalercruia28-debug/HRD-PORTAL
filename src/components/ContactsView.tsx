@@ -44,7 +44,7 @@ export default function ContactsView() {
       .then(d => { setContacts(d.contacts ?? []); setLoading(false); });
   }, []);
 
-  const grouped = ["HRD", "DRR", "DRS"].map(role => ({
+  const grouped = ["DRR", "DRS", "HRD"].map(role => ({
     role,
     label: ROLE_LABEL[role],
     items: contacts.filter(c => c.role === role),
