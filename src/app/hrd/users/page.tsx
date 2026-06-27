@@ -136,8 +136,8 @@ export default function UsersPage() {
   const filtered = roleFilter === "ALL" ? users : users.filter((u) => u.role === roleFilter);
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-5 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Users</h1>
           <p className="text-[#180F04]/50 text-sm mt-1 font-['Geist']">Manage all portal accounts</p>
@@ -172,62 +172,93 @@ export default function UsersPage() {
           <div className="flex items-center justify-center py-16">
             <Loader2 size={24} className="animate-spin text-[#180F04]/30" />
           </div>
+        ) : filtered.length === 0 ? (
+          <p className="px-5 py-10 text-center text-[#180F04]/30 text-sm">No users found.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm font-['Geist']">
-              <thead>
-                <tr className="border-b border-black/5 bg-[#FBF7EE]/50">
-                  {["Name", "Email", "Role", "Avenue", "Status", "Actions"].map((h) => (
-                    <th key={h} className="text-left px-5 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((u, i) => (
-                  <tr key={u.id} className={`border-b border-black/5 hover:bg-[#FBF7EE]/20 transition-colors ${i === filtered.length - 1 ? "border-none" : ""}`}>
-                    <td className="px-5 py-3 font-medium text-[#180F04]">{u.name}</td>
-                    <td className="px-5 py-3 text-[#180F04]/60">{u.email}</td>
-                    <td className="px-5 py-3">
-                      <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded ${ROLE_COLORS[u.role] ?? ""}`}>{u.role}</span>
-                    </td>
-                    <td className="px-5 py-3 text-[#180F04]/60">{u.avenue?.name ?? "—"}</td>
-                    <td className="px-5 py-3">
-                      <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${u.isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
+          <>
+            {/* Mobile card list */}
+            <div className="sm:hidden divide-y divide-black/5">
+              {filtered.map((u) => (
+                <div key={u.id} className="p-4 space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-sm text-[#180F04] truncate">{u.name}</p>
+                      <p className="text-xs text-[#180F04]/50 truncate">{u.email}</p>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${ROLE_COLORS[u.role] ?? ""}`}>{u.role}</span>
+                      <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${u.isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
                         {u.isActive ? "Active" : "Inactive"}
                       </span>
-                    </td>
-                    <td className="px-5 py-3">
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => handleToggle(u.id)}
-                          disabled={toggling === u.id}
-                          className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors disabled:opacity-40"
-                        >
-                          {toggling === u.id ? <Loader2 size={14} className="animate-spin" /> : u.isActive ? <ToggleRight size={16} className="text-emerald-500" /> : <ToggleLeft size={16} />}
-                          {u.isActive ? "Deactivate" : "Activate"}
-                        </button>
-                        <button
-                          onClick={() => { setEditEmailUser(u); setNewEmail(u.email); setEmailError(""); setEmailSuccess(false); }}
-                          className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors"
-                        >
-                          <Mail size={13} /> Edit Email
-                        </button>
-                        <button
-                          onClick={() => { setResetUserId(u.id); setResetPassword(""); setResetError(""); setResetSuccess(false); }}
-                          className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors"
-                        >
-                          <KeyRound size={13} /> Reset PW
-                        </button>
-                      </div>
-                    </td>
+                    </div>
+                  </div>
+                  {u.avenue && <p className="text-xs text-[#180F04]/40">{u.avenue.name}</p>}
+                  <div className="flex items-center gap-3 pt-1">
+                    <button onClick={() => handleToggle(u.id)} disabled={toggling === u.id}
+                      className="flex items-center gap-1 text-xs text-[#180F04]/50 hover:text-[#180F04] disabled:opacity-40">
+                      {toggling === u.id ? <Loader2 size={12} className="animate-spin" /> : u.isActive ? <ToggleRight size={14} className="text-emerald-500" /> : <ToggleLeft size={14} />}
+                      {u.isActive ? "Deactivate" : "Activate"}
+                    </button>
+                    <button onClick={() => { setEditEmailUser(u); setNewEmail(u.email); setEmailError(""); setEmailSuccess(false); }}
+                      className="flex items-center gap-1 text-xs text-[#180F04]/50 hover:text-[#180F04]">
+                      <Mail size={12} /> Email
+                    </button>
+                    <button onClick={() => { setResetUserId(u.id); setResetPassword(""); setResetError(""); setResetSuccess(false); }}
+                      className="flex items-center gap-1 text-xs text-[#180F04]/50 hover:text-[#180F04]">
+                      <KeyRound size={12} /> Reset PW
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-sm font-['Geist']">
+                <thead>
+                  <tr className="border-b border-black/5 bg-[#FBF7EE]/50">
+                    {["Name", "Email", "Role", "Avenue", "Status", "Actions"].map((h) => (
+                      <th key={h} className="text-left px-5 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide">{h}</th>
+                    ))}
                   </tr>
-                ))}
-                {filtered.length === 0 && (
-                  <tr><td colSpan={6} className="px-5 py-10 text-center text-[#180F04]/30">No users found.</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filtered.map((u, i) => (
+                    <tr key={u.id} className={`border-b border-black/5 hover:bg-[#FBF7EE]/20 transition-colors ${i === filtered.length - 1 ? "border-none" : ""}`}>
+                      <td className="px-5 py-3 font-medium text-[#180F04]">{u.name}</td>
+                      <td className="px-5 py-3 text-[#180F04]/60">{u.email}</td>
+                      <td className="px-5 py-3">
+                        <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded ${ROLE_COLORS[u.role] ?? ""}`}>{u.role}</span>
+                      </td>
+                      <td className="px-5 py-3 text-[#180F04]/60">{u.avenue?.name ?? "—"}</td>
+                      <td className="px-5 py-3">
+                        <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${u.isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
+                          {u.isActive ? "Active" : "Inactive"}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-3">
+                          <button onClick={() => handleToggle(u.id)} disabled={toggling === u.id}
+                            className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors disabled:opacity-40">
+                            {toggling === u.id ? <Loader2 size={14} className="animate-spin" /> : u.isActive ? <ToggleRight size={16} className="text-emerald-500" /> : <ToggleLeft size={16} />}
+                            {u.isActive ? "Deactivate" : "Activate"}
+                          </button>
+                          <button onClick={() => { setEditEmailUser(u); setNewEmail(u.email); setEmailError(""); setEmailSuccess(false); }}
+                            className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors">
+                            <Mail size={13} /> Edit Email
+                          </button>
+                          <button onClick={() => { setResetUserId(u.id); setResetPassword(""); setResetError(""); setResetSuccess(false); }}
+                            className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors">
+                            <KeyRound size={13} /> Reset PW
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 

@@ -80,7 +80,7 @@ export default async function DRRDashboardPage() {
   ];
 
   return (
-    <div className="p-6 lg:p-8 space-y-8">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
       <div>
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           DRR Dashboard
@@ -95,7 +95,7 @@ export default async function DRRDashboardPage() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {statCards.map(({ label, value, icon: Icon, color, bg }) => (
           <div
             key={label}
@@ -115,7 +115,7 @@ export default async function DRRDashboardPage() {
       </div>
 
       {/* Evaluation coverage banner — shows DEC submission progress */}
-      <div className="bg-white rounded-xl border border-black/5 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-black/5 shadow-sm p-4 sm:p-6">
         <div className="flex items-center justify-between gap-4 mb-3">
           <div>
             <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-base">
@@ -144,7 +144,7 @@ export default async function DRRDashboardPage() {
       </div>
 
       {/* Quarterly Audit Progress */}
-      <div className="bg-white rounded-xl border border-black/5 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-black/5 shadow-sm p-4 sm:p-6">
         <div className="flex items-start justify-between gap-4 mb-5">
           <div className="flex items-center gap-2">
             <ClipboardCheck size={18} className="text-[#D4A017]" />
@@ -193,7 +193,7 @@ export default async function DRRDashboardPage() {
 
       {/* Category breakdown */}
       {(elite + performing + underperforming) > 0 && (
-        <div className="bg-white rounded-xl border border-black/5 shadow-sm p-6">
+        <div className="bg-white rounded-xl border border-black/5 shadow-sm p-4 sm:p-6">
           <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-lg mb-4">
             {quarterLabel} Performance Breakdown
           </h2>
@@ -204,7 +204,7 @@ export default async function DRRDashboardPage() {
               { label: "Underperforming", count: underperforming, color: "bg-red-400", pct: Math.round((underperforming / (auditedThisQuarter || 1)) * 100) },
             ].map(({ label, count, color, pct }) => (
               <div key={label} className="flex items-center gap-3">
-                <span className="text-sm text-[#180F04]/60 font-['Geist'] w-28 flex-shrink-0">{label}</span>
+                <span className="text-sm text-[#180F04]/60 font-['Geist'] w-24 sm:w-28 flex-shrink-0">{label}</span>
                 <div className="flex-1 h-2 bg-black/10 rounded-full overflow-hidden">
                   <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
                 </div>

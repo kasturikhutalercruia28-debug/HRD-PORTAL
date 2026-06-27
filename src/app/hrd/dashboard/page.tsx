@@ -119,7 +119,7 @@ export default async function HRDDashboardPage() {
   ];
 
   return (
-    <div className="p-6 lg:p-8 space-y-8">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
       {/* Header */}
       <div>
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
@@ -135,7 +135,7 @@ export default async function HRDDashboardPage() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {statCards.map(({ label, value, icon: Icon, color, bg }) => (
           <div
             key={label}
@@ -156,11 +156,11 @@ export default async function HRDDashboardPage() {
 
       {/* Submission table */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-black/5 flex items-center justify-between">
-          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-lg">
+        <div className="px-4 sm:px-6 py-4 border-b border-black/5 flex items-center justify-between gap-2">
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-base sm:text-lg">
             Submission Status by Avenue
           </h2>
-          <span className="text-xs text-[#180F04]/40 font-['Geist']">
+          <span className="text-xs text-[#180F04]/40 font-['Geist'] shrink-0">
             {MONTH_NAMES[activeMonth]} {activeYear}
           </span>
         </div>
@@ -236,7 +236,7 @@ export default async function HRDDashboardPage() {
 
       {/* Quarterly Audit Status */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-black/5 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-4 border-b border-black/5 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <TrendingUp size={18} className="text-[#D4A017]" />
             <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-lg">
@@ -247,7 +247,7 @@ export default async function HRDDashboardPage() {
             {activeYear}
           </span>
         </div>
-        <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           <div className="rounded-lg bg-[#FBF7EE] p-4">
             <p className="text-xs text-[#180F04]/50 uppercase tracking-wide font-['Geist']">
               Quarter

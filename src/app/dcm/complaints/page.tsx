@@ -18,8 +18,8 @@ export default async function DcmComplaintsPage() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6">
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">My Complaints</h1>
         <Link
           href="/dcm/complaints/new"

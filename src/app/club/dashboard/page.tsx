@@ -65,7 +65,7 @@ export default async function ClubDashboardPage() {
   ).length;
 
   return (
-    <div className="p-6 lg:p-8 space-y-8">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
       <div>
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           {club.name}
@@ -76,7 +76,7 @@ export default async function ClubDashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         {[
           { label: "Pending", value: pending, color: "text-amber-600", bg: "bg-amber-50" },
           { label: "Scheduled", value: scheduled, color: "text-blue-600", bg: "bg-blue-50" },
@@ -130,7 +130,7 @@ export default async function ClubDashboardPage() {
                 <Link
                   key={req.id}
                   href={`/club/request/${req.id}`}
-                  className="flex items-center gap-4 px-6 py-4 hover:bg-[#FBF7EE]/40 transition-colors"
+                  className="flex items-start sm:items-center gap-3 sm:gap-4 px-4 sm:px-6 py-4 hover:bg-[#FBF7EE]/40 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
@@ -149,17 +149,18 @@ export default async function ClubDashboardPage() {
                         : `Submitted: ${formatDate(req.createdAt)}`}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
                     {needsFeedback && (
                       <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-['Geist'] font-medium">
-                        Submit Feedback
+                        Feedback
                       </span>
                     )}
-                    <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full font-['Geist'] ${cfg.color}`}>
-                      <Icon size={11} />
-                      {cfg.label}
+                    <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full font-['Geist'] ${cfg.color}`}>
+                      <Icon size={10} />
+                      <span className="hidden sm:inline">{cfg.label}</span>
+                      <span className="sm:hidden">{cfg.label.split(" ")[0]}</span>
                     </span>
-                    <ArrowRight size={14} className="text-[#180F04]/20" />
+                    <ArrowRight size={13} className="text-[#180F04]/20" />
                   </div>
                 </Link>
               );
