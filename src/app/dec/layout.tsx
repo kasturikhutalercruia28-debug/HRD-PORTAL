@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
+import SidebarLogo from "@/components/SidebarLogo";
 
 const NAV_LINKS = [
   { href: "/dec/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -45,14 +46,7 @@ export default function DECLayout({ children }: { children: React.ReactNode }) {
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="px-4 py-4 border-b border-white/10">
-        <div className="bg-white rounded-xl px-3 py-2 mb-3 inline-block shadow-md">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.svg" alt="Rotaract District 3141" className="h-7 w-auto" />
-        </div>
-        <p className="text-white/35 text-[10px] font-['Geist'] uppercase tracking-widest">DEC Portal</p>
-      </div>
+      <SidebarLogo portal="DEC" />
 
       {/* Avenue badge */}
       {user?.avenueName && (
@@ -166,7 +160,7 @@ export default function DECLayout({ children }: { children: React.ReactNode }) {
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <span className="font-['Fraunces'] font-bold text-[#AAFF47] text-lg">DPES</span>
+          <span className="font-['Fraunces'] font-bold text-[#AAFF47] text-lg">NEXUS</span>
           {user?.avenueName && (
             <span className="text-white/50 text-xs font-['Geist'] truncate max-w-[140px]">
               {user.avenueName}

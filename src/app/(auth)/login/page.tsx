@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
-import Image from 'next/image'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -56,29 +55,27 @@ export default function LoginPage() {
 
       <div className="w-full max-w-sm relative z-10">
 
-        {/* Logo + name */}
-        <div className="flex flex-col items-center mb-10 gap-4">
-          <div className="bg-white rounded-2xl px-5 py-3 shadow-lg shadow-black/30">
-            <Image
-              src="/logo.svg"
-              alt="Rotaract District 3141"
-              width={180}
-              height={56}
-              className="h-12 w-auto"
-              priority
-            />
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-10 gap-3">
+          <div className="flex items-center gap-3">
+            <svg width="38" height="38" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="14" cy="14" r="12.5" stroke="#E8175D" strokeWidth="2"/>
+              <circle cx="14" cy="14" r="5.5" stroke="#E8175D" strokeWidth="2"/>
+              <circle cx="14" cy="14" r="2.5" fill="#E8175D"/>
+              <line x1="14" y1="8.5" x2="14" y2="2.5" stroke="#E8175D" strokeWidth="2.2" strokeLinecap="round"/>
+              <line x1="14" y1="25.5" x2="14" y2="19.5" stroke="#E8175D" strokeWidth="2.2" strokeLinecap="round"/>
+              <line x1="8.5" y1="14" x2="2.5" y2="14" stroke="#E8175D" strokeWidth="2.2" strokeLinecap="round"/>
+              <line x1="25.5" y1="14" x2="19.5" y2="14" stroke="#E8175D" strokeWidth="2.2" strokeLinecap="round"/>
+              <line x1="9.9" y1="9.9" x2="5.8" y2="5.8" stroke="#E8175D" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="22.2" y1="22.2" x2="18.1" y2="18.1" stroke="#E8175D" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="18.1" y1="9.9" x2="22.2" y2="5.8" stroke="#E8175D" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="5.8" y1="22.2" x2="9.9" y2="18.1" stroke="#E8175D" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <span className="font-['Fraunces'] text-white font-bold text-5xl tracking-tight leading-none">NEXUS</span>
           </div>
-          <div className="text-center">
-            <h1
-              className="text-4xl font-bold tracking-tight text-[#AAFF47]"
-              style={{ fontFamily: 'Fraunces, serif' }}
-            >
-              DPES
-            </h1>
-            <p className="mt-1 text-[10px] tracking-[0.2em] uppercase text-[#F0EDE5]/35 font-['Geist']">
-              District Performance Evaluation System
-            </p>
-          </div>
+          <p className="text-[10px] tracking-[0.2em] uppercase text-[#F0EDE5]/30 font-['Geist']">
+            Rotaract District 3141 · District Management Portal
+          </p>
         </div>
 
         {/* Card */}

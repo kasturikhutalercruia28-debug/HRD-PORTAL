@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
+import SidebarLogo from "@/components/SidebarLogo";
 
 const NAV_LINKS = [
   { href: "/club/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -37,13 +38,7 @@ export default function ClubLayout({ children }: { children: React.ReactNode }) 
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
-      <div className="px-4 py-4 border-b border-white/10">
-        <div className="bg-white rounded-xl px-3 py-2 mb-3 inline-block shadow-md">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.svg" alt="Rotaract District 3141" className="h-7 w-auto" />
-        </div>
-        <p className="text-white/35 text-[10px] font-['Geist'] uppercase tracking-widest">Club Portal</p>
-      </div>
+      <SidebarLogo portal="Club" />
 
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         {NAV_LINKS.map(({ href, label, icon: Icon }) => (

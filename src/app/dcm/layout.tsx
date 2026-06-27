@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LayoutDashboard, MessageCircleWarning, ClipboardList, Settings, LogOut } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
+import SidebarLogo from "@/components/SidebarLogo";
 
 const NAV_LINKS = [
   { href: "/dcm/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -20,13 +21,7 @@ export default async function DcmLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-[#F0EDE5] flex font-['Geist']">
       {/* Sidebar */}
       <aside className="w-56 bg-[#0D0D0B] flex flex-col shrink-0">
-        <div className="px-4 py-4 border-b border-white/10">
-          <div className="bg-white rounded-xl px-3 py-2 mb-3 inline-block shadow-md">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt="Rotaract District 3141" className="h-7 w-auto" />
-          </div>
-          <p className="text-white/35 text-[10px] font-['Geist'] uppercase tracking-widest">DCM Portal</p>
-        </div>
+        <SidebarLogo portal="DCM" />
         <nav className="flex-1 px-3 py-4 space-y-1">
           {NAV_LINKS.map(({ href, label, icon: Icon }) => (
             <Link
