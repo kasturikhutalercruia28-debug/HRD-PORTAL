@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, ToggleLeft, ToggleRight, Loader2, X, KeyRound, Check } from "lucide-react";
+import { Plus, ToggleLeft, ToggleRight, Loader2, X, KeyRound, Check, Mail } from "lucide-react";
 
 type Avenue = { id: string; name: string };
 type User = {
   id: string;
   name: string;
   email: string;
-  role: "DEC" | "DRR";
+  role: "CLUB" | "DCM" | "DEC" | "DRR";
   avenue: Avenue | null;
   isActive: boolean;
 };
 
 const ROLE_COLORS: Record<string, string> = {
+  CLUB: "bg-amber-100 text-amber-700",
+  DCM: "bg-green-100 text-green-700",
   DEC: "bg-blue-100 text-blue-700",
   DRR: "bg-purple-100 text-purple-700",
 };
@@ -24,11 +26,23 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [toggling, setToggling] = useState<string | null>(null);
+
+  // Reset password
   const [resetUserId, setResetUserId] = useState<string | null>(null);
   const [resetPassword, setResetPassword] = useState("");
   const [resetError, setResetError] = useState("");
   const [resetSuccess, setResetSuccess] = useState(false);
   const [resetting, setResetting] = useState(false);
+
+  // Edit email
+  const [editEmailUser, setEditEmailUser] = useState<User | null>(null);
+  const [newEmail, setNewEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [emailSuccess, setEmailSuccess] = useState(false);
+  const [savingEmail, setSavingEmail] = useState(false);
+
+  // Role filter
+  const [roleFilter, setRoleFilter] = useState<string>("ALL");
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,13 +59,27 @@ export default function UsersPage() {
     else { const d = await res.json(); setResetError(d.error ?? "Failed"); }
   };
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "DEC",
-    avenueId: "",
-  });
+  const handleEditEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailError(""); setEmailSuccess(false);
+    if (!newEmail.trim()) { setEmailError("Email is required"); return; }
+    setSavingEmail(true);
+    const res = await fetch("/api/hrd/users/update-credentials", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: editEmailUser?.id, email: newEmail.trim() }),
+    });
+    setSavingEmail(false);
+    if (res.ok) {
+      setEmailSuccess(true);
+      await fetchData();
+    } else {
+      const d = await res.json();
+      setEmailError(d.error ?? "Failed to update email");
+    }
+  };
+
+  const [form, setForm] = useState({ name: "", email: "", password: "", role: "DEC", avenueId: "" });
   const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -68,9 +96,7 @@ export default function UsersPage() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
   const handleToggle = async (id: string) => {
     setToggling(id);
@@ -82,14 +108,8 @@ export default function UsersPage() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
-    if (!form.name || !form.email || !form.password) {
-      setFormError("Name, email and password are required.");
-      return;
-    }
-    if (form.role === "DEC" && !form.avenueId) {
-      setFormError("Avenue is required for DEC users.");
-      return;
-    }
+    if (!form.name || !form.email || !form.password) { setFormError("Name, email and password are required."); return; }
+    if (form.role === "DEC" && !form.avenueId) { setFormError("Avenue is required for DEC users."); return; }
     setSubmitting(true);
     const res = await fetch("/api/hrd/users", {
       method: "POST",
@@ -113,22 +133,38 @@ export default function UsersPage() {
     setSubmitting(false);
   };
 
+  const filtered = roleFilter === "ALL" ? users : users.filter((u) => u.role === roleFilter);
+
   return (
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Users</h1>
-          <p className="text-[#0D0D0B]/50 text-sm mt-1 font-['Geist']">
-            Manage DEC and DRR accounts
-          </p>
+          <p className="text-[#0D0D0B]/50 text-sm mt-1 font-['Geist']">Manage all portal accounts</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
           className="flex items-center gap-2 bg-[#0D0D0B] text-[#AAFF47] px-4 py-2.5 rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
         >
-          <Plus size={15} />
-          Add User
+          <Plus size={15} /> Add User
         </button>
+      </div>
+
+      {/* Role filter tabs */}
+      <div className="flex gap-2 flex-wrap">
+        {["ALL", "CLUB", "DCM", "DEC", "DRR"].map((r) => (
+          <button
+            key={r}
+            onClick={() => setRoleFilter(r)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold font-['Geist'] transition-colors ${
+              roleFilter === r
+                ? "bg-[#0D0D0B] text-[#AAFF47]"
+                : "bg-white border border-black/10 text-[#0D0D0B]/60 hover:bg-[#F0EDE5]"
+            }`}
+          >
+            {r} {r !== "ALL" && <span className="opacity-60">({users.filter((u) => u.role === r).length})</span>}
+          </button>
+        ))}
       </div>
 
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
@@ -142,45 +178,21 @@ export default function UsersPage() {
               <thead>
                 <tr className="border-b border-black/5 bg-[#F0EDE5]/50">
                   {["Name", "Email", "Role", "Avenue", "Status", "Actions"].map((h) => (
-                    <th
-                      key={h}
-                      className="text-left px-5 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide"
-                    >
-                      {h}
-                    </th>
+                    <th key={h} className="text-left px-5 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {users.map((u, i) => (
-                  <tr
-                    key={u.id}
-                    className={`border-b border-black/5 hover:bg-[#F0EDE5]/20 transition-colors ${
-                      i === users.length - 1 ? "border-none" : ""
-                    }`}
-                  >
+                {filtered.map((u, i) => (
+                  <tr key={u.id} className={`border-b border-black/5 hover:bg-[#F0EDE5]/20 transition-colors ${i === filtered.length - 1 ? "border-none" : ""}`}>
                     <td className="px-5 py-3 font-medium text-[#0D0D0B]">{u.name}</td>
                     <td className="px-5 py-3 text-[#0D0D0B]/60">{u.email}</td>
                     <td className="px-5 py-3">
-                      <span
-                        className={`inline-block text-xs font-bold px-2 py-0.5 rounded ${
-                          ROLE_COLORS[u.role] ?? ""
-                        }`}
-                      >
-                        {u.role}
-                      </span>
+                      <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded ${ROLE_COLORS[u.role] ?? ""}`}>{u.role}</span>
                     </td>
-                    <td className="px-5 py-3 text-[#0D0D0B]/60">
-                      {u.avenue?.name ?? "—"}
-                    </td>
+                    <td className="px-5 py-3 text-[#0D0D0B]/60">{u.avenue?.name ?? "—"}</td>
                     <td className="px-5 py-3">
-                      <span
-                        className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${
-                          u.isActive
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-red-100 text-red-600"
-                        }`}
-                      >
+                      <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${u.isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
                         {u.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
@@ -191,14 +203,14 @@ export default function UsersPage() {
                           disabled={toggling === u.id}
                           className="flex items-center gap-1.5 text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] transition-colors disabled:opacity-40"
                         >
-                          {toggling === u.id ? (
-                            <Loader2 size={14} className="animate-spin" />
-                          ) : u.isActive ? (
-                            <ToggleRight size={16} className="text-emerald-500" />
-                          ) : (
-                            <ToggleLeft size={16} />
-                          )}
+                          {toggling === u.id ? <Loader2 size={14} className="animate-spin" /> : u.isActive ? <ToggleRight size={16} className="text-emerald-500" /> : <ToggleLeft size={16} />}
                           {u.isActive ? "Deactivate" : "Activate"}
+                        </button>
+                        <button
+                          onClick={() => { setEditEmailUser(u); setNewEmail(u.email); setEmailError(""); setEmailSuccess(false); }}
+                          className="flex items-center gap-1.5 text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] transition-colors"
+                        >
+                          <Mail size={13} /> Edit Email
                         </button>
                         <button
                           onClick={() => { setResetUserId(u.id); setResetPassword(""); setResetError(""); setResetSuccess(false); }}
@@ -210,18 +222,51 @@ export default function UsersPage() {
                     </td>
                   </tr>
                 ))}
-                {users.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-5 py-10 text-center text-[#0D0D0B]/30">
-                      No users found. Add the first one.
-                    </td>
-                  </tr>
+                {filtered.length === 0 && (
+                  <tr><td colSpan={6} className="px-5 py-10 text-center text-[#0D0D0B]/30">No users found.</td></tr>
                 )}
               </tbody>
             </table>
           </div>
         )}
       </div>
+
+      {/* Edit Email modal */}
+      {editEmailUser && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
+              <div>
+                <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">Edit Email</h2>
+                <p className="text-xs text-[#0D0D0B]/50 font-['Geist'] mt-0.5">{editEmailUser.name} · {editEmailUser.role}</p>
+              </div>
+              <button onClick={() => setEditEmailUser(null)} className="text-[#0D0D0B]/30 hover:text-[#0D0D0B]"><X size={18} /></button>
+            </div>
+            <form onSubmit={handleEditEmail} className="px-6 py-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5">New Email</label>
+                <input
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  required
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                />
+              </div>
+              {emailError && <p className="text-red-500 text-xs">{emailError}</p>}
+              {emailSuccess && <p className="text-green-600 text-xs flex items-center gap-1"><Check size={12} /> Email updated</p>}
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setEditEmailUser(null)}
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors">Cancel</button>
+                <button type="submit" disabled={savingEmail}
+                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                  {savingEmail && <Loader2 size={14} className="animate-spin" />} Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Reset password modal */}
       {resetUserId && (
@@ -253,114 +298,58 @@ export default function UsersPage() {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Add User modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
             <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
-              <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">
-                Add New User
-              </h2>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setFormError("");
-                }}
-                className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"
-              >
-                <X size={18} />
-              </button>
+              <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">Add New User</h2>
+              <button onClick={() => { setShowModal(false); setFormError(""); }} className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"><X size={18} /></button>
             </div>
             <form onSubmit={handleCreate} className="px-6 py-5 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Full Name</label>
+                <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
-                  placeholder="Jane Doe"
-                />
+                  placeholder="Jane Doe" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Email</label>
+                <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
-                  placeholder="jane@example.com"
-                />
+                  placeholder="jane@example.com" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Password</label>
+                <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
                   className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
-                  placeholder="Min. 8 characters"
-                />
+                  placeholder="Min. 8 characters" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
-                  Role
-                </label>
-                <select
-                  value={form.role}
-                  onChange={(e) => setForm({ ...form, role: e.target.value, avenueId: "" })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white"
-                >
+                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Role</label>
+                <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value, avenueId: "" })}
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white">
                   <option value="DEC">DEC</option>
                   <option value="DRR">DRR</option>
                 </select>
               </div>
               {form.role === "DEC" && (
                 <div>
-                  <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
-                    Avenue
-                  </label>
-                  <select
-                    value={form.avenueId}
-                    onChange={(e) => setForm({ ...form, avenueId: e.target.value })}
-                    className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white"
-                  >
+                  <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Avenue</label>
+                  <select value={form.avenueId} onChange={(e) => setForm({ ...form, avenueId: e.target.value })}
+                    className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white">
                     <option value="">Select avenue...</option>
-                    {avenues.map((av) => (
-                      <option key={av.id} value={av.id}>
-                        {av.name}
-                      </option>
-                    ))}
+                    {avenues.map((av) => <option key={av.id} value={av.id}>{av.name}</option>)}
                   </select>
                 </div>
               )}
-              {formError && (
-                <p className="text-red-500 text-xs font-['Geist']">{formError}</p>
-              )}
+              {formError && <p className="text-red-500 text-xs font-['Geist']">{formError}</p>}
               <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowModal(false);
-                    setFormError("");
-                  }}
-                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors font-['Geist']"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2"
-                >
-                  {submitting && <Loader2 size={14} className="animate-spin" />}
-                  Create User
+                <button type="button" onClick={() => { setShowModal(false); setFormError(""); }}
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors font-['Geist']">Cancel</button>
+                <button type="submit" disabled={submitting}
+                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2">
+                  {submitting && <Loader2 size={14} className="animate-spin" />} Create User
                 </button>
               </div>
             </form>
