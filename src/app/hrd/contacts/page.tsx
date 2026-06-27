@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 
 function toDirectImageUrl(url: string): string {
   if (!url) return url;
-  const driveMatch = url.match(/\/file\/d\/([^/]+)/);
-  if (driveMatch) return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+  const driveMatch = url.match(/\/file\/d\/([^/?]+)/);
+  if (driveMatch) return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
   const openMatch = url.match(/[?&]id=([^&]+)/);
-  if (openMatch && url.includes("drive.google.com")) return `https://drive.google.com/uc?export=view&id=${openMatch[1]}`;
+  if (openMatch && url.includes("drive.google.com")) return `https://lh3.googleusercontent.com/d/${openMatch[1]}`;
   return url;
 }
 
