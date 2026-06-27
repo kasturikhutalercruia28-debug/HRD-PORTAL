@@ -2,6 +2,15 @@
 
 import { useEffect, useState } from "react";
 
+function toDirectImageUrl(url: string): string {
+  if (!url) return url;
+  const driveMatch = url.match(/\/file\/d\/([^/]+)/);
+  if (driveMatch) return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+  const openMatch = url.match(/[?&]id=([^&]+)/);
+  if (openMatch && url.includes("drive.google.com")) return `https://drive.google.com/uc?export=view&id=${openMatch[1]}`;
+  return url;
+}
+
 interface Contact {
   id: string;
   name: string;
@@ -99,7 +108,7 @@ export default function HrdContactsPage() {
             <div key={c.id} className="bg-white rounded-xl border border-[#180F04]/8 p-4 flex gap-3">
               <div className="flex-shrink-0">
                 {c.photoUrl ? (
-                  <img src={c.photoUrl} alt={c.name} className="w-14 h-14 rounded-full object-cover" />
+                  <img src={toDirectImageUrl(c.photoUrl)} alt={c.name} className="w-14 h-14 rounded-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
                 ) : (
                   <div className="w-14 h-14 rounded-full bg-[#D4A017]/20 flex items-center justify-center text-[#D4A017] text-xl font-bold">
                     {c.name[0]}

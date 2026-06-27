@@ -2,6 +2,18 @@
 
 import { useEffect, useState } from "react";
 
+// Converts Google Drive share links to a direct-renderable URL
+function toDirectImageUrl(url: string): string {
+  if (!url) return url;
+  // https://drive.google.com/file/d/FILE_ID/view?...
+  const driveMatch = url.match(/\/file\/d\/([^/]+)/);
+  if (driveMatch) return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+  // https://drive.google.com/open?id=FILE_ID
+  const openMatch = url.match(/[?&]id=([^&]+)/);
+  if (openMatch && url.includes("drive.google.com")) return `https://drive.google.com/uc?export=view&id=${openMatch[1]}`;
+  return url;
+}
+
 interface Contact {
   id: string;
   name: string;
@@ -63,7 +75,12 @@ export default function ContactsView() {
               {items.map(c => (
                 <div key={c.id} className={`rounded-2xl ${colors.bg} border border-[#180F04]/6 p-4 flex flex-col items-center text-center gap-2`}>
                   {c.photoUrl ? (
-                    <img src={c.photoUrl} alt={c.name} className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm" />
+                    <img
+                      src={toDirectImageUrl(c.photoUrl)}
+                      alt={c.name}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm"
+                      onError={e => { (e.target as HTMLImageElement).style.display = "none"; (e.target as HTMLImageElement).nextElementSibling?.removeAttribute("style"); }}
+                    />
                   ) : (
                     <div className="w-16 h-16 rounded-full bg-[#D4A017]/20 flex items-center justify-center text-[#D4A017] text-2xl font-bold border-2 border-white shadow-sm">
                       {c.name[0]}
