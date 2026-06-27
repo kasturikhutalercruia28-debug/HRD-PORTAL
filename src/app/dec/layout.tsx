@@ -162,7 +162,7 @@ export default function DECLayout({ children }: { children: React.ReactNode }) {
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <span className="font-['Fraunces'] font-bold text-[#D4A017] text-lg">NEXUS</span>
+          <span className="font-['Fraunces'] font-bold text-[#D4A017] text-lg">SYNC</span>
           {user?.avenueName && (
             <span className="text-white/50 text-xs font-['Geist'] truncate max-w-[140px]">
               {user.avenueName}

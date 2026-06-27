@@ -3,7 +3,7 @@ import { SessionProvider } from 'next-auth/react'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'NEXUS | Rotaract District 3141',
+  title: 'SYNC | Rotaract District 3141',
   description: 'District Management Portal for Rotaract District 3141',
 }
 

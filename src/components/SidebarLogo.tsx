@@ -16,10 +16,10 @@ export default function SidebarLogo({ portal }: { portal: string }) {
           <line x1="18.1" y1="9.9" x2="22.2" y2="5.8" stroke="#E8175D" strokeWidth="2" strokeLinecap="round"/>
           <line x1="5.8" y1="22.2" x2="9.9" y2="18.1" stroke="#E8175D" strokeWidth="2" strokeLinecap="round"/>
         </svg>
-        <span className="font-['Fraunces'] text-white font-bold text-[22px] tracking-tight leading-none">NEXUS</span>
+        <span className="font-['Fraunces'] text-white font-bold text-[22px] tracking-tight leading-none">SYNC</span>
       </div>
       <p className="text-white/30 text-[9px] font-['Geist'] uppercase tracking-[0.15em]">
-        Rotaract District 3141 &nbsp;·&nbsp; {portal}
+        by Team HRD &nbsp;·&nbsp; {portal}
       </p>
     </div>
   );

@@ -71,10 +71,10 @@ export default function LoginPage() {
               <line x1="18.1" y1="9.9" x2="22.2" y2="5.8" stroke="#E8175D" strokeWidth="2" strokeLinecap="round"/>
               <line x1="5.8" y1="22.2" x2="9.9" y2="18.1" stroke="#E8175D" strokeWidth="2" strokeLinecap="round"/>
             </svg>
-            <span className="font-['Fraunces'] text-white font-bold text-5xl tracking-tight leading-none">NEXUS</span>
+            <span className="font-['Fraunces'] text-white font-bold text-5xl tracking-tight leading-none">SYNC</span>
           </div>
           <p className="text-[10px] tracking-[0.2em] uppercase text-[#FBF7EE]/30 font-['Geist']">
-            Rotaract District 3141 · District Management Portal
+            Rotaract District 3141 · by Team HRD
           </p>
         </div>
 

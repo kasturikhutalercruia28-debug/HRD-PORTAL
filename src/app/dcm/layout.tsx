@@ -110,7 +110,7 @@ export default function DcmLayout({ children }: { children: React.ReactNode }) {
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white/70 hover:text-white">
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <span className="font-['Fraunces'] font-bold text-[#D4A017] text-lg">NEXUS</span>
+          <span className="font-['Fraunces'] font-bold text-[#D4A017] text-lg">SYNC</span>
           <div className="ml-auto">
             <NotificationBell />
           </div>

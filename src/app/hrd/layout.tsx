@@ -149,7 +149,7 @@ export default function HRDLayout({ children }: { children: React.ReactNode }) {
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <span className="font-['Fraunces'] font-bold text-[#D4A017] text-lg">NEXUS</span>
+          <span className="font-['Fraunces'] font-bold text-[#D4A017] text-lg">SYNC</span>
           <div className="ml-auto">
             <NotificationBell />
           </div>
