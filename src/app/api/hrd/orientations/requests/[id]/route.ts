@@ -133,3 +133,17 @@ export async function PATCH(
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });
 }
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const session = await auth();
+  const user = session?.user as { role?: string } | undefined;
+  if (!user || user.role !== "HRD") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  await prisma.orientationRequest.delete({ where: { id: params.id } });
+  return NextResponse.json({ ok: true });
+}

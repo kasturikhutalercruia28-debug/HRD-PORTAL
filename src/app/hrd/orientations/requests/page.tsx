@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Filter,
 } from "lucide-react";
+import DeleteButton from "@/components/DeleteButton";
 
 const STATUS_CONFIG = {
   requested: { label: "Pending", color: "bg-amber-100 text-amber-700", icon: Clock },
@@ -118,34 +119,38 @@ export default async function HRDOrientationRequestsPage({
               const cfg = STATUS_CONFIG[req.status] ?? STATUS_CONFIG.requested;
               const Icon = cfg.icon;
               return (
-                <Link
-                  key={req.id}
-                  href={`/hrd/orientations/requests/${req.id}`}
-                  className="flex items-center gap-4 px-6 py-4 hover:bg-[#FBF7EE]/40 transition-colors"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-medium text-sm text-[#180F04] font-['Geist']">
-                        {req.club.name}
-                      </span>
-                      <span className="text-[10px] text-[#180F04]/40 font-['Geist'] bg-[#FBF7EE] px-1.5 py-0.5 rounded">
-                        {TYPE_LABELS[req.orientationType]}
-                      </span>
+                <div key={req.id} className="flex items-center hover:bg-[#FBF7EE]/40 transition-colors">
+                  <Link
+                    href={`/hrd/orientations/requests/${req.id}`}
+                    className="flex-1 flex items-center gap-4 px-6 py-4"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-medium text-sm text-[#180F04] font-['Geist']">
+                          {req.club.name}
+                        </span>
+                        <span className="text-[10px] text-[#180F04]/40 font-['Geist'] bg-[#FBF7EE] px-1.5 py-0.5 rounded">
+                          {TYPE_LABELS[req.orientationType]}
+                        </span>
+                      </div>
+                      <p className="text-[#180F04]/40 text-xs font-['Geist']">
+                        {req.scheduledDate
+                          ? `Scheduled: ${fmtDate(req.scheduledDate)}`
+                          : `Submitted: ${fmtDate(req.createdAt)}`}
+                      </p>
                     </div>
-                    <p className="text-[#180F04]/40 text-xs font-['Geist']">
-                      {req.scheduledDate
-                        ? `Scheduled: ${fmtDate(req.scheduledDate)}`
-                        : `Submitted: ${fmtDate(req.createdAt)}`}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full font-['Geist'] ${cfg.color}`}>
+                        <Icon size={10} />
+                        {cfg.label}
+                      </span>
+                      <ArrowRight size={14} className="text-[#180F04]/20" />
+                    </div>
+                  </Link>
+                  <div className="pr-4">
+                    <DeleteButton endpoint={`/api/hrd/orientations/requests/${req.id}`} confirmMessage={`Delete orientation request for ${req.club.name}?`} />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full font-['Geist'] ${cfg.color}`}>
-                      <Icon size={10} />
-                      {cfg.label}
-                    </span>
-                    <ArrowRight size={14} className="text-[#180F04]/20" />
-                  </div>
-                </Link>
+                </div>
               );
             })}
           </div>

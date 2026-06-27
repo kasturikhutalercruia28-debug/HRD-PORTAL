@@ -19,6 +19,7 @@ import {
   LogOut,
   ChevronRight,
   Phone,
+  BarChart2,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
@@ -34,6 +35,7 @@ const NAV_LINKS = [
   { href: "/hrd/orientations", label: "Orientations", icon: GraduationCap },
   { href: "/hrd/complaints", label: "Complaints", icon: MessageCircleWarning },
   { href: "/hrd/feedback", label: "Feedback", icon: ClipboardList },
+  { href: "/hrd/evaluations", label: "Evaluations", icon: BarChart2 },
   { href: "/hrd/contacts", label: "Contacts", icon: Phone },
 ];
 

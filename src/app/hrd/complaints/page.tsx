@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import { Download } from "lucide-react";
+import DeleteButton from "@/components/DeleteButton";
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-700",
@@ -83,31 +84,35 @@ export default async function HrdComplaintsPage({
       ) : (
         <div className="space-y-3">
           {complaints.map((c) => (
-            <Link
-              key={c.id}
-              href={`/hrd/complaints/${c.id}`}
-              className="flex items-start justify-between gap-4 bg-white rounded-xl border border-black/5 p-4 hover:border-[#D4A017] transition-colors"
-            >
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm text-[#180F04] truncate">{c.subject}</p>
-                <p className="text-xs text-[#180F04]/50 mt-0.5">
-                  {c.submitter.name} · {c.submitter.role}
-                </p>
-                {c.history[0]?.remark && (
-                  <p className="text-xs text-[#180F04]/40 mt-0.5 line-clamp-1">
-                    Last remark: {c.history[0].remark}
+            <div key={c.id} className="flex items-start gap-2 bg-white rounded-xl border border-black/5 hover:border-[#D4A017] transition-colors">
+              <Link
+                href={`/hrd/complaints/${c.id}`}
+                className="flex-1 flex items-start justify-between gap-4 p-4 min-w-0"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm text-[#180F04] truncate">{c.subject}</p>
+                  <p className="text-xs text-[#180F04]/50 mt-0.5">
+                    {c.submitter.name} · {c.submitter.role}
                   </p>
-                )}
+                  {c.history[0]?.remark && (
+                    <p className="text-xs text-[#180F04]/40 mt-0.5 line-clamp-1">
+                      Last remark: {c.history[0].remark}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[c.status]}`}>
+                    {c.status.replace("_", " ")}
+                  </span>
+                  <span className="text-[10px] text-[#180F04]/40">
+                    {new Date(c.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                  </span>
+                </div>
+              </Link>
+              <div className="flex items-center pr-3 pt-3">
+                <DeleteButton endpoint={`/api/complaints/${c.id}`} confirmMessage={`Delete complaint "${c.subject}"?`} />
               </div>
-              <div className="flex flex-col items-end gap-1 shrink-0">
-                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[c.status]}`}>
-                  {c.status.replace("_", " ")}
-                </span>
-                <span className="text-[10px] text-[#180F04]/40">
-                  {new Date(c.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
-                </span>
-              </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
-import { Plus, Eye, Edit } from "lucide-react";
+import { Plus, Edit } from "lucide-react";
+import DeleteButton from "@/components/DeleteButton";
 
 export default async function HrdFeedbackPage() {
   const forms = await prisma.eventFeedbackForm.findMany({
@@ -40,13 +41,14 @@ export default async function HrdFeedbackPage() {
                   {form._count.questions} questions · {form._count.submissions} submissions
                 </p>
               </div>
-              <div className="flex gap-2 shrink-0">
+              <div className="flex gap-2 shrink-0 items-center">
                 <Link
                   href={`/hrd/feedback/${form.id}`}
                   className="flex items-center gap-1.5 text-xs border border-black/15 text-[#180F04] px-3 py-1.5 rounded-lg hover:bg-black/5 transition-colors"
                 >
                   <Edit size={12} /> Manage
                 </Link>
+                <DeleteButton endpoint={`/api/feedback/forms/${form.id}`} confirmMessage={`Delete "${form.eventName}" and all its submissions?`} />
               </div>
             </div>
           ))}
