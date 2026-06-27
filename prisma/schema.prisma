@@ -371,3 +371,18 @@ model EventFeedbackResponse {
 
   @@unique([submissionId, questionId])
 }
+
+
+model HrdContact {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  title     String?
+  phone     String?
+  email     String?
+  photoUrl  String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

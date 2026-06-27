@@ -15,6 +15,7 @@ import {
   X,
   LogOut,
   ChevronRight,
+  Phone,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
@@ -27,6 +28,7 @@ const NAV_LINKS = [
   { href: "/club/complaints", label: "Complaints", icon: MessageCircleWarning },
   { href: "/club/feedback", label: "Feedback", icon: ClipboardList },
   { href: "/club/settings", label: "Settings", icon: Settings },
+  { href: "/club/contact", label: "Contact Us", icon: Phone },
 ];
 
 export default function ClubLayout({ children }: { children: React.ReactNode }) {

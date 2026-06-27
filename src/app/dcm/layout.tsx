@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, MessageCircleWarning, ClipboardList, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, MessageCircleWarning, ClipboardList, Settings, LogOut, Phone } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
 import SidebarLogo from "@/components/SidebarLogo";
@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: "/dcm/complaints", label: "Complaints", icon: MessageCircleWarning },
   { href: "/dcm/feedback", label: "Feedback", icon: ClipboardList },
   { href: "/dcm/settings", label: "Settings", icon: Settings },
+  { href: "/dcm/contact", label: "Contact Us", icon: Phone },
 ];
 
 export default async function DcmLayout({ children }: { children: React.ReactNode }) {

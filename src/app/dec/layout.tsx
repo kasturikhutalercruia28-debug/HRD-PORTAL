@@ -14,6 +14,7 @@ import {
   LogOut,
   ChevronRight,
   MapPin,
+  Phone,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
@@ -24,6 +25,7 @@ const NAV_LINKS = [
   { href: "/dec/evaluate", label: "Evaluate", icon: ClipboardList },
   { href: "/dec/history", label: "History", icon: History },
   { href: "/dec/complaints", label: "Complaints", icon: MessageCircleWarning },
+  { href: "/dec/contact", label: "Contact Us", icon: Phone },
 ];
 
 const ROLE_COLORS: Record<string, string> = {
