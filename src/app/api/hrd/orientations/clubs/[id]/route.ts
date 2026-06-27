@@ -26,3 +26,19 @@ export async function PATCH(
 
   return NextResponse.json(updated);
 }
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const session = await auth();
+  const user = session?.user as { role?: string } | undefined;
+  if (!user || user.role !== "HRD") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Delete linked users first, then the club
+  await prisma.user.deleteMany({ where: { clubId: params.id } });
+  await prisma.club.delete({ where: { id: params.id } });
+  return NextResponse.json({ ok: true });
+}

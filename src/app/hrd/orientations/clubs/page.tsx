@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, ToggleLeft, ToggleRight, Loader2, List } from "lucide-react";
+import { Plus, ToggleLeft, ToggleRight, Loader2, List, Trash2 } from "lucide-react";
 
 interface Club {
   id: string;
@@ -115,6 +115,12 @@ export default function HRDClubsPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ isActive: !club.isActive }),
     });
+    fetchClubs();
+  }
+
+  async function deleteClub(club: Club) {
+    if (!confirm(`Permanently delete "${club.name}" and its login account? This cannot be undone.`)) return;
+    await fetch(`/api/hrd/orientations/clubs/${club.id}`, { method: "DELETE" });
     fetchClubs();
   }
 
@@ -338,6 +344,15 @@ export default function HRDClubsPage() {
                   <span className={`text-xs font-['Geist'] w-14 text-right ${club.isActive ? "text-emerald-600" : "text-[#180F04]/30"}`}>
                     {club.isActive ? "Active" : "Inactive"}
                   </span>
+                  {!club.isActive && (
+                    <button
+                      onClick={() => deleteClub(club)}
+                      className="text-red-400 hover:text-red-600 transition-colors ml-1"
+                      title="Delete club"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
