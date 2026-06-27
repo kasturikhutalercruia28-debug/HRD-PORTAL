@@ -60,7 +60,7 @@ export default function LoginPage() {
         <div className="flex flex-col items-center mb-10 gap-4">
           <div className="bg-white rounded-2xl px-5 py-3 shadow-lg shadow-black/30">
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt="Rotaract District 3141"
               width={180}
               height={56}

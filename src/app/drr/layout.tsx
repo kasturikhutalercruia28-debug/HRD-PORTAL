@@ -45,7 +45,7 @@ export default function DRRLayout({ children }: { children: React.ReactNode }) {
       <div className="px-4 py-4 border-b border-white/10">
         <div className="bg-white rounded-xl px-3 py-2 mb-3 inline-block shadow-md">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Rotaract District 3141" className="h-7 w-auto" />
+          <img src="/logo.svg" alt="Rotaract District 3141" className="h-7 w-auto" />
         </div>
         <p className="text-white/35 text-[10px] font-['Geist'] uppercase tracking-widest">DRR Portal</p>
       </div>
