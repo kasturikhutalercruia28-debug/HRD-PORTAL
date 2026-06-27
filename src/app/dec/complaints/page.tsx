@@ -18,8 +18,8 @@ export default async function DecComplaintsPage() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">My Complaints</h1>
         <Link href="/dec/complaints/new"
           className="flex items-center gap-2 bg-[#D4A017] text-[#180F04] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#b8860b] transition-colors">

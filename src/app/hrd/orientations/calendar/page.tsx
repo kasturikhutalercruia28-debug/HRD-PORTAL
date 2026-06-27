@@ -86,8 +86,8 @@ export default function HRDCalendarPage() {
   const today = new Date();
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Calendar</h1>
           <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
@@ -164,7 +164,7 @@ export default function HRDCalendarPage() {
 
       {/* Month navigator */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5">
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
           <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-black/5 transition-colors">
             <ChevronLeft size={18} />
           </button>

@@ -60,7 +60,7 @@ export default function DcmFeedbackFormPage() {
   if (!form) return <div className="p-8 text-center text-red-500 text-sm">Form not found</div>;
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
       <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04] mb-2">{form.eventName}</h1>
       <p className="text-sm text-[#180F04]/50 mb-6">Event Feedback</p>
 

@@ -31,8 +31,8 @@ export default async function HrdComplaintsPage({
   const statuses = ["pending", "in_progress", "resolved", "closed"];
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Complaints</h1>
         <div className="flex gap-2">
           <a

@@ -83,7 +83,7 @@ export default function ActiveMonthPage() {
     current && (current.activeMonth !== month || current.activeYear !== year);
 
   return (
-    <div className="p-6 lg:p-8 space-y-6 max-w-2xl">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-2xl">
       <div>
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Active Month</h1>
         <p className="text-[#180F04]/50 text-sm mt-1 font-['Geist']">
@@ -147,7 +147,7 @@ export default function ActiveMonthPage() {
           Change Active Period
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                 Month

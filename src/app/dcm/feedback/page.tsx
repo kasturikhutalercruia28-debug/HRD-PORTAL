@@ -16,7 +16,7 @@ export default async function DcmFeedbackPage() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
       <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04] mb-6">Feedback Forms</h1>
       {forms.length === 0 ? (
         <div className="bg-white rounded-xl border border-black/5 p-12 text-center text-[#180F04]/40 text-sm">

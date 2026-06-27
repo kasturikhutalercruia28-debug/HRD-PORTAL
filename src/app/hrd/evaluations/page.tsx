@@ -18,7 +18,7 @@ export default async function HrdEvaluationsPage() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6">
       <div className="mb-6">
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">DCM Evaluations</h1>
         <p className="text-sm text-[#180F04]/50 mt-0.5">{evaluations.length} total score submissions</p>

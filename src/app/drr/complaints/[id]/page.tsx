@@ -53,7 +53,7 @@ export default function DrrComplaintDetailPage() {
   if (!complaint) return <div className="p-8 text-center text-[#180F04]/40 text-sm">Loading…</div>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-4 sm:p-6">
       <Link href="/drr/complaints" className="inline-flex items-center gap-1.5 text-sm text-[#180F04]/50 hover:text-[#180F04] mb-4 transition-colors">
         <ArrowLeft size={14} /> Back
       </Link>

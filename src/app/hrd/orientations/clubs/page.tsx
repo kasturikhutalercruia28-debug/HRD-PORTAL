@@ -125,8 +125,8 @@ export default function HRDClubsPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Clubs</h1>
           <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
@@ -323,7 +323,7 @@ export default function HRDClubsPage() {
           ) : (
             <div className="divide-y divide-black/5">
               {clubs.map((club) => (
-                <div key={club.id} className="flex items-center gap-4 px-6 py-4">
+                <div key={club.id} className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4">
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm text-[#180F04] font-['Geist']">{club.name}</p>
                     <p className="text-[#180F04]/40 text-xs font-['Geist'] mt-0.5">

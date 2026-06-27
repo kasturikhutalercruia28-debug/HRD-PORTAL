@@ -127,7 +127,7 @@ export default function HrdFeedbackFormPage() {
   const TABS = ["overview", "questions", "responses", "analytics"] as const;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6">
       <Link href="/hrd/feedback" className="inline-flex items-center gap-1.5 text-sm text-[#180F04]/50 hover:text-[#180F04] mb-4 transition-colors">
         <ArrowLeft size={14} /> Back
       </Link>

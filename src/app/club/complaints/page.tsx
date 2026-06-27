@@ -18,8 +18,8 @@ export default async function ClubComplaintsPage() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">My Complaints</h1>
         <Link
           href="/club/complaints/new"

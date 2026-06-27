@@ -63,7 +63,7 @@ export default async function HRDOrientationRequestsPage({
   const total = counts.reduce((s, c) => s + c._count.id, 0);
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       <div>
         <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           Orientation Requests
@@ -122,7 +122,7 @@ export default async function HRDOrientationRequestsPage({
                 <div key={req.id} className="flex items-center hover:bg-[#FBF7EE]/40 transition-colors">
                   <Link
                     href={`/hrd/orientations/requests/${req.id}`}
-                    className="flex-1 flex items-center gap-4 px-6 py-4"
+                    className="flex-1 flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">

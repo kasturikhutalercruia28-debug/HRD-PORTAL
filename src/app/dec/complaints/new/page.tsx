@@ -28,7 +28,7 @@ export default function DecNewComplaintPage() {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-6">
+    <div className="max-w-xl mx-auto p-4 sm:p-6">
       <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04] mb-6">New Complaint</h1>
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-black/5 p-6 space-y-4">
         <div>

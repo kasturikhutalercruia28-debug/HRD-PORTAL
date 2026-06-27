@@ -114,7 +114,7 @@ export default async function ClubRequestDetailPage({
       {/* Details */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4">
         <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-sm">Request Details</h2>
-        <div className="grid grid-cols-2 gap-4 text-sm font-['Geist']">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-['Geist']">
           <div>
             <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-1">Submitted</p>
             <p className="text-[#180F04]">{fmtDate(request.createdAt)}</p>

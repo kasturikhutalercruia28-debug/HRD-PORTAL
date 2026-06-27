@@ -84,8 +84,8 @@ export default function HrdContactsPage() {
   const roleColor: Record<string, string> = { HRD: "bg-amber-100 text-amber-800", DRR: "bg-blue-100 text-blue-800", DRS: "bg-purple-100 text-purple-800" };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 sm:p-6 max-w-5xl mx-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-['Fraunces'] font-bold text-[#180F04]">Contact Directory</h1>
           <p className="text-sm text-[#180F04]/50 mt-0.5">Manage Team HRD, DRR, and DRS contacts shown in club/DCM/DEC portals</p>

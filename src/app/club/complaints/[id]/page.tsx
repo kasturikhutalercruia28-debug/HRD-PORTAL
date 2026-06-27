@@ -26,7 +26,7 @@ export default async function ClubComplaintDetailPage({ params }: { params: { id
   if (complaint.submittedBy !== session?.user?.id) redirect("/club/complaints");
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
       <Link href="/club/complaints" className="inline-flex items-center gap-1.5 text-sm text-[#180F04]/50 hover:text-[#180F04] mb-4 transition-colors">
         <ArrowLeft size={14} /> Back to complaints
       </Link>

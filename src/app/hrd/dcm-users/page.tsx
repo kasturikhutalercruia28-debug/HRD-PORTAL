@@ -50,7 +50,7 @@ export default function HrdDcmUsersPage() {
   if (loading) return <div className="p-8 text-center text-[#180F04]/40 text-sm">Loading…</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6">
       <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04] mb-6">DCM Login Management</h1>
 
       {/* Create form */}

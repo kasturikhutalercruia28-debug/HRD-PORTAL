@@ -121,8 +121,8 @@ export default function AvenuesPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Avenues</h1>
           <p className="text-[#180F04]/50 text-sm mt-1 font-['Geist']">
