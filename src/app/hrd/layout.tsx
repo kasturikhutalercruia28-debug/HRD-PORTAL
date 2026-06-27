@@ -32,7 +32,6 @@ const NAV_LINKS = [
   { href: "/hrd/orientations", label: "Orientations", icon: GraduationCap },
   { href: "/hrd/complaints", label: "Complaints", icon: MessageCircleWarning },
   { href: "/hrd/feedback", label: "Feedback", icon: ClipboardList },
-  { href: "/hrd/dcm-users", label: "DCM Users", icon: UserCheck },
 ];
 
 const ROLE_COLORS: Record<string, string> = {
