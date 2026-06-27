@@ -19,7 +19,7 @@ export default function SidebarLogo({ portal }: { portal: string }) {
         <span className="font-['Fraunces'] text-white font-bold text-[22px] tracking-tight leading-none">SYNC</span>
       </div>
       <p className="text-white/30 text-[9px] font-['Geist'] uppercase tracking-[0.15em]">
-        by Team HRD &nbsp;·&nbsp; {portal}
+        by Team HRD &nbsp;·&nbsp; District 3141
       </p>
     </div>
   );
