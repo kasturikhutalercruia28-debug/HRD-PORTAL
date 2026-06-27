@@ -77,15 +77,15 @@ export default async function HRDRequestDetailPage({
       <div className="flex items-center gap-3">
         <Link
           href="/hrd/orientations/requests"
-          className="text-[#0D0D0B]/40 hover:text-[#0D0D0B] transition-colors"
+          className="text-[#180F04]/40 hover:text-[#180F04] transition-colors"
         >
           <ArrowLeft size={18} />
         </Link>
         <div>
-          <h1 className="font-['Fraunces'] text-xl font-bold text-[#0D0D0B]">
+          <h1 className="font-['Fraunces'] text-xl font-bold text-[#180F04]">
             {request.club.name}
           </h1>
-          <p className="text-[#0D0D0B]/60 text-sm font-['Geist']">
+          <p className="text-[#180F04]/60 text-sm font-['Geist']">
             {TYPE_LABELS[request.orientationType]} · {STATUS_LABELS[request.status]}
           </p>
         </div>
@@ -93,24 +93,24 @@ export default async function HRDRequestDetailPage({
 
       {/* Request details */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4">
-        <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-sm">Request Details</h2>
+        <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-sm">Request Details</h2>
         <div className="grid grid-cols-2 gap-4 text-sm font-['Geist']">
           <div>
-            <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-1">Club</p>
-            <p className="text-[#0D0D0B] font-medium">{request.club.name}</p>
+            <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-1">Club</p>
+            <p className="text-[#180F04] font-medium">{request.club.name}</p>
           </div>
           <div>
-            <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-1">Attendance</p>
-            <p className="text-[#0D0D0B]">{request.expectedAttendance}</p>
+            <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-1">Attendance</p>
+            <p className="text-[#180F04]">{request.expectedAttendance}</p>
           </div>
           <div>
-            <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-1">Submitted</p>
-            <p className="text-[#0D0D0B]">{fmtDate(request.createdAt)}</p>
+            <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-1">Submitted</p>
+            <p className="text-[#180F04]">{fmtDate(request.createdAt)}</p>
           </div>
           {request.scheduledDate && (
             <div>
-              <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-1">Scheduled</p>
-              <p className="text-[#0D0D0B] font-medium">
+              <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-1">Scheduled</p>
+              <p className="text-[#180F04] font-medium">
                 {fmtDate(request.scheduledDate)} — {TIME_LABELS[request.scheduledTime!]}
               </p>
             </div>
@@ -118,12 +118,12 @@ export default async function HRDRequestDetailPage({
         </div>
 
         <div>
-          <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-2">Preferred Dates</p>
+          <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-2">Preferred Dates</p>
           <div className="space-y-1.5">
             {preferredSlots.map(({ date, time, label }) => (
               <div key={label} className="flex items-center gap-2 text-sm font-['Geist']">
-                <span className="text-[#0D0D0B]/40 w-8">{label}</span>
-                <span className="text-[#0D0D0B]">
+                <span className="text-[#180F04]/40 w-8">{label}</span>
+                <span className="text-[#180F04]">
                   {fmtDate(date)} — {TIME_LABELS[time as string]}
                 </span>
               </div>
@@ -133,7 +133,7 @@ export default async function HRDRequestDetailPage({
 
         {request.rejectionReason && (
           <div>
-            <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-1">Rejection Reason</p>
+            <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-1">Rejection Reason</p>
             <p className="text-red-600 text-sm font-['Geist']">{request.rejectionReason}</p>
           </div>
         )}
@@ -142,14 +142,14 @@ export default async function HRDRequestDetailPage({
       {/* Answers */}
       {request.answers.length > 0 && (
         <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4">
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-sm">Orientation Answers</h2>
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-sm">Orientation Answers</h2>
           <div className="space-y-4">
             {request.answers.map((a) => (
               <div key={a.id}>
-                <p className="text-[#0D0D0B]/50 text-xs font-['Geist'] mb-1">
+                <p className="text-[#180F04]/50 text-xs font-['Geist'] mb-1">
                   {a.question.questionText}
                 </p>
-                <p className="text-[#0D0D0B] text-sm font-['Geist']">{a.answerText}</p>
+                <p className="text-[#180F04] text-sm font-['Geist']">{a.answerText}</p>
               </div>
             ))}
           </div>
@@ -159,14 +159,14 @@ export default async function HRDRequestDetailPage({
       {/* Feedback */}
       {request.feedback && (
         <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4">
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-sm">Club Feedback</h2>
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-sm">Club Feedback</h2>
           <div className="space-y-4">
             {request.feedback.responses.map((r) => (
               <div key={r.id}>
-                <p className="text-[#0D0D0B]/50 text-xs font-['Geist'] mb-1">
+                <p className="text-[#180F04]/50 text-xs font-['Geist'] mb-1">
                   {r.question.questionText}
                 </p>
-                <p className="text-[#0D0D0B] text-sm font-['Geist']">{r.answerText}</p>
+                <p className="text-[#180F04] text-sm font-['Geist']">{r.answerText}</p>
               </div>
             ))}
           </div>

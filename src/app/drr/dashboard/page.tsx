@@ -53,8 +53,8 @@ export default async function DRRDashboardPage() {
       label: "Total DCMs",
       value: totalDCMs,
       icon: Users,
-      color: "text-[#AAFF47]",
-      bg: "bg-[#AAFF47]/10",
+      color: "text-[#D4A017]",
+      bg: "bg-[#D4A017]/10",
     },
     {
       label: `Evaluated (${MONTH_NAMES[activeMonth]})`,
@@ -67,8 +67,8 @@ export default async function DRRDashboardPage() {
       label: "Elite",
       value: elite,
       icon: Trophy,
-      color: "text-[#AAFF47]",
-      bg: "bg-[#AAFF47]/10",
+      color: "text-[#D4A017]",
+      bg: "bg-[#D4A017]/10",
     },
     {
       label: "Performing",
@@ -82,12 +82,12 @@ export default async function DRRDashboardPage() {
   return (
     <div className="p-6 lg:p-8 space-y-8">
       <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           DRR Dashboard
         </h1>
-        <p className="text-[#0D0D0B]/60 text-sm mt-1 font-['Geist']">
+        <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
           Active period:{" "}
-          <span className="font-semibold text-[#0D0D0B]">
+          <span className="font-semibold text-[#180F04]">
             {MONTH_NAMES[activeMonth]} {activeYear}
           </span>{" "}
           — {quarterLabel} ({quarterMonths.map((m) => MONTH_NAMES[m]).join(", ")})
@@ -104,10 +104,10 @@ export default async function DRRDashboardPage() {
             <div className={`w-10 h-10 rounded-lg ${bg} flex items-center justify-center mb-3`}>
               <Icon size={18} className={color} />
             </div>
-            <p className="text-[#0D0D0B]/50 text-xs font-['Geist'] uppercase tracking-wide">
+            <p className="text-[#180F04]/50 text-xs font-['Geist'] uppercase tracking-wide">
               {label}
             </p>
-            <p className="font-['Fraunces'] text-3xl font-bold text-[#0D0D0B] mt-1">
+            <p className="font-['Fraunces'] text-3xl font-bold text-[#180F04] mt-1">
               {value}
             </p>
           </div>
@@ -118,16 +118,16 @@ export default async function DRRDashboardPage() {
       <div className="bg-white rounded-xl border border-black/5 shadow-sm p-6">
         <div className="flex items-center justify-between gap-4 mb-3">
           <div>
-            <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-base">
+            <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-base">
               DEC Submissions — {MONTH_NAMES[activeMonth]} {activeYear}
             </h2>
-            <p className="text-[#0D0D0B]/50 text-xs font-['Geist'] mt-0.5">
+            <p className="text-[#180F04]/50 text-xs font-['Geist'] mt-0.5">
               DCMs evaluated by their DEC this month
             </p>
           </div>
-          <span className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B] flex-shrink-0">
+          <span className="font-['Fraunces'] text-2xl font-bold text-[#180F04] flex-shrink-0">
             {evaluatedCount}
-            <span className="text-[#0D0D0B]/30 text-lg">/{totalDCMs}</span>
+            <span className="text-[#180F04]/30 text-lg">/{totalDCMs}</span>
           </span>
         </div>
         <div className="h-2 bg-black/10 rounded-full overflow-hidden">
@@ -147,15 +147,15 @@ export default async function DRRDashboardPage() {
       <div className="bg-white rounded-xl border border-black/5 shadow-sm p-6">
         <div className="flex items-start justify-between gap-4 mb-5">
           <div className="flex items-center gap-2">
-            <ClipboardCheck size={18} className="text-[#AAFF47]" />
-            <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-lg">
+            <ClipboardCheck size={18} className="text-[#D4A017]" />
+            <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-lg">
               Quarterly Audit Progress
             </h2>
           </div>
           <span
             className={`text-xs font-semibold px-2 py-1 rounded-full font-['Geist'] ${
               isComplete
-                ? "bg-[#AAFF47]/20 text-[#0D0D0B]"
+                ? "bg-[#D4A017]/20 text-[#180F04]"
                 : auditedThisQuarter === 0
                 ? "bg-gray-100 text-gray-500"
                 : "bg-amber-100 text-amber-700"
@@ -165,14 +165,14 @@ export default async function DRRDashboardPage() {
           </span>
         </div>
 
-        <p className="text-[#0D0D0B]/60 text-sm font-['Geist'] mb-3">
+        <p className="text-[#180F04]/60 text-sm font-['Geist'] mb-3">
           {quarterLabel}: {auditedThisQuarter}/{totalDCMs} DCMs audited
         </p>
 
         <div className="w-full h-2 bg-black/10 rounded-full overflow-hidden mb-5">
           <div
             className={`h-full rounded-full transition-all ${
-              isComplete ? "bg-[#AAFF47]" : "bg-purple-500"
+              isComplete ? "bg-[#D4A017]" : "bg-purple-500"
             }`}
             style={{ width: `${auditProgress}%` }}
           />
@@ -180,7 +180,7 @@ export default async function DRRDashboardPage() {
 
         <Link
           href={`/drr/audit/${currentQuarter}/${quarterYear}`}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0D0D0B] text-[#AAFF47] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#180F04] text-[#D4A017] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors"
         >
           {isComplete
             ? `View ${quarterLabel} Audit`
@@ -194,21 +194,21 @@ export default async function DRRDashboardPage() {
       {/* Category breakdown */}
       {(elite + performing + underperforming) > 0 && (
         <div className="bg-white rounded-xl border border-black/5 shadow-sm p-6">
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-lg mb-4">
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-lg mb-4">
             {quarterLabel} Performance Breakdown
           </h2>
           <div className="space-y-3">
             {[
-              { label: "Elite", count: elite, color: "bg-[#AAFF47]", pct: Math.round((elite / (auditedThisQuarter || 1)) * 100) },
+              { label: "Elite", count: elite, color: "bg-[#D4A017]", pct: Math.round((elite / (auditedThisQuarter || 1)) * 100) },
               { label: "Performing", count: performing, color: "bg-amber-400", pct: Math.round((performing / (auditedThisQuarter || 1)) * 100) },
               { label: "Underperforming", count: underperforming, color: "bg-red-400", pct: Math.round((underperforming / (auditedThisQuarter || 1)) * 100) },
             ].map(({ label, count, color, pct }) => (
               <div key={label} className="flex items-center gap-3">
-                <span className="text-sm text-[#0D0D0B]/60 font-['Geist'] w-28 flex-shrink-0">{label}</span>
+                <span className="text-sm text-[#180F04]/60 font-['Geist'] w-28 flex-shrink-0">{label}</span>
                 <div className="flex-1 h-2 bg-black/10 rounded-full overflow-hidden">
                   <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
                 </div>
-                <span className="text-sm font-semibold text-[#0D0D0B] font-['Geist'] w-12 text-right">
+                <span className="text-sm font-semibold text-[#180F04] font-['Geist'] w-12 text-right">
                   {count}
                 </span>
               </div>

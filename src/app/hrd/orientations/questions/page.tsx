@@ -77,10 +77,10 @@ export default function HRDQuestionsPage() {
   return (
     <div className="p-6 lg:p-8 space-y-6">
       <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           Orientation Questions
         </h1>
-        <p className="text-[#0D0D0B]/60 text-sm mt-1 font-['Geist']">
+        <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
           Questions clubs answer when submitting a request
         </p>
       </div>
@@ -93,8 +93,8 @@ export default function HRDQuestionsPage() {
             onClick={() => setActiveType(t.value)}
             className={`px-4 py-2 rounded-full text-sm font-semibold font-['Geist'] transition-colors ${
               activeType === t.value
-                ? "bg-[#0D0D0B] text-[#AAFF47]"
-                : "bg-white border border-black/10 text-[#0D0D0B]/60 hover:text-[#0D0D0B]"
+                ? "bg-[#180F04] text-[#D4A017]"
+                : "bg-white border border-black/10 text-[#180F04]/60 hover:text-[#180F04]"
             }`}
           >
             {t.label} ({questions.filter((q) => q.orientationType === t.value).length})
@@ -104,7 +104,7 @@ export default function HRDQuestionsPage() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 size={20} className="animate-spin text-[#0D0D0B]/30" />
+          <Loader2 size={20} className="animate-spin text-[#180F04]/30" />
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
@@ -113,7 +113,7 @@ export default function HRDQuestionsPage() {
               key={q.id}
               className="flex items-start gap-3 px-5 py-4 border-b border-black/5 last:border-0"
             >
-              <span className="text-[#0D0D0B]/30 text-sm font-['Geist'] mt-0.5 w-5 flex-shrink-0">
+              <span className="text-[#180F04]/30 text-sm font-['Geist'] mt-0.5 w-5 flex-shrink-0">
                 {i + 1}.
               </span>
               {editingId === q.id ? (
@@ -122,35 +122,35 @@ export default function HRDQuestionsPage() {
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}
                     rows={2}
-                    className="flex-1 border border-[#AAFF47] rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none resize-none"
+                    className="flex-1 border border-[#D4A017] rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none resize-none"
                     autoFocus
                   />
                   <button
                     onClick={() => handleEdit(q.id)}
-                    className="text-[#0D0D0B] hover:text-[#AAFF47] transition-colors"
+                    className="text-[#180F04] hover:text-[#D4A017] transition-colors"
                   >
                     <Check size={16} />
                   </button>
                   <button
                     onClick={() => setEditingId(null)}
-                    className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"
+                    className="text-[#180F04]/30 hover:text-[#180F04] transition-colors"
                   >
                     <X size={16} />
                   </button>
                 </div>
               ) : (
                 <div className="flex-1 flex items-start justify-between gap-3">
-                  <p className="text-sm text-[#0D0D0B] font-['Geist']">{q.questionText}</p>
+                  <p className="text-sm text-[#180F04] font-['Geist']">{q.questionText}</p>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <button
                       onClick={() => { setEditingId(q.id); setEditText(q.questionText); }}
-                      className="text-[#0D0D0B]/20 hover:text-[#0D0D0B] transition-colors"
+                      className="text-[#180F04]/20 hover:text-[#180F04] transition-colors"
                     >
                       <Pencil size={13} />
                     </button>
                     <button
                       onClick={() => handleDelete(q.id)}
-                      className="text-[#0D0D0B]/20 hover:text-red-500 transition-colors"
+                      className="text-[#180F04]/20 hover:text-red-500 transition-colors"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -161,7 +161,7 @@ export default function HRDQuestionsPage() {
           ))}
 
           {filtered.length === 0 && addingFor !== activeType && (
-            <div className="px-6 py-8 text-center text-[#0D0D0B]/40 text-sm font-['Geist']">
+            <div className="px-6 py-8 text-center text-[#180F04]/40 text-sm font-['Geist']">
               No questions for this type yet.
             </div>
           )}
@@ -173,19 +173,19 @@ export default function HRDQuestionsPage() {
                 onChange={(e) => setNewText(e.target.value)}
                 rows={2}
                 placeholder="New question..."
-                className="flex-1 border border-[#AAFF47] rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none resize-none"
+                className="flex-1 border border-[#D4A017] rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none resize-none"
                 autoFocus
               />
               <button
                 onClick={handleAdd}
                 disabled={saving}
-                className="text-[#0D0D0B] hover:text-[#AAFF47] transition-colors"
+                className="text-[#180F04] hover:text-[#D4A017] transition-colors"
               >
                 {saving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
               </button>
               <button
                 onClick={() => { setAddingFor(null); setNewText(""); }}
-                className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"
+                className="text-[#180F04]/30 hover:text-[#180F04] transition-colors"
               >
                 <X size={16} />
               </button>
@@ -194,7 +194,7 @@ export default function HRDQuestionsPage() {
             <div className="px-5 py-3 border-t border-black/5">
               <button
                 onClick={() => setAddingFor(activeType)}
-                className="flex items-center gap-2 text-sm text-[#0D0D0B]/50 hover:text-[#0D0D0B] font-['Geist'] transition-colors"
+                className="flex items-center gap-2 text-sm text-[#180F04]/50 hover:text-[#180F04] font-['Geist'] transition-colors"
               >
                 <Plus size={14} />
                 Add question

@@ -48,10 +48,10 @@ export default async function AuditIndexPage() {
   return (
     <div className="p-6 lg:p-8 space-y-8">
       <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           Quarterly Audit
         </h1>
-        <p className="text-[#0D0D0B]/60 text-sm mt-1 font-['Geist']">
+        <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
           Rotaract Year {rotaractStartYear}–{rotaractStartYear + 1}
         </p>
       </div>
@@ -73,20 +73,20 @@ export default async function AuditIndexPage() {
           const isComplete = audited >= totalDCMs && totalDCMs > 0;
           const isInProgress = audited > 0 && !isComplete;
 
-          let statusIcon = <AlertCircle size={16} className="text-[#0D0D0B]/30" />;
+          let statusIcon = <AlertCircle size={16} className="text-[#180F04]/30" />;
           let statusLabel = "Not Started";
           let statusClass = "bg-gray-100 text-gray-500";
           let borderClass = "border-black/5";
 
           if (isFuture) {
-            statusIcon = <Clock size={16} className="text-[#0D0D0B]/30" />;
+            statusIcon = <Clock size={16} className="text-[#180F04]/30" />;
             statusLabel = "Upcoming";
             statusClass = "bg-gray-100 text-gray-400";
           } else if (isComplete) {
-            statusIcon = <CheckCircle size={16} className="text-[#AAFF47]" />;
+            statusIcon = <CheckCircle size={16} className="text-[#D4A017]" />;
             statusLabel = "Complete";
-            statusClass = "bg-[#AAFF47]/20 text-[#0D0D0B]";
-            borderClass = "border-[#AAFF47]/30";
+            statusClass = "bg-[#D4A017]/20 text-[#180F04]";
+            borderClass = "border-[#D4A017]/30";
           } else if (isInProgress) {
             statusIcon = <Clock size={16} className="text-amber-500" />;
             statusLabel = "In Progress";
@@ -110,7 +110,7 @@ export default async function AuditIndexPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">
+                    <span className="font-['Fraunces'] font-bold text-[#180F04] text-lg">
                       Q{quarter} {year}
                     </span>
                     {isCurrentQ && (
@@ -119,22 +119,22 @@ export default async function AuditIndexPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-[#0D0D0B]/50 text-sm font-['Geist']">{monthLabels}</p>
+                  <p className="text-[#180F04]/50 text-sm font-['Geist']">{monthLabels}</p>
 
                   {!isFuture && (
                     <div className="mt-3">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-xs text-[#0D0D0B]/50 font-['Geist']">
+                        <span className="text-xs text-[#180F04]/50 font-['Geist']">
                           {audited}/{totalDCMs} DCMs audited
                         </span>
-                        <span className="text-xs font-semibold text-[#0D0D0B] font-['Geist']">
+                        <span className="text-xs font-semibold text-[#180F04] font-['Geist']">
                           {pct}%
                         </span>
                       </div>
                       <div className="w-full h-1.5 bg-black/10 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${
-                            isComplete ? "bg-[#AAFF47]" : "bg-purple-500"
+                            isComplete ? "bg-[#D4A017]" : "bg-purple-500"
                           }`}
                           style={{ width: `${pct}%` }}
                         />
@@ -152,7 +152,7 @@ export default async function AuditIndexPage() {
                   {!isFuture && (
                     <Link
                       href={`/drr/audit/${quarter}/${year}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0D0D0B] hover:text-[#0D0D0B]/60 transition-colors font-['Geist']"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#180F04] hover:text-[#180F04]/60 transition-colors font-['Geist']"
                     >
                       {isComplete ? "View" : isInProgress ? "Continue" : "Start"}
                       <ArrowRight size={13} />

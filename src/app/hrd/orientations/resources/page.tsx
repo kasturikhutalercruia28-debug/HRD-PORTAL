@@ -52,14 +52,14 @@ export default function HRDResourcesPage() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Resources</h1>
-          <p className="text-[#0D0D0B]/60 text-sm mt-1 font-['Geist']">
+          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Resources</h1>
+          <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
             Materials visible to clubs
           </p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#0D0D0B] text-[#AAFF47] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#180F04] text-[#D4A017] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors"
         >
           <Plus size={15} />
           Add Resource
@@ -71,23 +71,23 @@ export default function HRDResourcesPage() {
           onSubmit={handleAdd}
           className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4"
         >
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B]">New Resource</h2>
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04]">New Resource</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">Title</label>
+              <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">Title</label>
               <input
                 required
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]"
+                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#D4A017]"
               />
             </div>
             <div>
-              <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">Type</label>
+              <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">Type</label>
               <select
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
-                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]"
+                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#D4A017]"
               >
                 {RESOURCE_TYPES.map((t) => (
                   <option key={t} value={t}>{t.toUpperCase()}</option>
@@ -95,21 +95,21 @@ export default function HRDResourcesPage() {
               </select>
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">URL</label>
+              <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">URL</label>
               <input
                 required
                 type="url"
                 value={form.url}
                 onChange={(e) => setForm({ ...form, url: e.target.value })}
-                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]"
+                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#D4A017]"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">Description (optional)</label>
+              <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">Description (optional)</label>
               <input
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]"
+                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#D4A017]"
               />
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function HRDResourcesPage() {
             <button
               type="submit"
               disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 bg-[#0D0D0B] text-[#AAFF47] rounded-lg text-sm font-semibold font-['Geist'] disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 bg-[#180F04] text-[#D4A017] rounded-lg text-sm font-semibold font-['Geist'] disabled:opacity-50"
             >
               {saving && <Loader2 size={14} className="animate-spin" />}
               Add Resource
@@ -125,7 +125,7 @@ export default function HRDResourcesPage() {
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="px-4 py-2 bg-black/5 text-[#0D0D0B] rounded-lg text-sm font-['Geist']"
+              className="px-4 py-2 bg-black/5 text-[#180F04] rounded-lg text-sm font-['Geist']"
             >
               Cancel
             </button>
@@ -135,7 +135,7 @@ export default function HRDResourcesPage() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 size={20} className="animate-spin text-[#0D0D0B]/30" />
+          <Loader2 size={20} className="animate-spin text-[#180F04]/30" />
         </div>
       ) : (
         <div className="space-y-2">
@@ -145,32 +145,32 @@ export default function HRDResourcesPage() {
               className="flex items-center gap-4 bg-white rounded-xl border border-black/5 px-5 py-4 shadow-sm"
             >
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm text-[#0D0D0B] font-['Geist']">{r.title}</p>
+                <p className="font-medium text-sm text-[#180F04] font-['Geist']">{r.title}</p>
                 {r.description && (
-                  <p className="text-[#0D0D0B]/40 text-xs font-['Geist'] mt-0.5">{r.description}</p>
+                  <p className="text-[#180F04]/40 text-xs font-['Geist'] mt-0.5">{r.description}</p>
                 )}
               </div>
-              <span className="text-xs bg-[#F0EDE5] text-[#0D0D0B]/60 px-2 py-0.5 rounded font-['Geist']">
+              <span className="text-xs bg-[#FBF7EE] text-[#180F04]/60 px-2 py-0.5 rounded font-['Geist']">
                 {r.type.toUpperCase()}
               </span>
               <a
                 href={r.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"
+                className="text-[#180F04]/30 hover:text-[#180F04] transition-colors"
               >
                 <ExternalLink size={15} />
               </a>
               <button
                 onClick={() => handleDelete(r.id)}
-                className="text-[#0D0D0B]/20 hover:text-red-500 transition-colors"
+                className="text-[#180F04]/20 hover:text-red-500 transition-colors"
               >
                 <Trash2 size={15} />
               </button>
             </div>
           ))}
           {resources.length === 0 && (
-            <div className="bg-white rounded-xl border border-black/5 px-6 py-12 text-center text-[#0D0D0B]/40 text-sm font-['Geist']">
+            <div className="bg-white rounded-xl border border-black/5 px-6 py-12 text-center text-[#180F04]/40 text-sm font-['Geist']">
               No resources yet.
             </div>
           )}

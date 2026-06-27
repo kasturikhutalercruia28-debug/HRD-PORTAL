@@ -18,7 +18,7 @@ const STATUS_CONFIG = {
   rejected: { label: "Rejected", color: "bg-red-100 text-red-700", icon: XCircle },
   scheduled: { label: "Scheduled", color: "bg-blue-100 text-blue-700", icon: CalendarCheck },
   conducted: { label: "Conducted", color: "bg-purple-100 text-purple-700", icon: CheckCircle2 },
-  feedback_submitted: { label: "Feedback Submitted", color: "bg-[#AAFF47]/20 text-[#0D0D0B]", icon: MessageSquare },
+  feedback_submitted: { label: "Feedback Submitted", color: "bg-[#D4A017]/20 text-[#180F04]", icon: MessageSquare },
   certificate_generated: { label: "Certificate Generated", color: "bg-emerald-100 text-emerald-700", icon: Award },
 };
 
@@ -67,10 +67,10 @@ export default async function ClubDashboardPage() {
   return (
     <div className="p-6 lg:p-8 space-y-8">
       <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           {club.name}
         </h1>
-        <p className="text-[#0D0D0B]/60 text-sm mt-1 font-['Geist']">
+        <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
           Club Orientation Portal
         </p>
       </div>
@@ -84,7 +84,7 @@ export default async function ClubDashboardPage() {
         ].map(({ label, value, color, bg }) => (
           <div key={label} className={`${bg} rounded-xl p-4 text-center`}>
             <p className={`font-['Fraunces'] text-3xl font-bold ${color}`}>{value}</p>
-            <p className="text-[#0D0D0B]/50 text-xs font-['Geist'] mt-1">{label}</p>
+            <p className="text-[#180F04]/50 text-xs font-['Geist'] mt-1">{label}</p>
           </div>
         ))}
       </div>
@@ -92,32 +92,32 @@ export default async function ClubDashboardPage() {
       {/* CTA */}
       <Link
         href="/club/request/new"
-        className="flex items-center gap-3 bg-[#0D0D0B] rounded-xl px-6 py-5 hover:bg-[#0D0D0B]/90 transition-colors"
+        className="flex items-center gap-3 bg-[#180F04] rounded-xl px-6 py-5 hover:bg-[#180F04]/90 transition-colors"
       >
-        <div className="w-10 h-10 bg-[#AAFF47] rounded-lg flex items-center justify-center flex-shrink-0">
-          <PlusCircle size={18} className="text-[#0D0D0B]" />
+        <div className="w-10 h-10 bg-[#D4A017] rounded-lg flex items-center justify-center flex-shrink-0">
+          <PlusCircle size={18} className="text-[#180F04]" />
         </div>
         <div className="flex-1">
-          <p className="font-['Fraunces'] font-bold text-[#AAFF47] text-base">
+          <p className="font-['Fraunces'] font-bold text-[#D4A017] text-base">
             Request New Orientation
           </p>
           <p className="text-white/50 text-xs font-['Geist'] mt-0.5">
             Schedule a core member, BOD, or full club orientation
           </p>
         </div>
-        <ArrowRight size={18} className="text-[#AAFF47]" />
+        <ArrowRight size={18} className="text-[#D4A017]" />
       </Link>
 
       {/* Requests list */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-black/5">
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-base">
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-base">
             Your Requests
           </h2>
         </div>
 
         {requests.length === 0 ? (
-          <div className="px-6 py-12 text-center text-[#0D0D0B]/40 text-sm font-['Geist']">
+          <div className="px-6 py-12 text-center text-[#180F04]/40 text-sm font-['Geist']">
             No requests yet. Submit your first orientation request above.
           </div>
         ) : (
@@ -130,11 +130,11 @@ export default async function ClubDashboardPage() {
                 <Link
                   key={req.id}
                   href={`/club/request/${req.id}`}
-                  className="flex items-center gap-4 px-6 py-4 hover:bg-[#F0EDE5]/40 transition-colors"
+                  className="flex items-center gap-4 px-6 py-4 hover:bg-[#FBF7EE]/40 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-medium text-sm text-[#0D0D0B] font-['Geist']">
+                      <span className="font-medium text-sm text-[#180F04] font-['Geist']">
                         {TYPE_LABELS[req.orientationType]}
                       </span>
                       {req.status === "rejected" && (
@@ -143,7 +143,7 @@ export default async function ClubDashboardPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-[#0D0D0B]/40 text-xs font-['Geist']">
+                    <p className="text-[#180F04]/40 text-xs font-['Geist']">
                       {req.scheduledDate
                         ? `Scheduled: ${formatDate(req.scheduledDate)}`
                         : `Submitted: ${formatDate(req.createdAt)}`}
@@ -159,7 +159,7 @@ export default async function ClubDashboardPage() {
                       <Icon size={11} />
                       {cfg.label}
                     </span>
-                    <ArrowRight size={14} className="text-[#0D0D0B]/20" />
+                    <ArrowRight size={14} className="text-[#180F04]/20" />
                   </div>
                 </Link>
               );

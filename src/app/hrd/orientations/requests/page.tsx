@@ -18,7 +18,7 @@ const STATUS_CONFIG = {
   rejected: { label: "Rejected", color: "bg-red-100 text-red-700", icon: XCircle },
   scheduled: { label: "Scheduled", color: "bg-blue-100 text-blue-700", icon: CalendarCheck },
   conducted: { label: "Conducted", color: "bg-purple-100 text-purple-700", icon: CheckCircle2 },
-  feedback_submitted: { label: "Feedback", color: "bg-[#AAFF47]/20 text-[#0D0D0B]", icon: MessageSquare },
+  feedback_submitted: { label: "Feedback", color: "bg-[#D4A017]/20 text-[#180F04]", icon: MessageSquare },
   certificate_generated: { label: "Certificate", color: "bg-emerald-100 text-emerald-700", icon: Award },
 };
 
@@ -64,10 +64,10 @@ export default async function HRDOrientationRequestsPage({
   return (
     <div className="p-6 lg:p-8 space-y-6">
       <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           Orientation Requests
         </h1>
-        <p className="text-[#0D0D0B]/60 text-sm mt-1 font-['Geist']">
+        <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
           {total} total requests
         </p>
       </div>
@@ -78,8 +78,8 @@ export default async function HRDOrientationRequestsPage({
           href="/hrd/orientations/requests"
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold font-['Geist'] transition-colors ${
             !statusFilter
-              ? "bg-[#0D0D0B] text-[#AAFF47]"
-              : "bg-white border border-black/10 text-[#0D0D0B]/60 hover:text-[#0D0D0B]"
+              ? "bg-[#180F04] text-[#D4A017]"
+              : "bg-white border border-black/10 text-[#180F04]/60 hover:text-[#180F04]"
           }`}
         >
           <Filter size={11} />
@@ -95,8 +95,8 @@ export default async function HRDOrientationRequestsPage({
               href={`/hrd/orientations/requests?status=${s}`}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold font-['Geist'] transition-colors ${
                 statusFilter === s
-                  ? "bg-[#0D0D0B] text-[#AAFF47]"
-                  : "bg-white border border-black/10 text-[#0D0D0B]/60 hover:text-[#0D0D0B]"
+                  ? "bg-[#180F04] text-[#D4A017]"
+                  : "bg-white border border-black/10 text-[#180F04]/60 hover:text-[#180F04]"
               }`}
             >
               <Icon size={11} />
@@ -109,7 +109,7 @@ export default async function HRDOrientationRequestsPage({
       {/* List */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
         {requests.length === 0 ? (
-          <div className="px-6 py-12 text-center text-[#0D0D0B]/40 text-sm font-['Geist']">
+          <div className="px-6 py-12 text-center text-[#180F04]/40 text-sm font-['Geist']">
             No requests found.
           </div>
         ) : (
@@ -121,18 +121,18 @@ export default async function HRDOrientationRequestsPage({
                 <Link
                   key={req.id}
                   href={`/hrd/orientations/requests/${req.id}`}
-                  className="flex items-center gap-4 px-6 py-4 hover:bg-[#F0EDE5]/40 transition-colors"
+                  className="flex items-center gap-4 px-6 py-4 hover:bg-[#FBF7EE]/40 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-medium text-sm text-[#0D0D0B] font-['Geist']">
+                      <span className="font-medium text-sm text-[#180F04] font-['Geist']">
                         {req.club.name}
                       </span>
-                      <span className="text-[10px] text-[#0D0D0B]/40 font-['Geist'] bg-[#F0EDE5] px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] text-[#180F04]/40 font-['Geist'] bg-[#FBF7EE] px-1.5 py-0.5 rounded">
                         {TYPE_LABELS[req.orientationType]}
                       </span>
                     </div>
-                    <p className="text-[#0D0D0B]/40 text-xs font-['Geist']">
+                    <p className="text-[#180F04]/40 text-xs font-['Geist']">
                       {req.scheduledDate
                         ? `Scheduled: ${fmtDate(req.scheduledDate)}`
                         : `Submitted: ${fmtDate(req.createdAt)}`}
@@ -143,7 +143,7 @@ export default async function HRDOrientationRequestsPage({
                       <Icon size={10} />
                       {cfg.label}
                     </span>
-                    <ArrowRight size={14} className="text-[#0D0D0B]/20" />
+                    <ArrowRight size={14} className="text-[#180F04]/20" />
                   </div>
                 </Link>
               );

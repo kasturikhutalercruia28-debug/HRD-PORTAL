@@ -99,7 +99,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
   }
 
   const inputCls =
-    "w-full border border-black/10 rounded-xl px-4 py-3 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47] bg-white placeholder:text-[#0D0D0B]/30";
+    "w-full border border-black/10 rounded-xl px-4 py-3 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017] bg-white placeholder:text-[#180F04]/30";
 
   return (
     <div className="p-6 lg:p-8 max-w-2xl">
@@ -107,15 +107,15 @@ export default function NewRequestForm({ questionsByType }: Props) {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => (step === 1 ? router.push("/club/dashboard") : setStep(step - 1))}
-          className="text-[#0D0D0B]/40 hover:text-[#0D0D0B] transition-colors"
+          className="text-[#180F04]/40 hover:text-[#180F04] transition-colors"
         >
           <ArrowLeft size={18} />
         </button>
         <div>
-          <h1 className="font-['Fraunces'] text-xl font-bold text-[#0D0D0B]">
+          <h1 className="font-['Fraunces'] text-xl font-bold text-[#180F04]">
             New Orientation Request
           </h1>
-          <p className="text-[#0D0D0B]/40 text-xs font-['Geist'] mt-0.5">
+          <p className="text-[#180F04]/40 text-xs font-['Geist'] mt-0.5">
             Step {step} of 3
           </p>
         </div>
@@ -128,10 +128,10 @@ export default function NewRequestForm({ questionsByType }: Props) {
             key={n}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-['Geist'] font-medium transition-colors ${
               step === n
-                ? "bg-[#0D0D0B] text-[#AAFF47]"
+                ? "bg-[#180F04] text-[#D4A017]"
                 : step > n
-                ? "bg-[#AAFF47]/20 text-[#0D0D0B]"
-                : "bg-black/5 text-[#0D0D0B]/40"
+                ? "bg-[#D4A017]/20 text-[#180F04]"
+                : "bg-black/5 text-[#180F04]/40"
             }`}
           >
             {step > n ? <CheckCircle2 size={11} /> : <Icon size={11} />}
@@ -143,7 +143,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
       {/* Step 1: Orientation type */}
       {step === 1 && (
         <div className="space-y-3">
-          <p className="text-[#0D0D0B] font-semibold font-['Geist'] text-sm mb-4">
+          <p className="text-[#180F04] font-semibold font-['Geist'] text-sm mb-4">
             What type of orientation are you requesting?
           </p>
           {TYPE_OPTIONS.map((opt) => (
@@ -152,22 +152,22 @@ export default function NewRequestForm({ questionsByType }: Props) {
               onClick={() => setOrientationType(opt.value)}
               className={`w-full text-left flex items-start gap-4 p-4 rounded-xl border transition-all ${
                 orientationType === opt.value
-                  ? "border-[#AAFF47] bg-[#AAFF47]/5 shadow-sm"
+                  ? "border-[#D4A017] bg-[#D4A017]/5 shadow-sm"
                   : "border-black/10 bg-white hover:border-black/20"
               }`}
             >
               <div
                 className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 flex-shrink-0 ${
-                  orientationType === opt.value ? "border-[#0D0D0B] bg-[#0D0D0B]" : "border-black/20"
+                  orientationType === opt.value ? "border-[#180F04] bg-[#180F04]" : "border-black/20"
                 }`}
               >
                 {orientationType === opt.value && (
-                  <div className="w-2 h-2 rounded-full bg-[#AAFF47]" />
+                  <div className="w-2 h-2 rounded-full bg-[#D4A017]" />
                 )}
               </div>
               <div>
-                <p className="font-semibold text-sm text-[#0D0D0B] font-['Geist']">{opt.label}</p>
-                <p className="text-[#0D0D0B]/50 text-xs font-['Geist'] mt-0.5">{opt.desc}</p>
+                <p className="font-semibold text-sm text-[#180F04] font-['Geist']">{opt.label}</p>
+                <p className="text-[#180F04]/50 text-xs font-['Geist'] mt-0.5">{opt.desc}</p>
               </div>
             </button>
           ))}
@@ -175,7 +175,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
           <button
             disabled={!orientationType}
             onClick={() => setStep(2)}
-            className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-[#0D0D0B] text-[#AAFF47] rounded-xl text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-40"
+            className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-[#180F04] text-[#D4A017] rounded-xl text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors disabled:opacity-40"
           >
             Continue
             <ArrowRight size={15} />
@@ -186,23 +186,23 @@ export default function NewRequestForm({ questionsByType }: Props) {
       {/* Step 2: Questions (always shown — may be empty) */}
       {step === 2 && (
         <div className="space-y-5">
-          <p className="text-[#0D0D0B] font-semibold font-['Geist'] text-sm">
+          <p className="text-[#180F04] font-semibold font-['Geist'] text-sm">
             Pre-orientation questions
           </p>
 
           {questions.length === 0 ? (
-            <div className="bg-[#F0EDE5] rounded-xl px-5 py-6 text-center">
-              <p className="text-[#0D0D0B]/50 text-sm font-['Geist']">
+            <div className="bg-[#FBF7EE] rounded-xl px-5 py-6 text-center">
+              <p className="text-[#180F04]/50 text-sm font-['Geist']">
                 No questions configured for this orientation type yet.
               </p>
-              <p className="text-[#0D0D0B]/30 text-xs font-['Geist'] mt-1">
+              <p className="text-[#180F04]/30 text-xs font-['Geist'] mt-1">
                 You can proceed to the next step.
               </p>
             </div>
           ) : (
             questions.map((q, i) => (
               <div key={q.id}>
-                <label className="block text-sm text-[#0D0D0B] font-['Geist'] font-medium mb-2">
+                <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
                   {i + 1}. {q.questionText}
                 </label>
                 <textarea
@@ -220,7 +220,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
 
           <button
             onClick={() => setStep(3)}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#0D0D0B] text-[#AAFF47] rounded-xl text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#180F04] text-[#D4A017] rounded-xl text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors"
           >
             Continue
             <ArrowRight size={15} />
@@ -231,32 +231,32 @@ export default function NewRequestForm({ questionsByType }: Props) {
       {/* Step 3: Dates + attendance */}
       {step === 3 && (
         <div className="space-y-6">
-          <p className="text-[#0D0D0B] font-semibold font-['Geist'] text-sm">
+          <p className="text-[#180F04] font-semibold font-['Geist'] text-sm">
             Choose 3 preferred dates and time periods
           </p>
 
           {slots.map((slot, i) => (
             <div key={i} className="bg-white border border-black/10 rounded-xl p-4 space-y-3">
-              <p className="text-xs text-[#0D0D0B]/50 font-['Geist'] font-medium uppercase tracking-wide">
+              <p className="text-xs text-[#180F04]/50 font-['Geist'] font-medium uppercase tracking-wide">
                 {["1st", "2nd", "3rd"][i]} Preference
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">Date</label>
+                  <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">Date</label>
                   <input
                     type="date"
                     min={today}
                     value={slot.date}
                     onChange={(e) => handleSlot(i, "date", e.target.value)}
-                    className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47] bg-white"
+                    className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017] bg-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">Time Period</label>
+                  <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">Time Period</label>
                   <select
                     value={slot.time}
                     onChange={(e) => handleSlot(i, "time", e.target.value as TimePeriod)}
-                    className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47] bg-white"
+                    className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017] bg-white"
                   >
                     {TIME_OPTIONS.map((t) => (
                       <option key={t.value} value={t.value}>{t.label}</option>
@@ -268,7 +268,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
           ))}
 
           <div>
-            <label className="block text-sm text-[#0D0D0B] font-['Geist'] font-medium mb-2">
+            <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
               Expected Attendance
             </label>
             <input
@@ -286,7 +286,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
           <button
             onClick={handleSubmit}
             disabled={saving}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#0D0D0B] text-[#AAFF47] rounded-xl text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#180F04] text-[#D4A017] rounded-xl text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors disabled:opacity-50"
           >
             {saving && <Loader2 size={15} className="animate-spin" />}
             Submit Request

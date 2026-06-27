@@ -111,14 +111,14 @@ export default function DCMsPage() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">DCMs</h1>
-          <p className="text-[#0D0D0B]/50 text-sm mt-1 font-['Geist']">
+          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">DCMs</h1>
+          <p className="text-[#180F04]/50 text-sm mt-1 font-['Geist']">
             District Committee Members
           </p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 bg-[#0D0D0B] text-[#AAFF47] px-4 py-2.5 rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+          className="flex items-center gap-2 bg-[#180F04] text-[#D4A017] px-4 py-2.5 rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors"
         >
           <Plus size={15} />
           Add DCM
@@ -130,20 +130,20 @@ export default function DCMsPage() {
         <div className="relative flex-1">
           <Search
             size={15}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#0D0D0B]/30"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#180F04]/30"
           />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search DCMs..."
-            className="w-full pl-9 pr-4 py-2.5 border border-black/10 rounded-lg text-sm font-['Geist'] text-[#0D0D0B] bg-white focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+            className="w-full pl-9 pr-4 py-2.5 border border-black/10 rounded-lg text-sm font-['Geist'] text-[#180F04] bg-white focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
           />
         </div>
         <select
           value={filterAvenue}
           onChange={(e) => setFilterAvenue(e.target.value)}
-          className="border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] bg-white focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] sm:w-56"
+          className="border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] bg-white focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017] sm:w-56"
         >
           <option value="">All Avenues</option>
           {avenues.map((av) => (
@@ -157,17 +157,17 @@ export default function DCMsPage() {
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-[#0D0D0B]/30" />
+            <Loader2 size={24} className="animate-spin text-[#180F04]/30" />
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm font-['Geist']">
               <thead>
-                <tr className="border-b border-black/5 bg-[#F0EDE5]/50">
+                <tr className="border-b border-black/5 bg-[#FBF7EE]/50">
                   {["Name", "Title", "Avenue", "Status", "Actions"].map((h) => (
                     <th
                       key={h}
-                      className="text-left px-5 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide"
+                      className="text-left px-5 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide"
                     >
                       {h}
                     </th>
@@ -178,13 +178,13 @@ export default function DCMsPage() {
                 {filtered.map((d, i) => (
                   <tr
                     key={d.id}
-                    className={`border-b border-black/5 hover:bg-[#F0EDE5]/20 transition-colors ${
+                    className={`border-b border-black/5 hover:bg-[#FBF7EE]/20 transition-colors ${
                       i === filtered.length - 1 ? "border-none" : ""
                     }`}
                   >
-                    <td className="px-5 py-3 font-medium text-[#0D0D0B]">{d.name}</td>
-                    <td className="px-5 py-3 text-[#0D0D0B]/60">{d.title}</td>
-                    <td className="px-5 py-3 text-[#0D0D0B]/60">{d.avenue.name}</td>
+                    <td className="px-5 py-3 font-medium text-[#180F04]">{d.name}</td>
+                    <td className="px-5 py-3 text-[#180F04]/60">{d.title}</td>
+                    <td className="px-5 py-3 text-[#180F04]/60">{d.avenue.name}</td>
                     <td className="px-5 py-3">
                       <span
                         className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${
@@ -200,14 +200,14 @@ export default function DCMsPage() {
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => openEdit(d)}
-                          className="text-[#0D0D0B]/40 hover:text-[#0D0D0B] transition-colors"
+                          className="text-[#180F04]/40 hover:text-[#180F04] transition-colors"
                         >
                           <Pencil size={14} />
                         </button>
                         <button
                           onClick={() => handleToggle(d.id)}
                           disabled={toggling === d.id}
-                          className="text-[#0D0D0B]/40 hover:text-[#0D0D0B] transition-colors disabled:opacity-30"
+                          className="text-[#180F04]/40 hover:text-[#180F04] transition-colors disabled:opacity-30"
                         >
                           {toggling === d.id ? (
                             <Loader2 size={14} className="animate-spin" />
@@ -223,7 +223,7 @@ export default function DCMsPage() {
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-5 py-10 text-center text-[#0D0D0B]/30">
+                    <td colSpan={5} className="px-5 py-10 text-center text-[#180F04]/30">
                       {search || filterAvenue ? "No DCMs match your filters." : "No DCMs yet."}
                     </td>
                   </tr>
@@ -239,49 +239,49 @@ export default function DCMsPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
             <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
-              <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">
+              <h2 className="font-['Fraunces'] font-bold text-[#180F04] text-lg">
                 {editId ? "Edit DCM" : "Add New DCM"}
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"
+                className="text-[#180F04]/30 hover:text-[#180F04] transition-colors"
               >
                 <X size={18} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                   Full Name
                 </label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="Rtn. Jane Doe"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                   Title / Position
                 </label>
                 <input
                   type="text"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="e.g. Sub-committee Chair"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                   Avenue
                 </label>
                 <select
                   value={form.avenueId}
                   onChange={(e) => setForm({ ...form, avenueId: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017] bg-white"
                 >
                   <option value="">Select avenue...</option>
                   {avenues.map((av) => (
@@ -298,14 +298,14 @@ export default function DCMsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors font-['Geist']"
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#180F04]/60 hover:bg-[#FBF7EE] transition-colors font-['Geist']"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2"
+                  className="flex-1 bg-[#180F04] text-[#D4A017] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#180F04]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2"
                 >
                   {saving ? (
                     <Loader2 size={14} className="animate-spin" />

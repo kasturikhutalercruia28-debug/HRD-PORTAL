@@ -65,7 +65,7 @@ function computeLive(quarterlyAvg: number, adjustment: number) {
 function CategoryBadge({ category }: { category: string }) {
   const cls =
     category === "elite"
-      ? "bg-[#AAFF47]/20 text-[#0D0D0B] border-[#AAFF47]/40"
+      ? "bg-[#D4A017]/20 text-[#180F04] border-[#D4A017]/40"
       : category === "performing"
       ? "bg-amber-100 text-amber-800 border-amber-200"
       : "bg-red-100 text-red-700 border-red-200";
@@ -167,25 +167,25 @@ export default function AuditWorkspace({
   const progressPct = totalDCMs > 0 ? Math.round((auditedCount / totalDCMs) * 100) : 0;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#F0EDE5]">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#FBF7EE]">
       {/* Header */}
       <div className="bg-white border-b border-black/5 px-6 py-4 flex-shrink-0">
         <div className="flex items-center justify-between gap-4 mb-3">
-          <h1 className="font-['Fraunces'] text-xl font-bold text-[#0D0D0B]">
+          <h1 className="font-['Fraunces'] text-xl font-bold text-[#180F04]">
             Q{quarter} {year} Audit
           </h1>
-          <span className="text-sm text-[#0D0D0B]/60 font-['Geist']">
+          <span className="text-sm text-[#180F04]/60 font-['Geist']">
             {quarterMonthNames.join(", ")}
           </span>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex-1 h-2 bg-black/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#AAFF47] rounded-full transition-all"
+              className="h-full bg-[#D4A017] rounded-full transition-all"
               style={{ width: `${progressPct}%` }}
             />
           </div>
-          <span className="text-sm font-semibold text-[#0D0D0B] font-['Geist'] flex-shrink-0">
+          <span className="text-sm font-semibold text-[#180F04] font-['Geist'] flex-shrink-0">
             {auditedCount}/{totalDCMs} DCMs audited
           </span>
         </div>
@@ -193,14 +193,14 @@ export default function AuditWorkspace({
 
       {/* Filter bar */}
       <div className="bg-white border-b border-black/5 px-6 py-3 flex-shrink-0 flex items-center gap-3">
-        <span className="text-xs text-[#0D0D0B]/50 font-['Geist'] uppercase tracking-wide">
+        <span className="text-xs text-[#180F04]/50 font-['Geist'] uppercase tracking-wide">
           Avenue
         </span>
         <div className="relative">
           <select
             value={avenueFilter}
             onChange={(e) => setAvenueFilter(e.target.value)}
-            className="appearance-none bg-[#F0EDE5] border border-black/10 rounded-lg px-3 py-1.5 pr-7 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50"
+            className="appearance-none bg-[#FBF7EE] border border-black/10 rounded-lg px-3 py-1.5 pr-7 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50"
           >
             <option value="all">All Avenues</option>
             {avenues.map((av) => (
@@ -209,9 +209,9 @@ export default function AuditWorkspace({
               </option>
             ))}
           </select>
-          <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-[#0D0D0B]/40 pointer-events-none" />
+          <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-[#180F04]/40 pointer-events-none" />
         </div>
-        <span className="text-xs text-[#0D0D0B]/40 font-['Geist'] ml-auto">
+        <span className="text-xs text-[#180F04]/40 font-['Geist'] ml-auto">
           {filteredDCMs.length} DCMs shown
         </span>
       </div>
@@ -220,7 +220,7 @@ export default function AuditWorkspace({
       <div className="flex-1 overflow-auto">
         <table className="w-full text-sm font-['Geist'] min-w-[1100px]">
           <thead className="sticky top-0 z-10">
-            <tr className="bg-[#0D0D0B] text-white/60">
+            <tr className="bg-[#180F04] text-white/60">
               <th className="text-left px-4 py-3 text-xs uppercase tracking-wide font-medium whitespace-nowrap">
                 Name
               </th>
@@ -261,21 +261,21 @@ export default function AuditWorkspace({
                   key={dcm.dcmId}
                   className={`border-b border-black/5 transition-colors ${
                     isSubmitted
-                      ? "bg-[#AAFF47]/5"
+                      ? "bg-[#D4A017]/5"
                       : idx % 2 === 0
                       ? "bg-white"
-                      : "bg-[#F0EDE5]/30"
-                  } hover:bg-[#AAFF47]/5`}
+                      : "bg-[#FBF7EE]/30"
+                  } hover:bg-[#D4A017]/5`}
                 >
                   {/* Name + title */}
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <p className="font-semibold text-[#0D0D0B] text-sm">{dcm.name}</p>
-                    <p className="text-[#0D0D0B]/40 text-xs">{dcm.title}</p>
+                    <p className="font-semibold text-[#180F04] text-sm">{dcm.name}</p>
+                    <p className="text-[#180F04]/40 text-xs">{dcm.title}</p>
                   </td>
 
                   {/* Avenue */}
                   <td className="px-3 py-3 whitespace-nowrap">
-                    <span className="text-xs text-[#0D0D0B]/60 bg-black/5 px-2 py-0.5 rounded">
+                    <span className="text-xs text-[#180F04]/60 bg-black/5 px-2 py-0.5 rounded">
                       {dcm.avenueName}
                     </span>
                   </td>
@@ -286,9 +286,9 @@ export default function AuditWorkspace({
                     return (
                       <td key={month} className="px-3 py-3 text-center whitespace-nowrap">
                         {score !== null && score !== undefined ? (
-                          <span className="font-semibold text-[#0D0D0B]">{score}</span>
+                          <span className="font-semibold text-[#180F04]">{score}</span>
                         ) : (
-                          <span className="text-[#0D0D0B]/25">—</span>
+                          <span className="text-[#180F04]/25">—</span>
                         )}
                       </td>
                     );
@@ -296,7 +296,7 @@ export default function AuditWorkspace({
 
                   {/* Q Avg */}
                   <td className="px-3 py-3 text-center whitespace-nowrap">
-                    <span className="font-semibold text-[#0D0D0B]">
+                    <span className="font-semibold text-[#180F04]">
                       {dcm.monthsAvailable > 0 ? dcm.quarterlyAvg.toFixed(1) : "—"}
                     </span>
                     {dcm.monthsAvailable < 3 && dcm.monthsAvailable > 0 && (
@@ -309,7 +309,7 @@ export default function AuditWorkspace({
                   {/* Adjustment */}
                   <td className="px-3 py-3 text-center whitespace-nowrap">
                     {isSubmitted ? (
-                      <span className="font-semibold text-[#0D0D0B]">
+                      <span className="font-semibold text-[#180F04]">
                         {row.adjustment > 0 ? "+" : ""}{row.adjustment}
                       </span>
                     ) : (
@@ -321,8 +321,8 @@ export default function AuditWorkspace({
                             disabled={isSubmitting}
                             className={`w-7 h-7 rounded text-xs font-bold transition-colors ${
                               row.adjustment === adj
-                                ? "bg-[#0D0D0B] text-[#AAFF47]"
-                                : "bg-black/5 text-[#0D0D0B]/60 hover:bg-black/10"
+                                ? "bg-[#180F04] text-[#D4A017]"
+                                : "bg-black/5 text-[#180F04]/60 hover:bg-black/10"
                             }`}
                           >
                             {adj > 0 ? `+${adj}` : adj}
@@ -335,7 +335,7 @@ export default function AuditWorkspace({
                   {/* Remarks */}
                   <td className="px-3 py-3 min-w-[180px]">
                     {isSubmitted ? (
-                      <p className="text-[#0D0D0B]/60 text-xs italic line-clamp-2">
+                      <p className="text-[#180F04]/60 text-xs italic line-clamp-2">
                         {row.remarks}
                       </p>
                     ) : (
@@ -348,7 +348,7 @@ export default function AuditWorkspace({
                           disabled={isSubmitting}
                           placeholder="Required..."
                           rows={2}
-                          className={`w-full text-xs px-2 py-1.5 border rounded resize-none font-['Geist'] text-[#0D0D0B] placeholder-[#0D0D0B]/25 focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 transition-colors ${
+                          className={`w-full text-xs px-2 py-1.5 border rounded resize-none font-['Geist'] text-[#180F04] placeholder-[#180F04]/25 focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 transition-colors ${
                             row.errorMsg
                               ? "border-red-300 bg-red-50"
                               : "border-black/10 bg-white"
@@ -367,20 +367,20 @@ export default function AuditWorkspace({
                       <div className="space-y-0.5">
                         {isSubmitted && row.finalScore !== undefined ? (
                           <>
-                            <p className="font-bold text-[#0D0D0B] text-sm">
+                            <p className="font-bold text-[#180F04] text-sm">
                               {row.finalScore.toFixed(1)}
                             </p>
-                            <p className="text-xs text-[#0D0D0B]/50">
+                            <p className="text-xs text-[#180F04]/50">
                               {row.finalPercentage?.toFixed(1)}%
                             </p>
                             <CategoryBadge category={row.performanceCategory ?? ""} />
                           </>
                         ) : (
                           <>
-                            <p className="font-bold text-[#0D0D0B] text-sm">
+                            <p className="font-bold text-[#180F04] text-sm">
                               {live.finalScore.toFixed(1)}
                             </p>
-                            <p className="text-xs text-[#0D0D0B]/50">
+                            <p className="text-xs text-[#180F04]/50">
                               {live.finalPercentage.toFixed(1)}%
                             </p>
                             <CategoryBadge category={live.category} />
@@ -388,22 +388,22 @@ export default function AuditWorkspace({
                         )}
                       </div>
                     ) : (
-                      <span className="text-[#0D0D0B]/25 text-xs">No data</span>
+                      <span className="text-[#180F04]/25 text-xs">No data</span>
                     )}
                   </td>
 
                   {/* Action */}
                   <td className="px-3 py-3 text-center whitespace-nowrap">
                     {isSubmitted ? (
-                      <CheckCircle size={18} className="text-[#AAFF47] mx-auto" />
+                      <CheckCircle size={18} className="text-[#D4A017] mx-auto" />
                     ) : (
                       <button
                         onClick={() => handleSubmit(dcm)}
                         disabled={isSubmitting || dcm.monthsAvailable === 0}
                         className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                           isSubmitting || dcm.monthsAvailable === 0
-                            ? "bg-black/10 text-[#0D0D0B]/30 cursor-not-allowed"
-                            : "bg-[#0D0D0B] text-[#AAFF47] hover:bg-[#0D0D0B]/80"
+                            ? "bg-black/10 text-[#180F04]/30 cursor-not-allowed"
+                            : "bg-[#180F04] text-[#D4A017] hover:bg-[#180F04]/80"
                         }`}
                       >
                         {isSubmitting ? "Saving..." : "Submit"}
@@ -418,7 +418,7 @@ export default function AuditWorkspace({
               <tr>
                 <td
                   colSpan={6 + quarterMonths.length}
-                  className="px-6 py-12 text-center text-[#0D0D0B]/40 font-['Geist']"
+                  className="px-6 py-12 text-center text-[#180F04]/40 font-['Geist']"
                 >
                   No DCMs found for this filter.
                 </td>

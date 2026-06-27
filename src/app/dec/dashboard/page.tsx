@@ -23,7 +23,7 @@ export default async function DECDashboardPage() {
   if (!user?.avenueId) {
     return (
       <div className="p-8 text-center">
-        <p className="text-[#0D0D0B]/60 font-['Geist']">
+        <p className="text-[#180F04]/60 font-['Geist']">
           Your account is not assigned to an avenue. Contact HRD.
         </p>
       </div>
@@ -56,7 +56,7 @@ export default async function DECDashboardPage() {
   if (!avenue) {
     return (
       <div className="p-8 text-center">
-        <p className="text-[#0D0D0B]/60 font-['Geist']">Avenue not found.</p>
+        <p className="text-[#180F04]/60 font-['Geist']">Avenue not found.</p>
       </div>
     );
   }
@@ -81,40 +81,40 @@ export default async function DECDashboardPage() {
             {avenue.name}
           </span>
         </div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           DEC Dashboard
         </h1>
       </div>
 
       {/* Active period banner */}
-      <div className="bg-[#0D0D0B] rounded-xl px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="bg-[#180F04] rounded-xl px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <p className="text-white/50 text-xs font-['Geist'] uppercase tracking-wide">
             Active Evaluation Period
           </p>
-          <p className="font-['Fraunces'] text-2xl font-bold text-[#AAFF47] mt-1">
+          <p className="font-['Fraunces'] text-2xl font-bold text-[#D4A017] mt-1">
             {periodLabel}
           </p>
         </div>
         <div className="flex items-center gap-3">
           {allSubmitted ? (
-            <div className="flex items-center gap-2 px-4 py-2 bg-[#AAFF47] rounded-lg">
-              <CheckCircle2 size={16} className="text-[#0D0D0B]" />
-              <span className="text-[#0D0D0B] font-medium text-sm font-['Geist']">
+            <div className="flex items-center gap-2 px-4 py-2 bg-[#D4A017] rounded-lg">
+              <CheckCircle2 size={16} className="text-[#180F04]" />
+              <span className="text-[#180F04] font-medium text-sm font-['Geist']">
                 All Submitted
               </span>
             </div>
           ) : (
             <Link
               href={evaluateHref}
-              className="flex items-center gap-2 px-4 py-2 bg-[#AAFF47] hover:bg-[#AAFF47]/90 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-[#D4A017] hover:bg-[#D4A017]/90 rounded-lg transition-colors"
             >
-              <span className="text-[#0D0D0B] font-medium text-sm font-['Geist']">
+              <span className="text-[#180F04] font-medium text-sm font-['Geist']">
                 {noneSubmitted
                   ? `Start ${MONTH_NAMES[activeMonth]} Evaluations`
                   : "Continue Evaluations"}
               </span>
-              <ArrowRight size={15} className="text-[#0D0D0B]" />
+              <ArrowRight size={15} className="text-[#180F04]" />
             </Link>
           )}
         </div>
@@ -123,12 +123,12 @@ export default async function DECDashboardPage() {
       {/* Progress */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm p-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-base">
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-base">
             Evaluation Progress
           </h2>
-          <span className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">
+          <span className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
             {submittedCount}
-            <span className="text-[#0D0D0B]/30 text-lg">/{totalDCMs}</span>
+            <span className="text-[#180F04]/30 text-lg">/{totalDCMs}</span>
           </span>
         </div>
         <div className="h-2 bg-black/10 rounded-full overflow-hidden">
@@ -138,14 +138,14 @@ export default async function DECDashboardPage() {
               width: totalDCMs > 0 ? `${(submittedCount / totalDCMs) * 100}%` : "0%",
               background:
                 allSubmitted
-                  ? "#AAFF47"
+                  ? "#D4A017"
                   : submittedCount > 0
                   ? "#3b82f6"
                   : "#e5e7eb",
             }}
           />
         </div>
-        <p className="text-[#0D0D0B]/50 text-xs font-['Geist'] mt-2">
+        <p className="text-[#180F04]/50 text-xs font-['Geist'] mt-2">
           {allSubmitted
             ? "All DCMs evaluated for this period."
             : `${pendingCount} DCM${pendingCount !== 1 ? "s" : ""} pending evaluation.`}
@@ -155,27 +155,27 @@ export default async function DECDashboardPage() {
       {/* DCM Table */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-black/5 flex items-center justify-between">
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-base">
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-base">
             DCMs — {avenue.name}
           </h2>
-          <span className="text-xs text-[#0D0D0B]/40 font-['Geist']">{periodLabel}</span>
+          <span className="text-xs text-[#180F04]/40 font-['Geist']">{periodLabel}</span>
         </div>
 
         {/* Desktop table */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm font-['Geist']">
             <thead>
-              <tr className="border-b border-black/5 bg-[#F0EDE5]/50">
-                <th className="text-left px-6 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide">
+              <tr className="border-b border-black/5 bg-[#FBF7EE]/50">
+                <th className="text-left px-6 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide">
                   Name
                 </th>
-                <th className="text-left px-4 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide">
+                <th className="text-left px-4 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide">
                   Title
                 </th>
-                <th className="text-center px-4 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide">
+                <th className="text-center px-4 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide">
                   Status
                 </th>
-                <th className="text-right px-6 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide">
+                <th className="text-right px-6 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide">
                   Action
                 </th>
               </tr>
@@ -187,12 +187,12 @@ export default async function DECDashboardPage() {
                 return (
                   <tr
                     key={dcm.id}
-                    className={`border-b border-black/5 hover:bg-[#F0EDE5]/30 transition-colors ${
+                    className={`border-b border-black/5 hover:bg-[#FBF7EE]/30 transition-colors ${
                       i === avenue.dcms.length - 1 ? "border-none" : ""
                     }`}
                   >
-                    <td className="px-6 py-3.5 font-medium text-[#0D0D0B]">{dcm.name}</td>
-                    <td className="px-4 py-3.5 text-[#0D0D0B]/50 text-xs">{dcm.title}</td>
+                    <td className="px-6 py-3.5 font-medium text-[#180F04]">{dcm.name}</td>
+                    <td className="px-4 py-3.5 text-[#180F04]/50 text-xs">{dcm.title}</td>
                     <td className="px-4 py-3.5 text-center">
                       {evaluated ? (
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full border border-emerald-200">
@@ -208,8 +208,8 @@ export default async function DECDashboardPage() {
                     </td>
                     <td className="px-6 py-3.5 text-right">
                       {evaluated && evaluation ? (
-                        <span className="text-[#0D0D0B]/40 text-xs">
-                          Score: <strong className="text-[#0D0D0B]">{evaluation.rawScore}/35</strong>
+                        <span className="text-[#180F04]/40 text-xs">
+                          Score: <strong className="text-[#180F04]">{evaluation.rawScore}/35</strong>
                         </span>
                       ) : (
                         <Link
@@ -225,7 +225,7 @@ export default async function DECDashboardPage() {
               })}
               {avenue.dcms.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-[#0D0D0B]/40">
+                  <td colSpan={4} className="px-6 py-8 text-center text-[#180F04]/40">
                     No active DCMs in this avenue.
                   </td>
                 </tr>
@@ -242,13 +242,13 @@ export default async function DECDashboardPage() {
             return (
               <div key={dcm.id} className="px-4 py-4 flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-[#0D0D0B] font-medium text-sm truncate">{dcm.name}</p>
-                  <p className="text-[#0D0D0B]/50 text-xs mt-0.5">{dcm.title}</p>
+                  <p className="text-[#180F04] font-medium text-sm truncate">{dcm.name}</p>
+                  <p className="text-[#180F04]/50 text-xs mt-0.5">{dcm.title}</p>
                 </div>
                 <div className="flex-shrink-0 flex items-center gap-2">
                   {evaluated ? (
                     <>
-                      <span className="text-[#0D0D0B]/50 text-xs">
+                      <span className="text-[#180F04]/50 text-xs">
                         {evaluation?.rawScore}/35
                       </span>
                       <CheckCircle2 size={16} className="text-emerald-500" />
@@ -266,7 +266,7 @@ export default async function DECDashboardPage() {
             );
           })}
           {avenue.dcms.length === 0 && (
-            <div className="px-4 py-8 text-center text-[#0D0D0B]/40 text-sm">
+            <div className="px-4 py-8 text-center text-[#180F04]/40 text-sm">
               No active DCMs in this avenue.
             </div>
           )}

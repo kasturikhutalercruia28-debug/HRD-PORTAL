@@ -34,15 +34,15 @@ export default async function ClubResourcesPage() {
   return (
     <div className="p-6 lg:p-8 space-y-6">
       <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Resources</h1>
-        <p className="text-[#0D0D0B]/60 text-sm mt-1 font-['Geist']">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Resources</h1>
+        <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
           Orientation materials and references
         </p>
       </div>
 
       {resources.length === 0 ? (
         <div className="bg-white rounded-xl border border-black/5 p-12 text-center">
-          <p className="text-[#0D0D0B]/40 font-['Geist'] text-sm">
+          <p className="text-[#180F04]/40 font-['Geist'] text-sm">
             No resources available yet.
           </p>
         </div>
@@ -56,28 +56,28 @@ export default async function ClubResourcesPage() {
                 href={r.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 bg-white rounded-xl border border-black/5 shadow-sm px-5 py-4 hover:border-[#AAFF47]/50 hover:shadow-md transition-all group"
+                className="flex items-center gap-4 bg-white rounded-xl border border-black/5 shadow-sm px-5 py-4 hover:border-[#D4A017]/50 hover:shadow-md transition-all group"
               >
-                <div className="w-10 h-10 bg-[#AAFF47]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Icon size={18} className="text-[#0D0D0B]" />
+                <div className="w-10 h-10 bg-[#D4A017]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Icon size={18} className="text-[#180F04]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm text-[#0D0D0B] font-['Geist'] truncate">
+                  <p className="font-medium text-sm text-[#180F04] font-['Geist'] truncate">
                     {r.title}
                   </p>
                   {r.description && (
-                    <p className="text-[#0D0D0B]/50 text-xs font-['Geist'] mt-0.5 truncate">
+                    <p className="text-[#180F04]/50 text-xs font-['Geist'] mt-0.5 truncate">
                       {r.description}
                     </p>
                   )}
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="text-xs bg-[#F0EDE5] text-[#0D0D0B]/60 px-2 py-0.5 rounded font-['Geist']">
+                  <span className="text-xs bg-[#FBF7EE] text-[#180F04]/60 px-2 py-0.5 rounded font-['Geist']">
                     {TYPE_LABEL[r.type] ?? r.type}
                   </span>
                   <ExternalLink
                     size={14}
-                    className="text-[#0D0D0B]/20 group-hover:text-[#0D0D0B]/60 transition-colors"
+                    className="text-[#180F04]/20 group-hover:text-[#180F04]/60 transition-colors"
                   />
                 </div>
               </a>

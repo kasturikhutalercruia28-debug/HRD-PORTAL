@@ -72,7 +72,7 @@ export default function RequestActions({
 
   return (
     <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4">
-      <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-sm">Actions</h2>
+      <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-sm">Actions</h2>
 
       {error && <p className="text-red-600 text-sm font-['Geist']">{error}</p>}
 
@@ -83,7 +83,7 @@ export default function RequestActions({
             <div className="flex gap-2">
               <button
                 onClick={() => setShowApprove(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#0D0D0B] text-[#AAFF47] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-[#180F04] text-[#D4A017] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors"
               >
                 <CalendarCheck size={14} />
                 Approve & Schedule
@@ -100,7 +100,7 @@ export default function RequestActions({
 
           {showApprove && (
             <div className="space-y-3">
-              <p className="text-sm font-['Geist'] text-[#0D0D0B]/60">
+              <p className="text-sm font-['Geist'] text-[#180F04]/60">
                 Select which date to schedule:
               </p>
               {preferredSlots.map((s) => (
@@ -109,22 +109,22 @@ export default function RequestActions({
                   onClick={() => setSelectedSlot({ date: s.date, time: s.time })}
                   className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
                     selectedSlot?.date === s.date && selectedSlot?.time === s.time
-                      ? "border-[#AAFF47] bg-[#AAFF47]/5"
+                      ? "border-[#D4A017] bg-[#D4A017]/5"
                       : "border-black/10 bg-white hover:border-black/20"
                   }`}
                 >
                   <div
                     className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
                       selectedSlot?.date === s.date && selectedSlot?.time === s.time
-                        ? "border-[#0D0D0B] bg-[#0D0D0B]"
+                        ? "border-[#180F04] bg-[#180F04]"
                         : "border-black/20"
                     }`}
                   >
                     {selectedSlot?.date === s.date && selectedSlot?.time === s.time && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#AAFF47]" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#D4A017]" />
                     )}
                   </div>
-                  <span className="text-sm font-['Geist'] text-[#0D0D0B]">
+                  <span className="text-sm font-['Geist'] text-[#180F04]">
                     {s.label} — {fmtDate(s.date)}, {TIME_LABELS[s.time]}
                   </span>
                 </button>
@@ -138,14 +138,14 @@ export default function RequestActions({
                       scheduledTime: selectedSlot!.time,
                     })
                   }
-                  className="flex items-center gap-2 px-4 py-2 bg-[#0D0D0B] text-[#AAFF47] rounded-lg text-sm font-semibold font-['Geist'] disabled:opacity-40"
+                  className="flex items-center gap-2 px-4 py-2 bg-[#180F04] text-[#D4A017] rounded-lg text-sm font-semibold font-['Geist'] disabled:opacity-40"
                 >
                   {loading === "approve" && <Loader2 size={13} className="animate-spin" />}
                   Confirm Schedule
                 </button>
                 <button
                   onClick={() => { setShowApprove(false); setSelectedSlot(null); }}
-                  className="px-4 py-2 bg-black/5 text-[#0D0D0B] rounded-lg text-sm font-['Geist']"
+                  className="px-4 py-2 bg-black/5 text-[#180F04] rounded-lg text-sm font-['Geist']"
                 >
                   Cancel
                 </button>
@@ -173,7 +173,7 @@ export default function RequestActions({
                 </button>
                 <button
                   onClick={() => setShowReject(false)}
-                  className="px-4 py-2 bg-black/5 text-[#0D0D0B] rounded-lg text-sm font-['Geist']"
+                  className="px-4 py-2 bg-black/5 text-[#180F04] rounded-lg text-sm font-['Geist']"
                 >
                   Cancel
                 </button>
@@ -207,7 +207,7 @@ export default function RequestActions({
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold font-['Geist'] transition-colors disabled:opacity-50 ${
             certificateGenerated
               ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
-              : "bg-[#0D0D0B] text-[#AAFF47] hover:bg-[#0D0D0B]/80"
+              : "bg-[#180F04] text-[#D4A017] hover:bg-[#180F04]/80"
           }`}
         >
           {loading === "toggle_certificate" ? (

@@ -139,12 +139,12 @@ export default function UsersPage() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Users</h1>
-          <p className="text-[#0D0D0B]/50 text-sm mt-1 font-['Geist']">Manage all portal accounts</p>
+          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Users</h1>
+          <p className="text-[#180F04]/50 text-sm mt-1 font-['Geist']">Manage all portal accounts</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-[#0D0D0B] text-[#AAFF47] px-4 py-2.5 rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+          className="flex items-center gap-2 bg-[#180F04] text-[#D4A017] px-4 py-2.5 rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors"
         >
           <Plus size={15} /> Add User
         </button>
@@ -158,8 +158,8 @@ export default function UsersPage() {
             onClick={() => setRoleFilter(r)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold font-['Geist'] transition-colors ${
               roleFilter === r
-                ? "bg-[#0D0D0B] text-[#AAFF47]"
-                : "bg-white border border-black/10 text-[#0D0D0B]/60 hover:bg-[#F0EDE5]"
+                ? "bg-[#180F04] text-[#D4A017]"
+                : "bg-white border border-black/10 text-[#180F04]/60 hover:bg-[#FBF7EE]"
             }`}
           >
             {r} {r !== "ALL" && <span className="opacity-60">({users.filter((u) => u.role === r).length})</span>}
@@ -170,27 +170,27 @@ export default function UsersPage() {
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-[#0D0D0B]/30" />
+            <Loader2 size={24} className="animate-spin text-[#180F04]/30" />
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm font-['Geist']">
               <thead>
-                <tr className="border-b border-black/5 bg-[#F0EDE5]/50">
+                <tr className="border-b border-black/5 bg-[#FBF7EE]/50">
                   {["Name", "Email", "Role", "Avenue", "Status", "Actions"].map((h) => (
-                    <th key={h} className="text-left px-5 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide">{h}</th>
+                    <th key={h} className="text-left px-5 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((u, i) => (
-                  <tr key={u.id} className={`border-b border-black/5 hover:bg-[#F0EDE5]/20 transition-colors ${i === filtered.length - 1 ? "border-none" : ""}`}>
-                    <td className="px-5 py-3 font-medium text-[#0D0D0B]">{u.name}</td>
-                    <td className="px-5 py-3 text-[#0D0D0B]/60">{u.email}</td>
+                  <tr key={u.id} className={`border-b border-black/5 hover:bg-[#FBF7EE]/20 transition-colors ${i === filtered.length - 1 ? "border-none" : ""}`}>
+                    <td className="px-5 py-3 font-medium text-[#180F04]">{u.name}</td>
+                    <td className="px-5 py-3 text-[#180F04]/60">{u.email}</td>
                     <td className="px-5 py-3">
                       <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded ${ROLE_COLORS[u.role] ?? ""}`}>{u.role}</span>
                     </td>
-                    <td className="px-5 py-3 text-[#0D0D0B]/60">{u.avenue?.name ?? "—"}</td>
+                    <td className="px-5 py-3 text-[#180F04]/60">{u.avenue?.name ?? "—"}</td>
                     <td className="px-5 py-3">
                       <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${u.isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
                         {u.isActive ? "Active" : "Inactive"}
@@ -201,20 +201,20 @@ export default function UsersPage() {
                         <button
                           onClick={() => handleToggle(u.id)}
                           disabled={toggling === u.id}
-                          className="flex items-center gap-1.5 text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] transition-colors disabled:opacity-40"
+                          className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors disabled:opacity-40"
                         >
                           {toggling === u.id ? <Loader2 size={14} className="animate-spin" /> : u.isActive ? <ToggleRight size={16} className="text-emerald-500" /> : <ToggleLeft size={16} />}
                           {u.isActive ? "Deactivate" : "Activate"}
                         </button>
                         <button
                           onClick={() => { setEditEmailUser(u); setNewEmail(u.email); setEmailError(""); setEmailSuccess(false); }}
-                          className="flex items-center gap-1.5 text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] transition-colors"
+                          className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors"
                         >
                           <Mail size={13} /> Edit Email
                         </button>
                         <button
                           onClick={() => { setResetUserId(u.id); setResetPassword(""); setResetError(""); setResetSuccess(false); }}
-                          className="flex items-center gap-1.5 text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] transition-colors"
+                          className="flex items-center gap-1.5 text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors"
                         >
                           <KeyRound size={13} /> Reset PW
                         </button>
@@ -223,7 +223,7 @@ export default function UsersPage() {
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={6} className="px-5 py-10 text-center text-[#0D0D0B]/30">No users found.</td></tr>
+                  <tr><td colSpan={6} className="px-5 py-10 text-center text-[#180F04]/30">No users found.</td></tr>
                 )}
               </tbody>
             </table>
@@ -237,29 +237,29 @@ export default function UsersPage() {
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
             <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
               <div>
-                <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">Edit Email</h2>
-                <p className="text-xs text-[#0D0D0B]/50 font-['Geist'] mt-0.5">{editEmailUser.name} · {editEmailUser.role}</p>
+                <h2 className="font-['Fraunces'] font-bold text-[#180F04] text-lg">Edit Email</h2>
+                <p className="text-xs text-[#180F04]/50 font-['Geist'] mt-0.5">{editEmailUser.name} · {editEmailUser.role}</p>
               </div>
-              <button onClick={() => setEditEmailUser(null)} className="text-[#0D0D0B]/30 hover:text-[#0D0D0B]"><X size={18} /></button>
+              <button onClick={() => setEditEmailUser(null)} className="text-[#180F04]/30 hover:text-[#180F04]"><X size={18} /></button>
             </div>
             <form onSubmit={handleEditEmail} className="px-6 py-5 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5">New Email</label>
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5">New Email</label>
                 <input
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   required
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                 />
               </div>
               {emailError && <p className="text-red-500 text-xs">{emailError}</p>}
               {emailSuccess && <p className="text-green-600 text-xs flex items-center gap-1"><Check size={12} /> Email updated</p>}
               <div className="flex gap-3">
                 <button type="button" onClick={() => setEditEmailUser(null)}
-                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors">Cancel</button>
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm text-[#180F04]/60 hover:bg-[#FBF7EE] transition-colors">Cancel</button>
                 <button type="submit" disabled={savingEmail}
-                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                  className="flex-1 bg-[#180F04] text-[#D4A017] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#180F04]/80 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                   {savingEmail && <Loader2 size={14} className="animate-spin" />} Save
                 </button>
               </div>
@@ -273,23 +273,23 @@ export default function UsersPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
             <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
-              <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">Reset Password</h2>
-              <button onClick={() => setResetUserId(null)} className="text-[#0D0D0B]/30 hover:text-[#0D0D0B]"><X size={18} /></button>
+              <h2 className="font-['Fraunces'] font-bold text-[#180F04] text-lg">Reset Password</h2>
+              <button onClick={() => setResetUserId(null)} className="text-[#180F04]/30 hover:text-[#180F04]"><X size={18} /></button>
             </div>
             <form onSubmit={handleReset} className="px-6 py-5 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5">New Password</label>
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5">New Password</label>
                 <input type="password" value={resetPassword} onChange={(e) => setResetPassword(e.target.value)} required
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="Min 6 characters" />
               </div>
               {resetError && <p className="text-red-500 text-xs">{resetError}</p>}
               {resetSuccess && <p className="text-green-600 text-xs flex items-center gap-1"><Check size={12} /> Password reset successfully</p>}
               <div className="flex gap-3">
                 <button type="button" onClick={() => setResetUserId(null)}
-                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors">Cancel</button>
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm text-[#180F04]/60 hover:bg-[#FBF7EE] transition-colors">Cancel</button>
                 <button type="submit" disabled={resetting}
-                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                  className="flex-1 bg-[#180F04] text-[#D4A017] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#180F04]/80 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                   {resetting && <Loader2 size={14} className="animate-spin" />} Reset
                 </button>
               </div>
@@ -303,41 +303,41 @@ export default function UsersPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
             <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
-              <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">Add New User</h2>
-              <button onClick={() => { setShowModal(false); setFormError(""); }} className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"><X size={18} /></button>
+              <h2 className="font-['Fraunces'] font-bold text-[#180F04] text-lg">Add New User</h2>
+              <button onClick={() => { setShowModal(false); setFormError(""); }} className="text-[#180F04]/30 hover:text-[#180F04] transition-colors"><X size={18} /></button>
             </div>
             <form onSubmit={handleCreate} className="px-6 py-5 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Full Name</label>
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Full Name</label>
                 <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="Jane Doe" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Email</label>
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Email</label>
                 <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="jane@example.com" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Password</label>
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Password</label>
                 <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="Min. 8 characters" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Role</label>
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Role</label>
                 <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value, avenueId: "" })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white">
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017] bg-white">
                   <option value="DEC">DEC</option>
                   <option value="DRR">DRR</option>
                 </select>
               </div>
               {form.role === "DEC" && (
                 <div>
-                  <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Avenue</label>
+                  <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Avenue</label>
                   <select value={form.avenueId} onChange={(e) => setForm({ ...form, avenueId: e.target.value })}
-                    className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white">
+                    className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017] bg-white">
                     <option value="">Select avenue...</option>
                     {avenues.map((av) => <option key={av.id} value={av.id}>{av.name}</option>)}
                   </select>
@@ -346,9 +346,9 @@ export default function UsersPage() {
               {formError && <p className="text-red-500 text-xs font-['Geist']">{formError}</p>}
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => { setShowModal(false); setFormError(""); }}
-                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors font-['Geist']">Cancel</button>
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#180F04]/60 hover:bg-[#FBF7EE] transition-colors font-['Geist']">Cancel</button>
                 <button type="submit" disabled={submitting}
-                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2">
+                  className="flex-1 bg-[#180F04] text-[#D4A017] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#180F04]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2">
                   {submitting && <Loader2 size={14} className="animate-spin" />} Create User
                 </button>
               </div>

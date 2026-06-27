@@ -85,17 +85,17 @@ export default function ActiveMonthPage() {
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-2xl">
       <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Active Month</h1>
-        <p className="text-[#0D0D0B]/50 text-sm mt-1 font-['Geist']">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Active Month</h1>
+        <p className="text-[#180F04]/50 text-sm mt-1 font-['Geist']">
           Controls which period DECs submit evaluations for
         </p>
       </div>
 
       {/* Current period card */}
-      <div className="bg-[#0D0D0B] rounded-xl p-6">
+      <div className="bg-[#180F04] rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-[#AAFF47]/10 rounded-lg flex items-center justify-center">
-            <Calendar size={18} className="text-[#AAFF47]" />
+          <div className="w-10 h-10 bg-[#D4A017]/10 rounded-lg flex items-center justify-center">
+            <Calendar size={18} className="text-[#D4A017]" />
           </div>
           <div>
             <p className="text-white/40 text-xs uppercase tracking-wide font-['Geist']">
@@ -116,13 +116,13 @@ export default function ActiveMonthPage() {
           <div className="flex gap-4 mt-2">
             <div className="bg-white/5 rounded-lg px-3 py-2">
               <p className="text-white/30 text-xs font-['Geist']">Quarter</p>
-              <p className="text-[#AAFF47] text-sm font-semibold font-['Geist']">
+              <p className="text-[#D4A017] text-sm font-semibold font-['Geist']">
                 {getQuarterLabel(current.activeMonth)}
               </p>
             </div>
             <div className="bg-white/5 rounded-lg px-3 py-2">
               <p className="text-white/30 text-xs font-['Geist']">Rotaract Year</p>
-              <p className="text-[#AAFF47] text-sm font-semibold font-['Geist']">
+              <p className="text-[#D4A017] text-sm font-semibold font-['Geist']">
                 {current.activeMonth >= 7 ? current.activeYear : current.activeYear - 1}–
                 {current.activeMonth >= 7 ? current.activeYear + 1 : current.activeYear}
               </p>
@@ -143,19 +143,19 @@ export default function ActiveMonthPage() {
 
       {/* Form */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm p-6">
-        <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-lg mb-5">
+        <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-lg mb-5">
           Change Active Period
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+              <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                 Month
               </label>
               <select
                 value={month}
                 onChange={(e) => setMonth(Number(e.target.value))}
-                className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47] bg-white"
+                className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017] bg-white"
               >
                 {MONTH_NAMES.map((m) => (
                   <option key={m.value} value={m.value}>
@@ -165,7 +165,7 @@ export default function ActiveMonthPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+              <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                 Year
               </label>
               <input
@@ -174,18 +174,18 @@ export default function ActiveMonthPage() {
                 onChange={(e) => setYear(Number(e.target.value))}
                 min={2020}
                 max={2100}
-                className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
               />
             </div>
           </div>
 
           {/* Preview */}
           {!loading && (
-            <div className="bg-[#F0EDE5] rounded-lg px-4 py-3">
-              <p className="text-xs text-[#0D0D0B]/50 font-['Geist']">Preview</p>
-              <p className="text-[#0D0D0B] font-semibold font-['Geist'] mt-0.5">
+            <div className="bg-[#FBF7EE] rounded-lg px-4 py-3">
+              <p className="text-xs text-[#180F04]/50 font-['Geist']">Preview</p>
+              <p className="text-[#180F04] font-semibold font-['Geist'] mt-0.5">
                 {MONTH_NAMES.find((m) => m.value === month)?.label} {year}{" "}
-                <span className="text-[#0D0D0B]/40 font-normal">
+                <span className="text-[#180F04]/40 font-normal">
                   — {getQuarterLabel(month)}
                 </span>
               </p>
@@ -204,7 +204,7 @@ export default function ActiveMonthPage() {
           <button
             type="submit"
             disabled={saving || !hasChanged}
-            className="flex items-center gap-2 bg-[#0D0D0B] text-[#AAFF47] px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-40 font-['Geist']"
+            className="flex items-center gap-2 bg-[#180F04] text-[#D4A017] px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#180F04]/80 transition-colors disabled:opacity-40 font-['Geist']"
           >
             {saving && <Loader2 size={14} className="animate-spin" />}
             {saving ? "Saving..." : "Update Active Period"}

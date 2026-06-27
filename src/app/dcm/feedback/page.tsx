@@ -17,9 +17,9 @@ export default async function DcmFeedbackPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B] mb-6">Feedback Forms</h1>
+      <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04] mb-6">Feedback Forms</h1>
       {forms.length === 0 ? (
-        <div className="bg-white rounded-xl border border-black/5 p-12 text-center text-[#0D0D0B]/40 text-sm">
+        <div className="bg-white rounded-xl border border-black/5 p-12 text-center text-[#180F04]/40 text-sm">
           No active feedback forms
         </div>
       ) : (
@@ -35,12 +35,12 @@ export default async function DcmFeedbackPage() {
               <div key={form.id} className="bg-white rounded-xl border border-black/5 p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h2 className="font-semibold text-[#0D0D0B]">{form.eventName}</h2>
-                    <p className="text-xs text-[#0D0D0B]/50 mt-0.5">
+                    <h2 className="font-semibold text-[#180F04]">{form.eventName}</h2>
+                    <p className="text-xs text-[#180F04]/50 mt-0.5">
                       Event: {new Date(form.eventDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                     </p>
                     {form.feedbackCloseAt && (
-                      <p className="text-xs text-[#0D0D0B]/50 mt-0.5">
+                      <p className="text-xs text-[#180F04]/50 mt-0.5">
                         Closes: {new Date(form.feedbackCloseAt).toLocaleString("en-IN")}
                       </p>
                     )}
@@ -51,7 +51,7 @@ export default async function DcmFeedbackPage() {
                     ) : isOpen ? (
                       <Link
                         href={`/dcm/feedback/${form.id}`}
-                        className="text-xs bg-[#AAFF47] text-[#0D0D0B] px-3 py-1.5 rounded-lg font-semibold hover:bg-[#99ee36] transition-colors"
+                        className="text-xs bg-[#D4A017] text-[#180F04] px-3 py-1.5 rounded-lg font-semibold hover:bg-[#b8860b] transition-colors"
                       >
                         Fill Feedback
                       </Link>
@@ -61,7 +61,7 @@ export default async function DcmFeedbackPage() {
                     {form.allowResubmit && submitted && isOpen && (
                       <Link
                         href={`/dcm/feedback/${form.id}`}
-                        className="text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] underline"
+                        className="text-xs text-[#180F04]/50 hover:text-[#180F04] underline"
                       >
                         Resubmit
                       </Link>

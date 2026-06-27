@@ -89,14 +89,14 @@ export default function HRDCalendarPage() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Calendar</h1>
-          <p className="text-[#0D0D0B]/60 text-sm mt-1 font-['Geist']">
+          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Calendar</h1>
+          <p className="text-[#180F04]/60 text-sm mt-1 font-['Geist']">
             Blocked orientation dates
           </p>
         </div>
         <button
           onClick={() => setShowBlockForm(!showBlockForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#0D0D0B] text-[#AAFF47] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#180F04] text-[#D4A017] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors"
         >
           <Plus size={14} />
           Block Date
@@ -108,24 +108,24 @@ export default function HRDCalendarPage() {
           onSubmit={handleBlock}
           className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4"
         >
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B]">Block a Date</h2>
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04]">Block a Date</h2>
           <div className="grid gap-3 sm:grid-cols-3">
             <div>
-              <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">Date</label>
+              <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">Date</label>
               <input
                 required
                 type="date"
                 value={blockForm.date}
                 onChange={(e) => setBlockForm({ ...blockForm, date: e.target.value })}
-                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]"
+                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#D4A017]"
               />
             </div>
             <div>
-              <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">Time Period</label>
+              <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">Time Period</label>
               <select
                 value={blockForm.timePeriod}
                 onChange={(e) => setBlockForm({ ...blockForm, timePeriod: e.target.value as BlockedDate["timePeriod"] })}
-                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]"
+                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#D4A017]"
               >
                 {TIME_PERIODS.map((t) => (
                   <option key={t.value} value={t.value}>{t.label}</option>
@@ -133,11 +133,11 @@ export default function HRDCalendarPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[#0D0D0B]/50 mb-1 font-['Geist']">Label (optional)</label>
+              <label className="block text-xs text-[#180F04]/50 mb-1 font-['Geist']">Label (optional)</label>
               <input
                 value={blockForm.label}
                 onChange={(e) => setBlockForm({ ...blockForm, label: e.target.value })}
-                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]"
+                className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none focus:ring-2 focus:ring-[#D4A017]"
                 placeholder="e.g. District event"
               />
             </div>
@@ -146,7 +146,7 @@ export default function HRDCalendarPage() {
             <button
               type="submit"
               disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 bg-[#0D0D0B] text-[#AAFF47] rounded-lg text-sm font-semibold font-['Geist'] disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 bg-[#180F04] text-[#D4A017] rounded-lg text-sm font-semibold font-['Geist'] disabled:opacity-50"
             >
               {saving && <Loader2 size={13} className="animate-spin" />}
               Block
@@ -154,7 +154,7 @@ export default function HRDCalendarPage() {
             <button
               type="button"
               onClick={() => setShowBlockForm(false)}
-              className="px-4 py-2 bg-black/5 text-[#0D0D0B] rounded-lg text-sm font-['Geist']"
+              className="px-4 py-2 bg-black/5 text-[#180F04] rounded-lg text-sm font-['Geist']"
             >
               Cancel
             </button>
@@ -168,7 +168,7 @@ export default function HRDCalendarPage() {
           <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-black/5 transition-colors">
             <ChevronLeft size={18} />
           </button>
-          <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">
+          <h2 className="font-['Fraunces'] font-bold text-[#180F04] text-lg">
             {MONTH_NAMES[month - 1]} {year}
           </h2>
           <button onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-black/5 transition-colors">
@@ -179,7 +179,7 @@ export default function HRDCalendarPage() {
         {/* Day labels */}
         <div className="grid grid-cols-7 mb-2">
           {DAY_LABELS.map((d) => (
-            <div key={d} className="text-center text-xs text-[#0D0D0B]/30 font-['Geist'] py-1">
+            <div key={d} className="text-center text-xs text-[#180F04]/30 font-['Geist'] py-1">
               {d}
             </div>
           ))}
@@ -201,7 +201,7 @@ export default function HRDCalendarPage() {
                 onClick={() => setSelectedDay(isSelected ? null : day)}
                 className={`
                   relative aspect-square rounded-lg flex flex-col items-center justify-center text-sm font-['Geist'] transition-colors
-                  ${isSelected ? "bg-[#0D0D0B] text-[#AAFF47]" : isToday ? "bg-[#AAFF47]/20 text-[#0D0D0B]" : "hover:bg-black/5 text-[#0D0D0B]"}
+                  ${isSelected ? "bg-[#180F04] text-[#D4A017]" : isToday ? "bg-[#D4A017]/20 text-[#180F04]" : "hover:bg-black/5 text-[#180F04]"}
                   ${dayBlocked.length > 0 ? "font-bold" : ""}
                 `}
               >
@@ -211,7 +211,7 @@ export default function HRDCalendarPage() {
                     {dayBlocked.slice(0, 3).map((_, i) => (
                       <div
                         key={i}
-                        className={`w-1 h-1 rounded-full ${isSelected ? "bg-[#AAFF47]" : "bg-red-400"}`}
+                        className={`w-1 h-1 rounded-full ${isSelected ? "bg-[#D4A017]" : "bg-red-400"}`}
                       />
                     ))}
                   </div>
@@ -225,13 +225,13 @@ export default function HRDCalendarPage() {
       {/* Selected day detail */}
       {selectedDay !== null && (
         <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-3">
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-sm">
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-sm">
             {MONTH_NAMES[month - 1]} {selectedDay}, {year}
           </h2>
           {loading ? (
-            <Loader2 size={16} className="animate-spin text-[#0D0D0B]/30" />
+            <Loader2 size={16} className="animate-spin text-[#180F04]/30" />
           ) : selectedDayBlocked.length === 0 ? (
-            <p className="text-[#0D0D0B]/40 text-sm font-['Geist']">No blocked slots.</p>
+            <p className="text-[#180F04]/40 text-sm font-['Geist']">No blocked slots.</p>
           ) : (
             <div className="space-y-2">
               {selectedDayBlocked.map((b) => (
@@ -242,22 +242,22 @@ export default function HRDCalendarPage() {
                   <div className="flex items-center gap-2">
                     <Lock size={13} className="text-red-400" />
                     <div>
-                      <p className="text-sm font-semibold text-[#0D0D0B] font-['Geist'] capitalize">
+                      <p className="text-sm font-semibold text-[#180F04] font-['Geist'] capitalize">
                         {b.timePeriod}
                       </p>
                       {b.label && (
-                        <p className="text-xs text-[#0D0D0B]/50 font-['Geist']">{b.label}</p>
+                        <p className="text-xs text-[#180F04]/50 font-['Geist']">{b.label}</p>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-['Geist'] text-[#0D0D0B]/40">
+                    <span className="text-xs font-['Geist'] text-[#180F04]/40">
                       {b.isManual ? "Manual" : "Booked"}
                     </span>
                     {b.isManual && (
                       <button
                         onClick={() => handleUnblock(b.id)}
-                        className="text-[#0D0D0B]/30 hover:text-red-500 transition-colors"
+                        className="text-[#180F04]/30 hover:text-red-500 transition-colors"
                       >
                         <X size={14} />
                       </button>

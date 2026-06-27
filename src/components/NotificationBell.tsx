@@ -60,9 +60,9 @@ export default function NotificationBell() {
         className="relative p-2 rounded-lg hover:bg-black/5 transition-colors"
         aria-label="Notifications"
       >
-        <Bell size={20} className="text-[#0D0D0B]" />
+        <Bell size={20} className="text-[#180F04]" />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 bg-[#AAFF47] text-[#0D0D0B] text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+          <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 bg-[#D4A017] text-[#180F04] text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
@@ -71,29 +71,29 @@ export default function NotificationBell() {
       {open && (
         <div className="absolute right-0 mt-2 w-80 bg-white border border-black/10 rounded-xl shadow-xl z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-black/5">
-            <span className="font-semibold text-sm text-[#0D0D0B] font-['Geist']">Notifications</span>
+            <span className="font-semibold text-sm text-[#180F04] font-['Geist']">Notifications</span>
             {unreadCount > 0 && (
-              <button onClick={markAllRead} className="text-xs text-[#0D0D0B]/50 hover:text-[#0D0D0B] transition-colors">
+              <button onClick={markAllRead} className="text-xs text-[#180F04]/50 hover:text-[#180F04] transition-colors">
                 Mark all read
               </button>
             )}
           </div>
           <div className="max-h-80 overflow-y-auto divide-y divide-black/5">
             {notifications.length === 0 ? (
-              <div className="px-4 py-8 text-center text-sm text-[#0D0D0B]/40 font-['Geist']">No notifications</div>
+              <div className="px-4 py-8 text-center text-sm text-[#180F04]/40 font-['Geist']">No notifications</div>
             ) : (
               notifications.map((n) => (
                 <button
                   key={n.id}
                   onClick={() => markRead(n.id, n.link)}
-                  className={`w-full text-left px-4 py-3 hover:bg-[#F0EDE5] transition-colors ${!n.isRead ? "bg-[#AAFF47]/10" : ""}`}
+                  className={`w-full text-left px-4 py-3 hover:bg-[#FBF7EE] transition-colors ${!n.isRead ? "bg-[#D4A017]/10" : ""}`}
                 >
                   <div className="flex items-start gap-2">
-                    {!n.isRead && <span className="mt-1.5 w-2 h-2 rounded-full bg-[#AAFF47] shrink-0" />}
+                    {!n.isRead && <span className="mt-1.5 w-2 h-2 rounded-full bg-[#D4A017] shrink-0" />}
                     <div className={!n.isRead ? "" : "ml-4"}>
-                      <p className="text-xs font-semibold text-[#0D0D0B] font-['Geist']">{n.title}</p>
-                      <p className="text-xs text-[#0D0D0B]/60 font-['Geist'] mt-0.5 line-clamp-2">{n.message}</p>
-                      <p className="text-[10px] text-[#0D0D0B]/40 mt-1 font-['Geist']">
+                      <p className="text-xs font-semibold text-[#180F04] font-['Geist']">{n.title}</p>
+                      <p className="text-xs text-[#180F04]/60 font-['Geist'] mt-0.5 line-clamp-2">{n.message}</p>
+                      <p className="text-[10px] text-[#180F04]/40 mt-1 font-['Geist']">
                         {new Date(n.createdAt).toLocaleString()}
                       </p>
                     </div>

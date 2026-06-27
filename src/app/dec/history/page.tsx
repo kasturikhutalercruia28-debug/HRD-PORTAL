@@ -84,17 +84,17 @@ export default async function DECHistoryPage() {
   return (
     <div className="p-6 lg:p-8 space-y-6">
       <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">
           Evaluation History
         </h1>
-        <p className="text-[#0D0D0B]/60 text-sm font-['Geist'] mt-1">
+        <p className="text-[#180F04]/60 text-sm font-['Geist'] mt-1">
           {avenue?.name} — past submissions
         </p>
       </div>
 
       {periods.length === 0 ? (
         <div className="bg-white rounded-xl border border-black/5 shadow-sm p-12 text-center">
-          <p className="text-[#0D0D0B]/40 font-['Geist'] text-sm">
+          <p className="text-[#180F04]/40 font-['Geist'] text-sm">
             No evaluations submitted yet.
           </p>
         </div>

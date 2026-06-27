@@ -18,9 +18,9 @@ export default async function DcmLayout({ children }: { children: React.ReactNod
   if (!session || session.user?.role !== "DCM") redirect("/login");
 
   return (
-    <div className="min-h-screen bg-[#F0EDE5] flex font-['Geist']">
+    <div className="min-h-screen bg-[#FBF7EE] flex font-['Geist']">
       {/* Sidebar */}
-      <aside className="w-56 bg-[#0D0D0B] flex flex-col shrink-0">
+      <aside className="w-56 bg-[#180F04] flex flex-col shrink-0">
         <SidebarLogo portal="DCM" />
         <nav className="flex-1 px-3 py-4 space-y-1">
           {NAV_LINKS.map(({ href, label, icon: Icon }) => (
@@ -51,10 +51,10 @@ export default async function DcmLayout({ children }: { children: React.ReactNod
           <div />
           <div className="flex items-center gap-3">
             <NotificationBell />
-            <span className="text-sm text-[#0D0D0B]/60">{session.user?.name}</span>
+            <span className="text-sm text-[#180F04]/60">{session.user?.name}</span>
           </div>
         </header>
-        <main className="flex-1 p-6 text-[#0D0D0B]">{children}</main>
+        <main className="flex-1 p-6 text-[#180F04]">{children}</main>
         <Footer />
       </div>
     </div>

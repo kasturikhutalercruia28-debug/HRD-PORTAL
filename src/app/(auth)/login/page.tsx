@@ -47,10 +47,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[#0D0D0B]">
+    <main className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[#180F04]">
       {/* Background glows */}
-      <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-[#AAFF47]/8 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#AAFF47]/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-[#D4A017]/8 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#D4A017]/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(170,255,71,0.03)_0%,_transparent_70%)] pointer-events-none" />
 
       <div className="w-full max-w-sm relative z-10">
@@ -73,7 +73,7 @@ export default function LoginPage() {
             </svg>
             <span className="font-['Fraunces'] text-white font-bold text-5xl tracking-tight leading-none">NEXUS</span>
           </div>
-          <p className="text-[10px] tracking-[0.2em] uppercase text-[#F0EDE5]/30 font-['Geist']">
+          <p className="text-[10px] tracking-[0.2em] uppercase text-[#FBF7EE]/30 font-['Geist']">
             Rotaract District 3141 · District Management Portal
           </p>
         </div>
@@ -83,7 +83,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <label htmlFor="email" className="block text-[10px] uppercase tracking-widest text-[#F0EDE5]/50 font-['Geist']">
+              <label htmlFor="email" className="block text-[10px] uppercase tracking-widest text-[#FBF7EE]/50 font-['Geist']">
                 Email
               </label>
               <input
@@ -94,12 +94,12 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@district3141.org"
-                className="w-full h-11 rounded-xl border border-white/[0.08] bg-white/[0.06] px-4 text-sm text-[#F0EDE5] placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/40 focus:border-[#AAFF47]/60 transition-all font-['Geist']"
+                className="w-full h-11 rounded-xl border border-white/[0.08] bg-white/[0.06] px-4 text-sm text-[#FBF7EE] placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#D4A017]/40 focus:border-[#D4A017]/60 transition-all font-['Geist']"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="password" className="block text-[10px] uppercase tracking-widest text-[#F0EDE5]/50 font-['Geist']">
+              <label htmlFor="password" className="block text-[10px] uppercase tracking-widest text-[#FBF7EE]/50 font-['Geist']">
                 Password
               </label>
               <input
@@ -110,7 +110,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full h-11 rounded-xl border border-white/[0.08] bg-white/[0.06] px-4 text-sm text-[#F0EDE5] placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/40 focus:border-[#AAFF47]/60 transition-all font-['Geist']"
+                className="w-full h-11 rounded-xl border border-white/[0.08] bg-white/[0.06] px-4 text-sm text-[#FBF7EE] placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#D4A017]/40 focus:border-[#D4A017]/60 transition-all font-['Geist']"
               />
             </div>
 
@@ -123,7 +123,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-1 h-11 rounded-xl bg-[#AAFF47] text-[#0D0D0B] text-sm font-bold tracking-wide hover:bg-[#bbff6a] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 font-['Geist'] shadow-lg shadow-[#AAFF47]/20"
+              className="w-full mt-1 h-11 rounded-xl bg-[#D4A017] text-[#180F04] text-sm font-bold tracking-wide hover:bg-[#e6b520] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 font-['Geist'] shadow-lg shadow-[#D4A017]/20"
             >
               {loading ? (
                 <>
@@ -137,7 +137,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center mt-6 text-[10px] text-[#F0EDE5]/20 font-['Geist'] tracking-wide">
+        <p className="text-center mt-6 text-[10px] text-[#FBF7EE]/20 font-['Geist'] tracking-wide">
           Authorised access only · Rotaract District 3141
         </p>
       </div>

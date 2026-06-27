@@ -6,14 +6,14 @@
 @tailwind utilities;
 
 :root {
-  --color-lime: #AAFF47;
-  --color-ink: #0D0D0B;
-  --color-cream: #F0EDE5;
+  --color-lime: #D4A017;
+  --color-ink: #180F04;
+  --color-cream: #FBF7EE;
 }
 
 @layer base {
   body {
-    @apply bg-[#0D0D0B] text-[#F0EDE5];
+    @apply bg-[#180F04] text-[#FBF7EE];
     font-family: 'Geist', system-ui, sans-serif;
   }
 

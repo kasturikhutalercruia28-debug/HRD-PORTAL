@@ -50,14 +50,14 @@ export default function ClubLayout({ children }: { children: React.ReactNode }) 
               flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-['Geist'] transition-colors
               ${
                 isActive(href)
-                  ? "bg-[#AAFF47]/10 text-[#AAFF47] font-medium"
+                  ? "bg-[#D4A017]/10 text-[#D4A017] font-medium"
                   : "text-white/60 hover:text-white hover:bg-white/5"
               }
             `}
           >
-            <Icon size={16} className={isActive(href) ? "text-[#AAFF47]" : "text-white/40"} />
+            <Icon size={16} className={isActive(href) ? "text-[#D4A017]" : "text-white/40"} />
             {label}
-            {isActive(href) && <ChevronRight size={14} className="ml-auto text-[#AAFF47]/60" />}
+            {isActive(href) && <ChevronRight size={14} className="ml-auto text-[#D4A017]/60" />}
           </Link>
         ))}
       </nav>
@@ -65,8 +65,8 @@ export default function ClubLayout({ children }: { children: React.ReactNode }) 
       <div className="border-t border-white/10 px-4 py-4">
         {session?.user && (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#AAFF47]/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-[#AAFF47] text-xs font-bold font-['Geist']">
+            <div className="w-8 h-8 rounded-full bg-[#D4A017]/20 flex items-center justify-center flex-shrink-0">
+              <span className="text-[#D4A017] text-xs font-bold font-['Geist']">
                 {session.user.name?.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -74,7 +74,7 @@ export default function ClubLayout({ children }: { children: React.ReactNode }) 
               <p className="text-white text-sm font-medium font-['Geist'] truncate">
                 {session.user.name}
               </p>
-              <span className="inline-block text-[10px] font-bold px-1.5 py-0.5 rounded font-['Geist'] bg-[#AAFF47] text-[#0D0D0B]">
+              <span className="inline-block text-[10px] font-bold px-1.5 py-0.5 rounded font-['Geist'] bg-[#D4A017] text-[#180F04]">
                 CLUB
               </span>
             </div>
@@ -92,8 +92,8 @@ export default function ClubLayout({ children }: { children: React.ReactNode }) 
   );
 
   return (
-    <div className="flex h-screen bg-[#F0EDE5] font-['Geist']">
-      <aside className="hidden lg:flex flex-col w-60 bg-[#0D0D0B] flex-shrink-0">
+    <div className="flex h-screen bg-[#FBF7EE] font-['Geist']">
+      <aside className="hidden lg:flex flex-col w-60 bg-[#180F04] flex-shrink-0">
         <SidebarContent />
       </aside>
 
@@ -106,7 +106,7 @@ export default function ClubLayout({ children }: { children: React.ReactNode }) 
 
       <aside
         className={`
-          fixed top-0 left-0 h-full w-60 bg-[#0D0D0B] z-50 transform transition-transform duration-200
+          fixed top-0 left-0 h-full w-60 bg-[#180F04] z-50 transform transition-transform duration-200
           lg:hidden
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -115,20 +115,20 @@ export default function ClubLayout({ children }: { children: React.ReactNode }) 
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="lg:hidden flex items-center gap-3 px-4 py-3 bg-[#0D0D0B] border-b border-white/10">
+        <header className="lg:hidden flex items-center gap-3 px-4 py-3 bg-[#180F04] border-b border-white/10">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="text-white/70 hover:text-white"
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <span className="font-['Fraunces'] font-bold text-[#AAFF47] text-lg">Orientations</span>
+          <span className="font-['Fraunces'] font-bold text-[#D4A017] text-lg">Orientations</span>
           <div className="ml-auto">
             <NotificationBell />
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto flex flex-col text-[#0D0D0B]">
+        <main className="flex-1 overflow-y-auto flex flex-col text-[#180F04]">
           <div className="flex-1">{children}</div>
           <Footer />
         </main>

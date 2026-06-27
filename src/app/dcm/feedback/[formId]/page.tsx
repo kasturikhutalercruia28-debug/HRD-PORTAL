@@ -56,18 +56,18 @@ export default function DcmFeedbackFormPage() {
     }
   }
 
-  if (loading) return <div className="p-8 text-center text-[#0D0D0B]/40 text-sm">Loading…</div>;
+  if (loading) return <div className="p-8 text-center text-[#180F04]/40 text-sm">Loading…</div>;
   if (!form) return <div className="p-8 text-center text-red-500 text-sm">Form not found</div>;
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B] mb-2">{form.eventName}</h1>
-      <p className="text-sm text-[#0D0D0B]/50 mb-6">Event Feedback</p>
+      <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04] mb-2">{form.eventName}</h1>
+      <p className="text-sm text-[#180F04]/50 mb-6">Event Feedback</p>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {form.questions.map((q) => (
           <div key={q.id} className="bg-white rounded-xl border border-black/5 p-5">
-            <label className="block text-sm font-semibold text-[#0D0D0B] mb-3">
+            <label className="block text-sm font-semibold text-[#180F04] mb-3">
               {q.questionText}
               {q.isRequired && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -77,7 +77,7 @@ export default function DcmFeedbackFormPage() {
                   <button key={n} type="button" onClick={() => setValue(q.id, String(n))}>
                     <Star
                       size={28}
-                      className={Number(responses[q.id]) >= n ? "fill-[#AAFF47] text-[#AAFF47]" : "text-[#0D0D0B]/20"}
+                      className={Number(responses[q.id]) >= n ? "fill-[#D4A017] text-[#D4A017]" : "text-[#180F04]/20"}
                     />
                   </button>
                 ))}
@@ -92,8 +92,8 @@ export default function DcmFeedbackFormPage() {
                     onClick={() => setValue(q.id, opt)}
                     className={`px-5 py-2 rounded-lg text-sm border transition-colors ${
                       responses[q.id] === opt
-                        ? "bg-[#AAFF47] border-[#AAFF47] text-[#0D0D0B] font-semibold"
-                        : "border-black/15 text-[#0D0D0B] hover:bg-black/5"
+                        ? "bg-[#D4A017] border-[#D4A017] text-[#180F04] font-semibold"
+                        : "border-black/15 text-[#180F04] hover:bg-black/5"
                     }`}
                   >
                     {opt}
@@ -110,8 +110,8 @@ export default function DcmFeedbackFormPage() {
                     onClick={() => setValue(q.id, opt)}
                     className={`w-full text-left px-4 py-2.5 rounded-lg text-sm border transition-colors ${
                       responses[q.id] === opt
-                        ? "bg-[#AAFF47] border-[#AAFF47] text-[#0D0D0B] font-semibold"
-                        : "border-black/15 text-[#0D0D0B] hover:bg-black/5"
+                        ? "bg-[#D4A017] border-[#D4A017] text-[#180F04] font-semibold"
+                        : "border-black/15 text-[#180F04] hover:bg-black/5"
                     }`}
                   >
                     {opt}
@@ -124,7 +124,7 @@ export default function DcmFeedbackFormPage() {
                 value={responses[q.id] ?? ""}
                 onChange={(e) => setValue(q.id, e.target.value)}
                 required={q.isRequired}
-                className="w-full border border-black/15 rounded-lg px-3 py-2 text-sm text-[#0D0D0B] bg-white placeholder:text-[#0D0D0B]/30 focus:outline-none focus:border-[#AAFF47]"
+                className="w-full border border-black/15 rounded-lg px-3 py-2 text-sm text-[#180F04] bg-white placeholder:text-[#180F04]/30 focus:outline-none focus:border-[#D4A017]"
                 placeholder="Your answer"
               />
             )}
@@ -134,7 +134,7 @@ export default function DcmFeedbackFormPage() {
                 onChange={(e) => setValue(q.id, e.target.value)}
                 required={q.isRequired}
                 rows={4}
-                className="w-full border border-black/15 rounded-lg px-3 py-2 text-sm text-[#0D0D0B] bg-white placeholder:text-[#0D0D0B]/30 focus:outline-none focus:border-[#AAFF47] resize-none"
+                className="w-full border border-black/15 rounded-lg px-3 py-2 text-sm text-[#180F04] bg-white placeholder:text-[#180F04]/30 focus:outline-none focus:border-[#D4A017] resize-none"
                 placeholder="Your answer"
               />
             )}
@@ -145,14 +145,14 @@ export default function DcmFeedbackFormPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex-1 border border-black/15 text-[#0D0D0B] py-2.5 rounded-lg text-sm hover:bg-black/5 transition-colors"
+            className="flex-1 border border-black/15 text-[#180F04] py-2.5 rounded-lg text-sm hover:bg-black/5 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="flex-1 bg-[#AAFF47] text-[#0D0D0B] py-2.5 rounded-lg text-sm font-semibold hover:bg-[#99ee36] transition-colors disabled:opacity-50"
+            className="flex-1 bg-[#D4A017] text-[#180F04] py-2.5 rounded-lg text-sm font-semibold hover:bg-[#b8860b] transition-colors disabled:opacity-50"
           >
             {submitting ? "Submitting…" : "Submit Feedback"}
           </button>

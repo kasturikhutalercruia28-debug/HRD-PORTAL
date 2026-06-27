@@ -32,17 +32,17 @@ export default async function HrdComplaintsPage({
   return (
     <div className="max-w-5xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Complaints</h1>
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Complaints</h1>
         <div className="flex gap-2">
           <a
             href="/api/export/complaints?format=csv"
-            className="flex items-center gap-1.5 text-xs border border-black/15 text-[#0D0D0B] px-3 py-1.5 rounded-lg hover:bg-black/5 transition-colors"
+            className="flex items-center gap-1.5 text-xs border border-black/15 text-[#180F04] px-3 py-1.5 rounded-lg hover:bg-black/5 transition-colors"
           >
             <Download size={13} /> CSV
           </a>
           <a
             href="/api/export/complaints?format=xlsx"
-            className="flex items-center gap-1.5 text-xs bg-[#AAFF47] text-[#0D0D0B] px-3 py-1.5 rounded-lg hover:bg-[#99ee36] transition-colors font-semibold"
+            className="flex items-center gap-1.5 text-xs bg-[#D4A017] text-[#180F04] px-3 py-1.5 rounded-lg hover:bg-[#b8860b] transition-colors font-semibold"
           >
             <Download size={13} /> Excel
           </a>
@@ -55,8 +55,8 @@ export default async function HrdComplaintsPage({
           href="/hrd/complaints"
           className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
             !searchParams.status
-              ? "bg-[#0D0D0B] text-white border-[#0D0D0B]"
-              : "border-black/15 text-[#0D0D0B] hover:bg-black/5"
+              ? "bg-[#180F04] text-white border-[#180F04]"
+              : "border-black/15 text-[#180F04] hover:bg-black/5"
           }`}
         >
           All
@@ -67,8 +67,8 @@ export default async function HrdComplaintsPage({
             href={`/hrd/complaints?status=${s}`}
             className={`text-xs px-3 py-1.5 rounded-full border transition-colors capitalize ${
               searchParams.status === s
-                ? "bg-[#0D0D0B] text-white border-[#0D0D0B]"
-                : "border-black/15 text-[#0D0D0B] hover:bg-black/5"
+                ? "bg-[#180F04] text-white border-[#180F04]"
+                : "border-black/15 text-[#180F04] hover:bg-black/5"
             }`}
           >
             {s.replace("_", " ")}
@@ -77,7 +77,7 @@ export default async function HrdComplaintsPage({
       </div>
 
       {complaints.length === 0 ? (
-        <div className="bg-white rounded-xl border border-black/5 p-12 text-center text-[#0D0D0B]/40 text-sm">
+        <div className="bg-white rounded-xl border border-black/5 p-12 text-center text-[#180F04]/40 text-sm">
           No complaints
         </div>
       ) : (
@@ -86,15 +86,15 @@ export default async function HrdComplaintsPage({
             <Link
               key={c.id}
               href={`/hrd/complaints/${c.id}`}
-              className="flex items-start justify-between gap-4 bg-white rounded-xl border border-black/5 p-4 hover:border-[#AAFF47] transition-colors"
+              className="flex items-start justify-between gap-4 bg-white rounded-xl border border-black/5 p-4 hover:border-[#D4A017] transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm text-[#0D0D0B] truncate">{c.subject}</p>
-                <p className="text-xs text-[#0D0D0B]/50 mt-0.5">
+                <p className="font-semibold text-sm text-[#180F04] truncate">{c.subject}</p>
+                <p className="text-xs text-[#180F04]/50 mt-0.5">
                   {c.submitter.name} · {c.submitter.role}
                 </p>
                 {c.history[0]?.remark && (
-                  <p className="text-xs text-[#0D0D0B]/40 mt-0.5 line-clamp-1">
+                  <p className="text-xs text-[#180F04]/40 mt-0.5 line-clamp-1">
                     Last remark: {c.history[0].remark}
                   </p>
                 )}
@@ -103,7 +103,7 @@ export default async function HrdComplaintsPage({
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[c.status]}`}>
                   {c.status.replace("_", " ")}
                 </span>
-                <span className="text-[10px] text-[#0D0D0B]/40">
+                <span className="text-[10px] text-[#180F04]/40">
                   {new Date(c.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
                 </span>
               </div>

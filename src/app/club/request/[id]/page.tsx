@@ -18,7 +18,7 @@ const STATUS_CONFIG = {
   rejected: { label: "Rejected", color: "bg-red-100 text-red-700 border-red-200", icon: XCircle },
   scheduled: { label: "Scheduled", color: "bg-blue-100 text-blue-700 border-blue-200", icon: CalendarCheck },
   conducted: { label: "Conducted", color: "bg-purple-100 text-purple-700 border-purple-200", icon: CheckCircle2 },
-  feedback_submitted: { label: "Feedback Submitted", color: "bg-[#AAFF47]/20 text-[#0D0D0B] border-[#AAFF47]/30", icon: MessageSquare },
+  feedback_submitted: { label: "Feedback Submitted", color: "bg-[#D4A017]/20 text-[#180F04] border-[#D4A017]/30", icon: MessageSquare },
   certificate_generated: { label: "Certificate Generated", color: "bg-emerald-100 text-emerald-700 border-emerald-200", icon: Award },
 };
 
@@ -63,10 +63,10 @@ export default async function ClubRequestDetailPage({
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-2xl">
       <div className="flex items-center gap-3">
-        <Link href="/club/dashboard" className="text-[#0D0D0B]/40 hover:text-[#0D0D0B] transition-colors">
+        <Link href="/club/dashboard" className="text-[#180F04]/40 hover:text-[#180F04] transition-colors">
           <ArrowLeft size={18} />
         </Link>
-        <h1 className="font-['Fraunces'] text-xl font-bold text-[#0D0D0B]">
+        <h1 className="font-['Fraunces'] text-xl font-bold text-[#180F04]">
           {TYPE_LABELS[request.orientationType]}
         </h1>
       </div>
@@ -93,7 +93,7 @@ export default async function ClubRequestDetailPage({
       {request.status === "rejected" && (
         <Link
           href="/club/request/new"
-          className="flex items-center gap-2 px-4 py-3 bg-[#0D0D0B] text-[#AAFF47] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors w-fit"
+          className="flex items-center gap-2 px-4 py-3 bg-[#180F04] text-[#D4A017] rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors w-fit"
         >
           <AlertCircle size={15} />
           Submit a New Request
@@ -113,20 +113,20 @@ export default async function ClubRequestDetailPage({
 
       {/* Details */}
       <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4">
-        <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-sm">Request Details</h2>
+        <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-sm">Request Details</h2>
         <div className="grid grid-cols-2 gap-4 text-sm font-['Geist']">
           <div>
-            <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-1">Submitted</p>
-            <p className="text-[#0D0D0B]">{fmtDate(request.createdAt)}</p>
+            <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-1">Submitted</p>
+            <p className="text-[#180F04]">{fmtDate(request.createdAt)}</p>
           </div>
           <div>
-            <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-1">Expected Attendance</p>
-            <p className="text-[#0D0D0B]">{request.expectedAttendance}</p>
+            <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-1">Expected Attendance</p>
+            <p className="text-[#180F04]">{request.expectedAttendance}</p>
           </div>
         </div>
 
         <div>
-          <p className="text-[#0D0D0B]/40 text-xs uppercase tracking-wide mb-2">Preferred Dates</p>
+          <p className="text-[#180F04]/40 text-xs uppercase tracking-wide mb-2">Preferred Dates</p>
           <div className="space-y-1.5">
             {[
               { date: request.preferredDate1, time: request.preferredTime1, label: "1st" },
@@ -134,8 +134,8 @@ export default async function ClubRequestDetailPage({
               { date: request.preferredDate3, time: request.preferredTime3, label: "3rd" },
             ].map(({ date, time, label }) => (
               <div key={label} className="flex items-center gap-2 text-sm">
-                <span className="text-[#0D0D0B]/40 w-8">{label}</span>
-                <span className="text-[#0D0D0B]">
+                <span className="text-[#180F04]/40 w-8">{label}</span>
+                <span className="text-[#180F04]">
                   {fmtDate(date)} — {TIME_LABELS[time]}
                 </span>
               </div>
@@ -147,14 +147,14 @@ export default async function ClubRequestDetailPage({
       {/* Answers */}
       {request.answers.length > 0 && (
         <div className="bg-white rounded-xl border border-black/5 shadow-sm p-5 space-y-4">
-          <h2 className="font-['Fraunces'] font-semibold text-[#0D0D0B] text-sm">Your Answers</h2>
+          <h2 className="font-['Fraunces'] font-semibold text-[#180F04] text-sm">Your Answers</h2>
           <div className="space-y-4">
             {request.answers.map((a) => (
               <div key={a.id}>
-                <p className="text-[#0D0D0B]/60 text-xs font-['Geist'] mb-1">
+                <p className="text-[#180F04]/60 text-xs font-['Geist'] mb-1">
                   {a.question.questionText}
                 </p>
-                <p className="text-[#0D0D0B] text-sm font-['Geist']">{a.answerText}</p>
+                <p className="text-[#180F04] text-sm font-['Geist']">{a.answerText}</p>
               </div>
             ))}
           </div>

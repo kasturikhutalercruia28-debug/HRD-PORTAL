@@ -20,17 +20,17 @@ export default async function DcmComplaintsPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">My Complaints</h1>
+        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">My Complaints</h1>
         <Link
           href="/dcm/complaints/new"
-          className="flex items-center gap-2 bg-[#AAFF47] text-[#0D0D0B] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#99ee36] transition-colors"
+          className="flex items-center gap-2 bg-[#D4A017] text-[#180F04] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#b8860b] transition-colors"
         >
           <Plus size={16} /> New Complaint
         </Link>
       </div>
 
       {complaints.length === 0 ? (
-        <div className="bg-white rounded-xl border border-black/5 p-12 text-center text-[#0D0D0B]/40 text-sm">
+        <div className="bg-white rounded-xl border border-black/5 p-12 text-center text-[#180F04]/40 text-sm">
           No complaints submitted yet
         </div>
       ) : (
@@ -39,18 +39,18 @@ export default async function DcmComplaintsPage() {
             <Link
               key={c.id}
               href={`/dcm/complaints/${c.id}`}
-              className="block bg-white rounded-xl border border-black/5 p-4 hover:border-[#AAFF47] transition-colors"
+              className="block bg-white rounded-xl border border-black/5 p-4 hover:border-[#D4A017] transition-colors"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-[#0D0D0B] truncate">{c.subject}</p>
-                  <p className="text-xs text-[#0D0D0B]/50 mt-0.5 line-clamp-2">{c.description}</p>
+                  <p className="font-semibold text-sm text-[#180F04] truncate">{c.subject}</p>
+                  <p className="text-xs text-[#180F04]/50 mt-0.5 line-clamp-2">{c.description}</p>
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full font-medium shrink-0 ${STATUS_COLORS[c.status]}`}>
                   {c.status.replace("_", " ")}
                 </span>
               </div>
-              <p className="text-[10px] text-[#0D0D0B]/40 mt-2">
+              <p className="text-[10px] text-[#180F04]/40 mt-2">
                 {new Date(c.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
               </p>
             </Link>

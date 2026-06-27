@@ -124,14 +124,14 @@ export default function AvenuesPage() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#0D0D0B]">Avenues</h1>
-          <p className="text-[#0D0D0B]/50 text-sm mt-1 font-['Geist']">
+          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Avenues</h1>
+          <p className="text-[#180F04]/50 text-sm mt-1 font-['Geist']">
             Manage avenues and their evaluation parameters
           </p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 bg-[#0D0D0B] text-[#AAFF47] px-4 py-2.5 rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#0D0D0B]/80 transition-colors"
+          className="flex items-center gap-2 bg-[#180F04] text-[#D4A017] px-4 py-2.5 rounded-lg text-sm font-semibold font-['Geist'] hover:bg-[#180F04]/80 transition-colors"
         >
           <Plus size={15} />
           Add Avenue
@@ -141,18 +141,18 @@ export default function AvenuesPage() {
       <div className="bg-white rounded-xl border border-black/5 shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-[#0D0D0B]/30" />
+            <Loader2 size={24} className="animate-spin text-[#180F04]/30" />
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm font-['Geist']">
               <thead>
-                <tr className="border-b border-black/5 bg-[#F0EDE5]/50">
+                <tr className="border-b border-black/5 bg-[#FBF7EE]/50">
                   {["#", "Avenue", "P6 Label", "P7 Label", "DEC", "DCMs", "Status", "Actions"].map(
                     (h) => (
                       <th
                         key={h}
-                        className="text-left px-4 py-3 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide"
+                        className="text-left px-4 py-3 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide"
                       >
                         {h}
                       </th>
@@ -164,18 +164,18 @@ export default function AvenuesPage() {
                 {avenues.map((av, i) => (
                   <tr
                     key={av.id}
-                    className={`border-b border-black/5 hover:bg-[#F0EDE5]/20 transition-colors ${
+                    className={`border-b border-black/5 hover:bg-[#FBF7EE]/20 transition-colors ${
                       i === avenues.length - 1 ? "border-none" : ""
                     }`}
                   >
-                    <td className="px-4 py-3 text-[#0D0D0B]/40 text-xs">{av.displayOrder}</td>
-                    <td className="px-4 py-3 font-medium text-[#0D0D0B]">{av.name}</td>
-                    <td className="px-4 py-3 text-[#0D0D0B]/60">{av.param6Label}</td>
-                    <td className="px-4 py-3 text-[#0D0D0B]/60">{av.param7Label}</td>
-                    <td className="px-4 py-3 text-[#0D0D0B]/60">
-                      {av.dec?.name ?? <span className="text-[#0D0D0B]/25">Unassigned</span>}
+                    <td className="px-4 py-3 text-[#180F04]/40 text-xs">{av.displayOrder}</td>
+                    <td className="px-4 py-3 font-medium text-[#180F04]">{av.name}</td>
+                    <td className="px-4 py-3 text-[#180F04]/60">{av.param6Label}</td>
+                    <td className="px-4 py-3 text-[#180F04]/60">{av.param7Label}</td>
+                    <td className="px-4 py-3 text-[#180F04]/60">
+                      {av.dec?.name ?? <span className="text-[#180F04]/25">Unassigned</span>}
                     </td>
-                    <td className="px-4 py-3 text-[#0D0D0B]/70">{av._count.dcms}</td>
+                    <td className="px-4 py-3 text-[#180F04]/70">{av._count.dcms}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${
@@ -191,7 +191,7 @@ export default function AvenuesPage() {
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => openEdit(av)}
-                          className="text-[#0D0D0B]/40 hover:text-[#0D0D0B] transition-colors"
+                          className="text-[#180F04]/40 hover:text-[#180F04] transition-colors"
                           title="Edit"
                         >
                           <Pencil size={14} />
@@ -199,7 +199,7 @@ export default function AvenuesPage() {
                         <button
                           onClick={() => handleToggle(av.id)}
                           disabled={toggling === av.id}
-                          className="text-[#0D0D0B]/40 hover:text-[#0D0D0B] transition-colors disabled:opacity-30"
+                          className="text-[#180F04]/40 hover:text-[#180F04] transition-colors disabled:opacity-30"
                           title={av.isActive ? "Deactivate" : "Activate"}
                         >
                           {toggling === av.id ? (
@@ -216,7 +216,7 @@ export default function AvenuesPage() {
                 ))}
                 {avenues.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-10 text-center text-[#0D0D0B]/30">
+                    <td colSpan={8} className="px-4 py-10 text-center text-[#180F04]/30">
                       No avenues yet. Create the first one.
                     </td>
                   </tr>
@@ -232,62 +232,62 @@ export default function AvenuesPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
             <div className="flex items-center justify-between px-6 py-5 border-b border-black/5">
-              <h2 className="font-['Fraunces'] font-bold text-[#0D0D0B] text-lg">
+              <h2 className="font-['Fraunces'] font-bold text-[#180F04] text-lg">
                 {editId ? "Edit Avenue" : "Add New Avenue"}
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-[#0D0D0B]/30 hover:text-[#0D0D0B] transition-colors"
+                className="text-[#180F04]/30 hover:text-[#180F04] transition-colors"
               >
                 <X size={18} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                   Avenue Name
                 </label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="e.g. Community Service"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                   P6 Label (Avenue-specific)
                 </label>
                 <input
                   type="text"
                   value={form.param6Label}
                   onChange={(e) => setForm({ ...form, param6Label: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="e.g. Project Impact"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                   P7 Label (Avenue-specific)
                 </label>
                 <input
                   type="text"
                   value={form.param7Label}
                   onChange={(e) => setForm({ ...form, param7Label: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="e.g. Volunteer Hours"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0D0D0B]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
+                <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">
                   Display Order
                 </label>
                 <input
                   type="number"
                   value={form.displayOrder}
                   onChange={(e) => setForm({ ...form, displayOrder: e.target.value })}
-                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#0D0D0B] focus:outline-none focus:ring-2 focus:ring-[#AAFF47]/50 focus:border-[#AAFF47]"
+                  className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017]"
                   placeholder="e.g. 1"
                   min={1}
                 />
@@ -299,14 +299,14 @@ export default function AvenuesPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#0D0D0B]/60 hover:bg-[#F0EDE5] transition-colors font-['Geist']"
+                  className="flex-1 border border-black/10 rounded-lg py-2.5 text-sm font-semibold text-[#180F04]/60 hover:bg-[#FBF7EE] transition-colors font-['Geist']"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 bg-[#0D0D0B] text-[#AAFF47] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#0D0D0B]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2"
+                  className="flex-1 bg-[#180F04] text-[#D4A017] rounded-lg py-2.5 text-sm font-semibold hover:bg-[#180F04]/80 transition-colors disabled:opacity-50 font-['Geist'] flex items-center justify-center gap-2"
                 >
                   {saving ? (
                     <Loader2 size={14} className="animate-spin" />

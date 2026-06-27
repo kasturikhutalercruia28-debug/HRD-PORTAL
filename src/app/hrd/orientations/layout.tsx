@@ -29,8 +29,8 @@ export default function OrientationsLayout({ children }: { children: React.React
                 href={href}
                 className={`flex items-center gap-1.5 px-3 py-3.5 text-sm font-['Geist'] font-medium border-b-2 transition-colors whitespace-nowrap ${
                   active
-                    ? "border-[#0D0D0B] text-[#0D0D0B]"
-                    : "border-transparent text-[#0D0D0B]/40 hover:text-[#0D0D0B]/70"
+                    ? "border-[#180F04] text-[#180F04]"
+                    : "border-transparent text-[#180F04]/40 hover:text-[#180F04]/70"
                 }`}
               >
                 <Icon size={14} />

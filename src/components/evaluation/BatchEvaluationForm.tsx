@@ -60,7 +60,7 @@ function computeRawScore(row: ScoreRow): number | null {
 
 function getCategory(score: number): { label: string; color: string; bg: string } {
   const pct = (score / 35) * 100;
-  if (pct >= 75) return { label: "Elite", color: "text-[#0D0D0B]", bg: "bg-[#AAFF47]" };
+  if (pct >= 75) return { label: "Elite", color: "text-[#180F04]", bg: "bg-[#D4A017]" };
   if (pct >= 50) return { label: "Performing", color: "text-blue-700", bg: "bg-blue-100" };
   return { label: "Underperforming", color: "text-red-700", bg: "bg-red-100" };
 }
@@ -172,9 +172,9 @@ export default function BatchEvaluationForm({
   const progressPct = dcms.length > 0 ? (validCount / dcms.length) * 100 : 0;
 
   return (
-    <div className="flex flex-col h-full min-h-screen bg-[#F0EDE5]">
+    <div className="flex flex-col h-full min-h-screen bg-[#FBF7EE]">
       {/* Sticky header */}
-      <div className="sticky top-0 z-30 bg-[#0D0D0B] border-b border-white/10 px-4 lg:px-8 py-3 flex items-center gap-4">
+      <div className="sticky top-0 z-30 bg-[#180F04] border-b border-white/10 px-4 lg:px-8 py-3 flex items-center gap-4">
         <div className="flex-1 min-w-0">
           <p className="text-white/40 text-xs font-['Geist'] uppercase tracking-wide">
             {avenueName}
@@ -184,7 +184,7 @@ export default function BatchEvaluationForm({
           </p>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
-          <span className="text-[#AAFF47] font-['Fraunces'] font-bold text-lg tabular-nums">
+          <span className="text-[#D4A017] font-['Fraunces'] font-bold text-lg tabular-nums">
             {validCount}
             <span className="text-white/30 font-normal text-sm">/{dcms.length}</span>
           </span>
@@ -199,25 +199,25 @@ export default function BatchEvaluationForm({
         <table className="w-full text-sm font-['Geist'] border-separate border-spacing-0">
           <thead>
             <tr className="bg-white border-b border-black/10">
-              <th className="sticky left-0 bg-white text-left px-6 py-4 text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide min-w-[200px] z-10 border-r border-black/5">
+              <th className="sticky left-0 bg-white text-left px-6 py-4 text-[#180F04]/50 font-medium text-xs uppercase tracking-wide min-w-[200px] z-10 border-r border-black/5">
                 DCM
               </th>
               {paramLabels.map((p) => (
                 <th
                   key={p.key}
-                  className="px-3 py-4 text-center text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide min-w-[70px]"
+                  className="px-3 py-4 text-center text-[#180F04]/50 font-medium text-xs uppercase tracking-wide min-w-[70px]"
                   title={p.full}
                 >
                   <span className="block">{p.short}</span>
-                  <span className="block text-[9px] normal-case text-[#0D0D0B]/30 font-normal max-w-[60px] truncate mx-auto leading-tight mt-0.5">
+                  <span className="block text-[9px] normal-case text-[#180F04]/30 font-normal max-w-[60px] truncate mx-auto leading-tight mt-0.5">
                     {p.full}
                   </span>
                 </th>
               ))}
-              <th className="px-4 py-4 text-center text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide min-w-[110px]">
+              <th className="px-4 py-4 text-center text-[#180F04]/50 font-medium text-xs uppercase tracking-wide min-w-[110px]">
                 Score
               </th>
-              <th className="px-4 py-4 text-left text-[#0D0D0B]/50 font-medium text-xs uppercase tracking-wide min-w-[240px]">
+              <th className="px-4 py-4 text-left text-[#180F04]/50 font-medium text-xs uppercase tracking-wide min-w-[240px]">
                 Remarks
               </th>
             </tr>
@@ -233,7 +233,7 @@ export default function BatchEvaluationForm({
               return (
                 <tr
                   key={dcm.id}
-                  className={`border-b border-black/5 hover:bg-[#F0EDE5]/20 transition-colors ${
+                  className={`border-b border-black/5 hover:bg-[#FBF7EE]/20 transition-colors ${
                     i === dcms.length - 1 ? "border-none" : ""
                   }`}
                 >
@@ -245,8 +245,8 @@ export default function BatchEvaluationForm({
                         <div className="w-3.5 h-3.5 rounded-full border-2 border-black/20 flex-shrink-0" />
                       )}
                       <div>
-                        <p className="font-medium text-[#0D0D0B]">{dcm.name}</p>
-                        <p className="text-[#0D0D0B]/40 text-xs">{dcm.title}</p>
+                        <p className="font-medium text-[#180F04]">{dcm.name}</p>
+                        <p className="text-[#180F04]/40 text-xs">{dcm.title}</p>
                       </div>
                     </div>
                   </td>
@@ -261,9 +261,9 @@ export default function BatchEvaluationForm({
                   <td className="px-4 py-4 text-center">
                     {raw !== null ? (
                       <div>
-                        <span className="font-['Fraunces'] font-bold text-[#0D0D0B] text-base tabular-nums">
+                        <span className="font-['Fraunces'] font-bold text-[#180F04] text-base tabular-nums">
                           {raw}
-                          <span className="text-[#0D0D0B]/30 font-normal text-sm">/35</span>
+                          <span className="text-[#180F04]/30 font-normal text-sm">/35</span>
                         </span>
                         <div className="mt-1">
                           {(() => {
@@ -279,7 +279,7 @@ export default function BatchEvaluationForm({
                         </div>
                       </div>
                     ) : (
-                      <span className="text-[#0D0D0B]/20 text-xs">—</span>
+                      <span className="text-[#180F04]/20 text-xs">—</span>
                     )}
                   </td>
                   <td className="px-4 py-4">
@@ -294,7 +294,7 @@ export default function BatchEvaluationForm({
                         ${
                           needsRemarks && !remarksOk
                             ? "border-amber-400 bg-amber-50 placeholder:text-amber-500 focus:border-amber-500"
-                            : "border-black/10 bg-[#F0EDE5]/60 placeholder:text-[#0D0D0B]/30 focus:border-[#AAFF47]"
+                            : "border-black/10 bg-[#FBF7EE]/60 placeholder:text-[#180F04]/30 focus:border-[#D4A017]"
                         }
                       `}
                     />
@@ -342,14 +342,14 @@ export default function BatchEvaluationForm({
                     ) : (
                       <div className="w-3.5 h-3.5 rounded-full border-2 border-black/20 flex-shrink-0" />
                     )}
-                    <p className="font-medium text-[#0D0D0B] text-sm">{dcm.name}</p>
+                    <p className="font-medium text-[#180F04] text-sm">{dcm.name}</p>
                   </div>
-                  <p className="text-[#0D0D0B]/40 text-xs mt-0.5 ml-5">{dcm.title}</p>
+                  <p className="text-[#180F04]/40 text-xs mt-0.5 ml-5">{dcm.title}</p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   {raw !== null && (
                     <div className="text-right">
-                      <p className="font-['Fraunces'] font-bold text-[#0D0D0B] text-sm tabular-nums">
+                      <p className="font-['Fraunces'] font-bold text-[#180F04] text-sm tabular-nums">
                         {raw}/35
                       </p>
                       {(() => {
@@ -365,9 +365,9 @@ export default function BatchEvaluationForm({
                     </div>
                   )}
                   {expanded ? (
-                    <ChevronUp size={16} className="text-[#0D0D0B]/30" />
+                    <ChevronUp size={16} className="text-[#180F04]/30" />
                   ) : (
-                    <ChevronDown size={16} className="text-[#0D0D0B]/30" />
+                    <ChevronDown size={16} className="text-[#180F04]/30" />
                   )}
                 </div>
               </button>
@@ -377,7 +377,7 @@ export default function BatchEvaluationForm({
                 <div className="px-4 pb-4 border-t border-black/5 pt-3 space-y-4">
                   {paramLabels.map((p) => (
                     <div key={p.key}>
-                      <p className="text-[#0D0D0B]/60 text-xs font-medium mb-1.5">
+                      <p className="text-[#180F04]/60 text-xs font-medium mb-1.5">
                         {p.short}: {p.full}
                       </p>
                       <ScoreSelector
@@ -387,7 +387,7 @@ export default function BatchEvaluationForm({
                     </div>
                   ))}
                   <div>
-                    <p className="text-[#0D0D0B]/60 text-xs font-medium mb-1.5">
+                    <p className="text-[#180F04]/60 text-xs font-medium mb-1.5">
                       Remarks{needsRemarks ? " (required)" : " (optional)"}
                     </p>
                     <textarea
@@ -399,7 +399,7 @@ export default function BatchEvaluationForm({
                         ${
                           needsRemarks && !remarksOk
                             ? "border-amber-400 bg-amber-50 placeholder:text-amber-500"
-                            : "border-black/10 bg-[#F0EDE5]/40 placeholder:text-[#0D0D0B]/30 focus:border-[#AAFF47]"
+                            : "border-black/10 bg-[#FBF7EE]/40 placeholder:text-[#180F04]/30 focus:border-[#D4A017]"
                         }
                       `}
                     />
@@ -422,10 +422,10 @@ export default function BatchEvaluationForm({
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center gap-4">
           <div className="flex-1 w-full">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[#0D0D0B]/60 text-xs font-['Geist']">
+              <span className="text-[#180F04]/60 text-xs font-['Geist']">
                 {validCount} of {dcms.length} ready
               </span>
-              <span className="text-[#0D0D0B]/60 text-xs font-['Geist']">
+              <span className="text-[#180F04]/60 text-xs font-['Geist']">
                 {Math.round(progressPct)}%
               </span>
             </div>
@@ -434,7 +434,7 @@ export default function BatchEvaluationForm({
                 className="h-full rounded-full transition-all duration-300"
                 style={{
                   width: `${progressPct}%`,
-                  background: allValid ? "#AAFF47" : "#3b82f6",
+                  background: allValid ? "#D4A017" : "#3b82f6",
                 }}
               />
             </div>
@@ -454,8 +454,8 @@ export default function BatchEvaluationForm({
               className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm font-['Geist'] transition-all
                 ${
                   allValid && !submitting
-                    ? "bg-[#AAFF47] text-[#0D0D0B] hover:bg-[#AAFF47]/90 shadow-sm"
-                    : "bg-black/10 text-[#0D0D0B]/30 cursor-not-allowed"
+                    ? "bg-[#D4A017] text-[#180F04] hover:bg-[#D4A017]/90 shadow-sm"
+                    : "bg-black/10 text-[#180F04]/30 cursor-not-allowed"
                 }
               `}
             >

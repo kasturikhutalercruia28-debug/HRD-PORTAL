@@ -15,23 +15,23 @@ export function StatCard({ title, value, subtitle, icon, className, accent }: St
     <div className={cn('rounded-xl border border-white/10 bg-white/5 p-5', className)}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <p className="text-xs uppercase tracking-wider text-[#F0EDE5]/50 mb-1 truncate">
+          <p className="text-xs uppercase tracking-wider text-[#FBF7EE]/50 mb-1 truncate">
             {title}
           </p>
           <p
             className={cn(
               'text-2xl font-bold leading-none tracking-tight',
-              accent ? 'text-[#AAFF47]' : 'text-[#F0EDE5]'
+              accent ? 'text-[#D4A017]' : 'text-[#FBF7EE]'
             )}
             style={{ fontFamily: 'Fraunces, serif' }}
           >
             {value}
           </p>
           {subtitle && (
-            <p className="mt-1.5 text-xs text-[#F0EDE5]/40 truncate">{subtitle}</p>
+            <p className="mt-1.5 text-xs text-[#FBF7EE]/40 truncate">{subtitle}</p>
           )}
         </div>
-        {icon && <div className="shrink-0 text-[#F0EDE5]/30 mt-0.5">{icon}</div>}
+        {icon && <div className="shrink-0 text-[#FBF7EE]/30 mt-0.5">{icon}</div>}
       </div>
     </div>
   )
