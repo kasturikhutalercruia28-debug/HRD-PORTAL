@@ -109,7 +109,7 @@ export default function UsersPage() {
     e.preventDefault();
     setFormError("");
     if (!form.name || !form.email || !form.password) { setFormError("Name, email and password are required."); return; }
-    if (form.role === "DEC" && !form.avenueId) { setFormError("Avenue is required for DEC users."); return; }
+    if ((form.role === "DEC" || form.role === "DCM") && !form.avenueId) { setFormError("Avenue is required for DEC and DCM users."); return; }
     setSubmitting(true);
     const res = await fetch("/api/hrd/users", {
       method: "POST",
@@ -119,7 +119,7 @@ export default function UsersPage() {
         email: form.email,
         password: form.password,
         role: form.role,
-        avenueId: form.role === "DEC" ? form.avenueId : undefined,
+        avenueId: (form.role === "DEC" || form.role === "DCM") ? form.avenueId : undefined,
       }),
     });
     const data = await res.json();
@@ -365,7 +365,7 @@ export default function UsersPage() {
                   <option value="DCM">DCM</option>
                 </select>
               </div>
-              {form.role === "DEC" && (
+              {(form.role === "DEC" || form.role === "DCM") && (
                 <div>
                   <label className="block text-xs font-semibold text-[#180F04]/60 uppercase tracking-wide mb-1.5 font-['Geist']">Avenue</label>
                   <select value={form.avenueId} onChange={(e) => setForm({ ...form, avenueId: e.target.value })}
