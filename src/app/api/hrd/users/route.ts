@@ -33,12 +33,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  if (!["DEC", "DRR"].includes(role)) {
-    return NextResponse.json({ error: "Invalid role. Must be DEC or DRR." }, { status: 400 });
+  if (!["DEC", "DRR", "DCM"].includes(role)) {
+    return NextResponse.json({ error: "Invalid role. Must be DEC, DRR, or DCM." }, { status: 400 });
   }
 
-  if (role === "DEC" && !avenueId) {
-    return NextResponse.json({ error: "avenueId is required for DEC users" }, { status: 400 });
+  if ((role === "DEC" || role === "DCM") && !avenueId) {
+    return NextResponse.json({ error: "avenueId is required for DEC and DCM users" }, { status: 400 });
   }
 
   if (password.length < 8) {
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       email,
       passwordHash,
       role,
-      avenueId: role === "DEC" ? avenueId : null,
+      avenueId: (role === "DEC" || role === "DCM") ? avenueId : null,
       isActive: true,
     },
     include: { avenue: { select: { id: true, name: true } } },
