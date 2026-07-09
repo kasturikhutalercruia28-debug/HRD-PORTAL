@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import ChangePasswordForm from "@/components/ChangePasswordForm";
 
 export default function ClubSettingsPage() {

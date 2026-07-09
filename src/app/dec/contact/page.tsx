@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import ContactsView from "@/components/ContactsView";
 
 export default function DecContactPage() {
