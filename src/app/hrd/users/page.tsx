@@ -362,6 +362,7 @@ export default function UsersPage() {
                   className="w-full border border-black/10 rounded-lg px-3 py-2.5 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017]/50 focus:border-[#D4A017] bg-white">
                   <option value="DEC">DEC</option>
                   <option value="DRR">DRR</option>
+                  <option value="DCM">DCM</option>
                 </select>
               </div>
               {form.role === "DEC" && (
