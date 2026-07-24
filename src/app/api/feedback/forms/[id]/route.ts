@@ -11,7 +11,6 @@ export async function GET(
 ) {
   const session = await auth();
   const user = session?.user as { id?: string; role?: string } | undefined;
-  if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const form = await prisma.eventFeedbackForm.findUnique({
     where: { id: params.id },
@@ -21,6 +20,12 @@ export async function GET(
     },
   });
   if (!form) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  // Logged-in users (any role) get full access, same as before.
+  if (user?.id) return NextResponse.json(form);
+
+  // No session — only allow if the form has been made public by HRD.
+  if (!form.isPublic) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   return NextResponse.json(form);
 }
 
@@ -45,6 +50,7 @@ export async function PATCH(
       ...(body.eventDate !== undefined && { eventDate: new Date(body.eventDate) }),
       ...(body.isActive !== undefined && { isActive: body.isActive }),
       ...(body.allowResubmit !== undefined && { allowResubmit: body.allowResubmit }),
+      ...(body.isPublic !== undefined && { isPublic: body.isPublic }),
       ...(body.feedbackOpenAt !== undefined && { feedbackOpenAt: body.feedbackOpenAt ? new Date(body.feedbackOpenAt) : null }),
       ...(body.feedbackCloseAt !== undefined && { feedbackCloseAt: body.feedbackCloseAt ? new Date(body.feedbackCloseAt) : null }),
     },

@@ -38,8 +38,8 @@ export async function GET(
   const rows = form.submissions.map((sub) => {
     const responseMap = Object.fromEntries(sub.responses.map((r) => [r.questionId, r.answer]));
     const row: Record<string, string> = {
-      "Submitted By": sub.submitter.name,
-      "Role": sub.submitter.role,
+      "Submitted By": sub.submitter ? sub.submitter.name : (sub.respondentName ?? "Unknown"),
+      "Role": sub.submitter ? sub.submitter.role : "Public",
       "Submitted At": sub.submittedAt.toISOString(),
     };
     form.questions.forEach((q) => {
