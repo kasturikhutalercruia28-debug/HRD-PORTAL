@@ -25,8 +25,6 @@ export async function GET(
     },
     orderBy: { submittedAt: "desc" },
   });
-  // Note: respondentName + deviceId are plain columns on EventFeedbackSubmission,
-  // already included by default in findMany — no extra select needed.
 
   return NextResponse.json(submissions);
 }
