@@ -327,7 +327,6 @@ model EventFeedbackForm {
   eventDate       DateTime  @db.Date
   isActive        Boolean   @default(true)
   allowResubmit   Boolean   @default(false)
-  isPublic        Boolean   @default(false)
   feedbackOpenAt  DateTime?
   feedbackCloseAt DateTime?
   createdAt       DateTime  @default(now())
@@ -351,18 +350,14 @@ model EventFeedbackQuestion {
 }
 
 model EventFeedbackSubmission {
-  id             String   @id @default(cuid())
-  formId         String
-  submittedBy    String?
-  respondentName String?
-  deviceId       String?
-  submittedAt    DateTime @default(now())
+  id          String   @id @default(cuid())
+  formId      String
+  submittedBy String
+  submittedAt DateTime @default(now())
 
   form      EventFeedbackForm       @relation(fields: [formId], references: [id])
-  submitter User?                   @relation("FeedbackSubmitter", fields: [submittedBy], references: [id])
+  submitter User                    @relation("FeedbackSubmitter", fields: [submittedBy], references: [id])
   responses EventFeedbackResponse[]
-
-  @@unique([formId, deviceId])
 }
 
 model EventFeedbackResponse {
