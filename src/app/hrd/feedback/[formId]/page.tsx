@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Plus, Trash2, Download, Copy, Check, Link2 } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Download } from "lucide-react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -33,7 +33,6 @@ type Form = {
   eventDate: string;
   isActive: boolean;
   allowResubmit: boolean;
-  isPublic: boolean;
   feedbackOpenAt: string | null;
   feedbackCloseAt: string | null;
   questions: Question[];
@@ -43,8 +42,7 @@ type Form = {
 type Submission = {
   id: string;
   submittedAt: string;
-  submitter: { name: string; role: string } | null;
-  respondentName: string | null;
+  submitter: { name: string; role: string };
   responses: { questionId: string; answer: string; question: Question }[];
 };
 
@@ -56,7 +54,6 @@ export default function HrdFeedbackFormPage() {
   const [tab, setTab] = useState<"overview" | "questions" | "responses" | "analytics">("questions");
   const [newQ, setNewQ] = useState({ questionText: "", questionType: "star_rating", options: "", isRequired: true });
   const [saving, setSaving] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   async function loadForm() {
     const [f, s] = await Promise.all([
@@ -77,23 +74,6 @@ export default function HrdFeedbackFormPage() {
       body: JSON.stringify({ isActive: !form.isActive }),
     });
     loadForm();
-  }
-
-  async function togglePublic() {
-    if (!form) return;
-    await fetch(`/api/feedback/forms/${formId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isPublic: !form.isPublic }),
-    });
-    loadForm();
-  }
-
-  function copyLink() {
-    const url = `${window.location.origin}/feedback/${formId}`;
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
   }
 
   async function addQuestion(e: React.FormEvent) {
@@ -173,12 +153,6 @@ export default function HrdFeedbackFormPage() {
           >
             {form.isActive ? "Deactivate" : "Activate"}
           </button>
-          <button
-            onClick={togglePublic}
-            className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors flex items-center gap-1.5 ${form.isPublic ? "bg-blue-100 text-blue-700 hover:bg-blue-200" : "border border-black/15 text-[#180F04] hover:bg-black/5"}`}
-          >
-            <Link2 size={12} /> {form.isPublic ? "Public" : "Make Public"}
-          </button>
         </div>
       </div>
 
@@ -215,36 +189,6 @@ export default function HrdFeedbackFormPage() {
           )}
           {form.feedbackCloseAt && (
             <p className="text-sm text-[#180F04]/60">Closes: {new Date(form.feedbackCloseAt).toLocaleString("en-IN")}</p>
-          )}
-
-          {form.isPublic ? (
-            <div className="bg-white rounded-xl border border-black/5 p-4">
-              <p className="text-xs font-semibold text-[#180F04] mb-2">Public link — share with any member</p>
-              <div className="flex items-center gap-2">
-                <input
-                  readOnly
-                  value={typeof window !== "undefined" ? `${window.location.origin}/feedback/${formId}` : ""}
-                  className="flex-1 border border-black/15 rounded-lg px-3 py-2 text-xs text-[#180F04]/70 bg-[#FBF7EE]"
-                  onFocus={(e) => e.target.select()}
-                />
-                <button
-                  onClick={copyLink}
-                  className="text-xs bg-[#D4A017] text-[#180F04] px-3 py-2 rounded-lg font-semibold hover:bg-[#b8860b] transition-colors flex items-center gap-1.5 shrink-0"
-                >
-                  {copied ? <Check size={12} /> : <Copy size={12} />}
-                  {copied ? "Copied" : "Copy"}
-                </button>
-              </div>
-              <p className="text-[10px] text-[#180F04]/40 mt-2">
-                Anyone with this link can submit feedback without logging in. Each person needs to enter their name; one submission is allowed per device.
-              </p>
-            </div>
-          ) : (
-            <div className="bg-white rounded-xl border border-dashed border-black/15 p-4">
-              <p className="text-xs text-[#180F04]/50">
-                This form is only fillable by logged-in Club/DCM users. Click "Make Public" above to generate a shareable link that any member can use without logging in.
-              </p>
-            </div>
           )}
         </div>
       )}
@@ -316,9 +260,7 @@ export default function HrdFeedbackFormPage() {
           ) : (
             submissions.map((sub) => (
               <div key={sub.id} className="bg-white rounded-xl border border-black/5 p-4">
-                <p className="text-xs font-semibold text-[#180F04]">
-                  {sub.submitter ? `${sub.submitter.name} · ${sub.submitter.role}` : `${sub.respondentName ?? "Unknown"} · Public`}
-                </p>
+                <p className="text-xs font-semibold text-[#180F04]">{sub.submitter.name} · {sub.submitter.role}</p>
                 <p className="text-[10px] text-[#180F04]/40 mb-3">{new Date(sub.submittedAt).toLocaleString("en-IN")}</p>
                 <div className="space-y-1.5">
                   {sub.responses.map((r) => (
