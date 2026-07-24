@@ -9,6 +9,7 @@ export default function HrdFeedbackNewPage() {
   const [useTemplate, setUseTemplate] = useState(true);
   const [isActive, setIsActive] = useState(false);
   const [allowResubmit, setAllowResubmit] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
   const [feedbackOpenAt, setFeedbackOpenAt] = useState("");
   const [feedbackCloseAt, setFeedbackCloseAt] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,7 @@ export default function HrdFeedbackNewPage() {
         useTemplate,
         isActive,
         allowResubmit,
+        isPublic,
         feedbackOpenAt: feedbackOpenAt || undefined,
         feedbackCloseAt: feedbackCloseAt || undefined,
       }),
@@ -113,6 +115,15 @@ export default function HrdFeedbackNewPage() {
               className="w-4 h-4 rounded accent-[#D4A017]"
             />
             <span className="text-sm text-[#180F04]">Allow resubmission</span>
+          </label>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+              className="w-4 h-4 rounded accent-[#D4A017]"
+            />
+            <span className="text-sm text-[#180F04]">Make public (anyone with the link can fill, no login needed)</span>
           </label>
         </div>
 
