@@ -27,19 +27,18 @@ export async function GET(
           submitter: { select: { name: true, role: true } },
           responses: true,
         },
+        orderBy: { submittedAt: "desc" },
       },
     },
   });
 
   if (!form) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const questionHeaders = form.questions.map((q) => q.questionText);
-
   const rows = form.submissions.map((sub) => {
     const responseMap = Object.fromEntries(sub.responses.map((r) => [r.questionId, r.answer]));
     const row: Record<string, string> = {
-      "Submitted By": sub.submitter ? sub.submitter.name : (sub.respondentName ?? "Unknown"),
-      "Role": sub.submitter ? sub.submitter.role : "Public",
+      "Submitted By": sub.submitter.name,
+      "Role": sub.submitter.role,
       "Submitted At": sub.submittedAt.toISOString(),
     };
     form.questions.forEach((q) => {
@@ -51,28 +50,25 @@ export async function GET(
   if (format === "xlsx") {
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Feedback");
+    XLSX.utils.book_append_sheet(wb, ws, "Responses");
     const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
     return new NextResponse(buf, {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename=feedback-${params.formId}.xlsx`,
+        "Content-Disposition": `attachment; filename="${form.eventName}-feedback.xlsx"`,
       },
     });
   }
 
-  const headers = ["Submitted By", "Role", "Submitted At", ...questionHeaders];
-  const csv = [
-    headers.map((h) => `"${h}"`).join(","),
-    ...rows.map((r) =>
-      headers.map((h) => `"${String(r[h] ?? "").replace(/"/g, '""')}"`).join(",")
-    ),
-  ].join("\n");
-
-  return new NextResponse(csv, {
+  const headers = rows.length > 0 ? Object.keys(rows[0]) : ["Submitted By", "Role", "Submitted At"];
+  const csvLines = [
+    headers.join(","),
+    ...rows.map((row) => headers.map((h) => `"${String(row[h] ?? "").replace(/"/g, '""')}"`).join(",")),
+  ];
+  return new NextResponse(csvLines.join("\n"), {
     headers: {
       "Content-Type": "text/csv",
-      "Content-Disposition": `attachment; filename=feedback-${params.formId}.csv`,
+      "Content-Disposition": `attachment; filename="${form.eventName}-feedback.csv"`,
     },
   });
 }
