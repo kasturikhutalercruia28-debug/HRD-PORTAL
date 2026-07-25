@@ -37,13 +37,16 @@ export default async function DcmDashboardPage() {
     prisma.eventFeedbackForm.count({ where: { isActive: true } }),
   ]);
 
-  let progress: ReturnType<typeof computeDcmProgress> | null = null;
+  // Default to all-zero progress so the card is ALWAYS shown — even before
+  // a dcmRecordId is linked, or if the GitHub data fetch fails.
+  const emptyProgress = computeDcmProgress("__none__", { installations: [], ocvs: [], projects: [] });
+  let progress: ReturnType<typeof computeDcmProgress> = emptyProgress;
   if (dcmRecordId) {
     try {
       const data = await getAllCriteriaData();
       progress = computeDcmProgress(dcmRecordId, data);
     } catch {
-      progress = null; // GitHub token/config missing or unreachable — just hide the section
+      progress = emptyProgress; // GitHub token/config missing or unreachable — show zeros, not nothing
     }
   }
 
@@ -83,24 +86,22 @@ export default async function DcmDashboardPage() {
         </Link>
       </div>
 
-      {progress && (
-        <div className="bg-white rounded-xl p-6 border border-black/5">
-          <div className="flex items-center gap-2 mb-4">
-            <Award size={18} className="text-[#D4A017]" />
-            <h2 className="font-semibold text-[#180F04]">Term Criteria Progress</h2>
-          </div>
-          <div className="space-y-4">
-            <ProgressBar label="Installations Attended" done={progress.installations.done} target={progress.installations.target} />
-            <ProgressBar label="OCVs Attended" done={progress.ocvs.done} target={progress.ocvs.target} />
-            <ProgressBar label="Projects Chaired" done={progress.chairProjects.done} target={progress.chairProjects.target} />
-            <ProgressBar label="Core Team Projects" done={progress.coreProjects.done} target={progress.coreProjects.target} />
-            <ProgressBar label="HoD Projects" done={progress.hodProjects.done} target={progress.hodProjects.target} />
-          </div>
-          <p className="text-[10px] text-[#180F04]/40 mt-4">
-            Council & DRR-Pres-Sec meeting attendance and quarterly district projects aren't tracked here yet.
-          </p>
+      <div className="bg-white rounded-xl p-6 border border-black/5">
+        <div className="flex items-center gap-2 mb-4">
+          <Award size={18} className="text-[#D4A017]" />
+          <h2 className="font-semibold text-[#180F04]">Term Criteria Progress</h2>
         </div>
-      )}
+        <div className="space-y-4">
+          <ProgressBar label="Installations Attended" done={progress.installations.done} target={progress.installations.target} />
+          <ProgressBar label="OCVs Attended" done={progress.ocvs.done} target={progress.ocvs.target} />
+          <ProgressBar label="Projects Chaired" done={progress.chairProjects.done} target={progress.chairProjects.target} />
+          <ProgressBar label="Core Team Projects" done={progress.coreProjects.done} target={progress.coreProjects.target} />
+          <ProgressBar label="HoD Projects" done={progress.hodProjects.done} target={progress.hodProjects.target} />
+        </div>
+        <p className="text-[10px] text-[#180F04]/40 mt-4">
+          Council & DRR-Pres-Sec meeting attendance and quarterly district projects aren't tracked here yet.
+        </p>
+      </div>
     </div>
   );
 }
