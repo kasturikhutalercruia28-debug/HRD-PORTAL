@@ -2,12 +2,13 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getQuarterMonthsCalendarYear } from "@/lib/utils";
+import { hasDrrAccess } from "@/lib/access";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const session = await auth();
-  if (!session || (session.user as { role?: string }).role !== "DRR") {
+  if (!session || !hasDrrAccess(session.user as { role?: string; email?: string })) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
