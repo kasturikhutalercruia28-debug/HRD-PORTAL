@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { name, date, avenue, chairDcmId, coreDcmIds, hodDcmIds } = body;
+  const { name, date, avenue, chairDcmIds, coreDcmIds, hodDcmIds } = body;
   if (!name || !date || !avenue) {
     return NextResponse.json({ error: "name, date, and avenue are required" }, { status: 400 });
   }
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     name,
     date,
     avenue,
-    chairDcmId: chairDcmId || null,
+    chairDcmIds: Array.isArray(chairDcmIds) ? chairDcmIds : [],
     coreDcmIds: Array.isArray(coreDcmIds) ? coreDcmIds : [],
     hodDcmIds: Array.isArray(hodDcmIds) ? hodDcmIds : [],
     createdAt: new Date().toISOString(),
