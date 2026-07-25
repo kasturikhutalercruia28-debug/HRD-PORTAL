@@ -15,10 +15,12 @@ import {
   ChevronRight,
   MapPin,
   Phone,
+  Eye,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
 import SidebarLogo from "@/components/SidebarLogo";
+import { hasDrrAccess } from "@/lib/access";
 
 const NAV_LINKS = [
   { href: "/dec/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -40,8 +42,12 @@ export default function DECLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const user = session?.user as
-    | { name?: string; role?: string; avenueId?: string; avenueName?: string }
+    | { name?: string; email?: string; role?: string; avenueId?: string; avenueName?: string }
     | undefined;
+
+  const navLinks = hasDrrAccess(user)
+    ? [...NAV_LINKS, { href: "/drr/dashboard", label: "DRR View", icon: Eye }]
+    : NAV_LINKS;
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
@@ -69,7 +75,7 @@ export default function DECLayout({ children }: { children: React.ReactNode }) {
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        {NAV_LINKS.map(({ href, label, icon: Icon }) => (
+        {navLinks.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
             href={href}
