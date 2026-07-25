@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Plus, ToggleLeft, ToggleRight, Loader2, X, KeyRound, Check, Mail } from "lucide-react";
 
 type Avenue = { id: string; name: string };
+type DcmOption = { id: string; name: string; title: string; avenue: { id: string; name: string } };
 type User = {
   id: string;
   name: string;
@@ -11,6 +12,8 @@ type User = {
   role: "CLUB" | "DCM" | "DEC" | "DRR";
   avenue: Avenue | null;
   isActive: boolean;
+  dcmRecordId?: string | null;
+  dcmRecord?: { id: string; name: string } | null;
 };
 
 const ROLE_COLORS: Record<string, string> = {
@@ -82,17 +85,22 @@ export default function UsersPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "DEC", avenueId: "" });
   const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [dcmOptions, setDcmOptions] = useState<DcmOption[]>([]);
+  const [linkingId, setLinkingId] = useState<string | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
-    const [usersRes, avenuesRes] = await Promise.all([
+    const [usersRes, avenuesRes, dcmsRes] = await Promise.all([
       fetch("/api/hrd/users"),
       fetch("/api/hrd/avenues"),
+      fetch("/api/hrd/dcms"),
     ]);
     const usersData = await usersRes.json();
     const avenuesData = await avenuesRes.json();
+    const dcmsData = await dcmsRes.json();
     setUsers(usersData.users ?? []);
     setAvenues(avenuesData.avenues ?? []);
+    setDcmOptions(dcmsData.dcms ?? []);
     setLoading(false);
   };
 
@@ -103,6 +111,17 @@ export default function UsersPage() {
     await fetch(`/api/hrd/users/${id}`, { method: "PATCH" });
     await fetchData();
     setToggling(null);
+  };
+
+  const handleLinkDcm = async (userId: string, dcmRecordId: string) => {
+    setLinkingId(userId);
+    await fetch(`/api/hrd/users/${userId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dcmRecordId: dcmRecordId || null }),
+    });
+    await fetchData();
+    setLinkingId(null);
   };
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -193,6 +212,22 @@ export default function UsersPage() {
                     </div>
                   </div>
                   {u.avenue && <p className="text-xs text-[#180F04]/40">{u.avenue.name}</p>}
+                  {u.role === "DCM" && (
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={u.dcmRecordId ?? ""}
+                        onChange={(e) => handleLinkDcm(u.id, e.target.value)}
+                        disabled={linkingId === u.id}
+                        className="text-xs border border-black/15 rounded-md px-2 py-1 bg-white flex-1"
+                      >
+                        <option value="">Not linked to a DCM record</option>
+                        {dcmOptions.map((d) => (
+                          <option key={d.id} value={d.id}>{d.name} ({d.avenue.name})</option>
+                        ))}
+                      </select>
+                      {linkingId === u.id && <Loader2 size={12} className="animate-spin text-[#180F04]/40" />}
+                    </div>
+                  )}
                   <div className="flex items-center gap-3 pt-1">
                     <button onClick={() => handleToggle(u.id)} disabled={toggling === u.id}
                       className="flex items-center gap-1 text-xs text-[#180F04]/50 hover:text-[#180F04] disabled:opacity-40">
@@ -230,7 +265,25 @@ export default function UsersPage() {
                       <td className="px-5 py-3">
                         <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded ${ROLE_COLORS[u.role] ?? ""}`}>{u.role}</span>
                       </td>
-                      <td className="px-5 py-3 text-[#180F04]/60">{u.avenue?.name ?? "—"}</td>
+                      <td className="px-5 py-3 text-[#180F04]/60">
+                        {u.avenue?.name ?? "—"}
+                        {u.role === "DCM" && (
+                          <div className="flex items-center gap-2 mt-1">
+                            <select
+                              value={u.dcmRecordId ?? ""}
+                              onChange={(e) => handleLinkDcm(u.id, e.target.value)}
+                              disabled={linkingId === u.id}
+                              className="text-xs border border-black/15 rounded-md px-1.5 py-0.5 bg-white"
+                            >
+                              <option value="">Not linked</option>
+                              {dcmOptions.map((d) => (
+                                <option key={d.id} value={d.id}>{d.name}</option>
+                              ))}
+                            </select>
+                            {linkingId === u.id && <Loader2 size={11} className="animate-spin text-[#180F04]/40" />}
+                          </div>
+                        )}
+                      </td>
                       <td className="px-5 py-3">
                         <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded ${u.isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
                           {u.isActive ? "Active" : "Inactive"}
