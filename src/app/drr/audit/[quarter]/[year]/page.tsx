@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import AuditWorkspace from '@/components/audit/AuditWorkspace'
 import { getQuarterMonthsCalendarYear } from '@/lib/utils'
 import { MONTH_NAMES } from '@/lib/constants'
+import { hasDrrAccess } from '@/lib/access'
 
 interface Props {
   params: { quarter: string; year: string }
@@ -11,7 +12,7 @@ interface Props {
 
 export default async function AuditQuarterPage({ params }: Props) {
   const session = await auth()
-  if (!session || (session.user as { role?: string }).role !== 'DRR') redirect('/login')
+  if (!session || !hasDrrAccess(session.user as { role?: string; email?: string })) redirect('/login')
 
   const quarter = parseInt(params.quarter, 10)
   const year = parseInt(params.year, 10)
