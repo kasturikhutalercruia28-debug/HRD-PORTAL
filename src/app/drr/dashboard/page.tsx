@@ -6,10 +6,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Users, Trophy, TrendingUp, TrendingDown, ClipboardCheck, ArrowRight, FileCheck } from "lucide-react";
 import { MONTH_NAMES, QUARTER_MONTHS, MONTH_TO_QUARTER } from "@/lib/constants";
+import { hasDrrAccess } from "@/lib/access";
 
 export default async function DRRDashboardPage() {
   const session = await auth();
-  if (!session || (session.user as { role?: string }).role !== "DRR") {
+  if (!session || !hasDrrAccess(session.user as { role?: string; email?: string })) {
     redirect("/login");
   }
 
