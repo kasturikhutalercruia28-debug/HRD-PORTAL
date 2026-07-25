@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import RankingsClient from "@/components/drr/RankingsClient";
+import { hasDrrAccess } from "@/lib/access";
 
 const QUARTER_MONTHS: Record<number, number[]> = {
   1: [7, 8, 9],
@@ -26,7 +27,7 @@ export default async function RankingsPage({
   searchParams: Promise<{ quarter?: string; year?: string; category?: string; avenueId?: string }>;
 }) {
   const session = await auth();
-  if (!session || (session.user as { role?: string }).role !== "DRR") {
+  if (!session || !hasDrrAccess(session.user as { role?: string; email?: string })) {
     redirect("/login");
   }
 
