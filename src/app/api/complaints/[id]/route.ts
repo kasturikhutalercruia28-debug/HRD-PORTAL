@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { createNotification } from "@/lib/notifications";
+import { hasDrrAccess } from "@/lib/access";
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const session = await auth();
-  const user = session?.user as { id?: string; role?: string } | undefined;
+  const user = session?.user as { id?: string; role?: string; email?: string } | undefined;
   if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const complaint = await prisma.complaint.findUnique({
@@ -26,7 +27,7 @@ export async function GET(
 
   if (!complaint) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const isAdmin = user.role === "HRD" || user.role === "DRR";
+  const isAdmin = user.role === "HRD" || hasDrrAccess(user);
   const canView = isAdmin || complaint.submittedBy === user.id;
   if (!canView) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -40,8 +41,8 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   const session = await auth();
-  const user = session?.user as { id?: string; role?: string } | undefined;
-  if (!user?.id || (user.role !== "HRD" && user.role !== "DRR")) {
+  const user = session?.user as { id?: string; role?: string; email?: string } | undefined;
+  if (!user?.id || (user.role !== "HRD" && !hasDrrAccess(user))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
