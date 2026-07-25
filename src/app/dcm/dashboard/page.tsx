@@ -209,9 +209,6 @@ export default async function DcmDashboardPage() {
         <p className="text-[10px] text-[#180F04]/40 mt-4">
           Council & DRR-Pres-Sec meeting attendance and quarterly district projects aren't tracked here yet.
         </p>
-        <p className="text-[10px] text-[#180F04]/25 mt-1">
-          Linked DCM ID: {dcmRecordId ?? "not linked to any DCM record"}
-        </p>
       </div>
     </div>
   );
