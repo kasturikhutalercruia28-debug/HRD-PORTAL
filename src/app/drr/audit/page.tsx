@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, Clock, AlertCircle, ArrowRight } from "lucide-react";
 import { QUARTER_MONTHS, MONTH_NAMES, MONTH_TO_QUARTER } from "@/lib/constants";
+import { hasDrrAccess } from "@/lib/access";
 
 function getRotaractYearQuarters(startYear: number) {
   // All four quarters are stored with year = rotaractYear (not calendar year)
@@ -19,7 +20,7 @@ function getRotaractYearQuarters(startYear: number) {
 
 export default async function AuditIndexPage() {
   const session = await auth();
-  if (!session || (session.user as { role?: string }).role !== "DRR") {
+  if (!session || !hasDrrAccess(session.user as { role?: string; email?: string })) {
     redirect("/login");
   }
 
