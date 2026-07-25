@@ -21,7 +21,7 @@ export interface ProjectRecord {
   name: string;
   date: string;
   avenue: string;
-  chairDcmId: string | null;
+  chairDcmIds: string[];
   coreDcmIds: string[];
   hodDcmIds: string[];
   createdAt: string;
@@ -58,7 +58,7 @@ export function computeDcmProgress(
 ) {
   const installationsAttended = data.installations.filter((r) => r.attendeeDcmIds.includes(dcmId)).length;
   const ocvsAttended = data.ocvs.filter((r) => r.attendeeDcmIds.includes(dcmId)).length;
-  const chairCount = data.projects.filter((p) => p.chairDcmId === dcmId).length;
+  const chairCount = data.projects.filter((p) => p.chairDcmIds.includes(dcmId)).length;
   const coreCount = data.projects.filter((p) => p.coreDcmIds.includes(dcmId)).length;
   const hodCount = data.projects.filter((p) => p.hodDcmIds.includes(dcmId)).length;
 
