@@ -17,7 +17,10 @@ const GITHUB_BRANCH = "main";
 
 // Public, unauthenticated read — works for anyone, no token required.
 export async function readJsonFile<T>(path: string, fallback: T): Promise<{ data: T; sha: string | null }> {
-  const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`;
+  // `cache: "no-store"` only stops Next.js's own fetch cache — GitHub's raw
+  // content CDN can still serve a stale copy for a few minutes after a
+  // commit. A cache-busting query param forces a fresh CDN hit every time.
+  const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}?t=${Date.now()}`;
   const res = await fetch(url, { cache: "no-store" });
 
   if (res.status === 404) {
@@ -64,4 +67,3 @@ export async function writeJsonFile<T>(path: string, data: T, token: string, mes
     throw new Error(`GitHub write failed for ${path}: ${res.status} ${await res.text()}`);
   }
 }
-
