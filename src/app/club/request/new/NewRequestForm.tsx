@@ -19,6 +19,15 @@ const TIME_OPTIONS: { value: TimePeriod; label: string }[] = [
   { value: "evening", label: "Evening (4pm – 8pm)" },
 ];
 
+// Special questions get custom UI instead of a generic textarea. These must
+// match the questionText EXACTLY as entered by HRD in the Orientation
+// Questions admin page — if the text doesn't match exactly, the question
+// just falls back to a plain textarea (safe default, nothing breaks).
+const MODE_Q = "Mode (Online/Offline)";
+const VENUE_Q = "Venue (if Offline)";
+const TIMING_NOTES_Q = "Any changes in preferred timing";
+const CONDUCTED_BY_Q = "Who should conduct — Chairman HRD or Team HRD";
+
 interface Props {
   questionsByType: Record<string, { id: string; questionText: string }[]>;
 }
@@ -50,6 +59,20 @@ export default function NewRequestForm({ questionsByType }: Props) {
 
   const questions = orientationType ? (questionsByType[orientationType] ?? []) : [];
   const today = new Date().toISOString().split("T")[0];
+
+  const modeQuestion = questions.find((q) => q.questionText.trim() === MODE_Q);
+  const modeAnswer = modeQuestion ? answers[modeQuestion.id] : undefined;
+
+  const visibleQuestions = questions.filter((q) => {
+    if (q.questionText.trim() === VENUE_Q) {
+      return modeAnswer === "Offline";
+    }
+    return true;
+  });
+
+  function setAnswer(id: string, val: string) {
+    setAnswers((prev) => ({ ...prev, [id]: val }));
+  }
 
   function handleSlot(idx: number, field: keyof DateSlot, val: string) {
     setSlots((prev) => {
@@ -100,6 +123,27 @@ export default function NewRequestForm({ questionsByType }: Props) {
 
   const inputCls =
     "w-full border border-black/10 rounded-xl px-4 py-3 text-sm font-['Geist'] text-[#180F04] focus:outline-none focus:ring-2 focus:ring-[#D4A017] bg-white placeholder:text-[#180F04]/30";
+
+  function renderChoice(qId: string, options: string[]) {
+    return (
+      <div className="flex gap-3 flex-wrap">
+        {options.map((opt) => (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => setAnswer(qId, opt)}
+            className={`px-5 py-2.5 rounded-xl text-sm font-['Geist'] font-medium border transition-colors ${
+              answers[qId] === opt
+                ? "bg-[#180F04] border-[#180F04] text-[#D4A017]"
+                : "border-black/10 bg-white text-[#180F04] hover:border-black/20"
+            }`}
+          >
+            {opt}
+          </button>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 lg:p-8 max-w-2xl">
@@ -190,7 +234,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
             Pre-orientation questions
           </p>
 
-          {questions.length === 0 ? (
+          {visibleQuestions.length === 0 ? (
             <div className="bg-[#FBF7EE] rounded-xl px-5 py-6 text-center">
               <p className="text-[#180F04]/50 text-sm font-['Geist']">
                 No questions configured for this orientation type yet.
@@ -200,22 +244,65 @@ export default function NewRequestForm({ questionsByType }: Props) {
               </p>
             </div>
           ) : (
-            questions.map((q, i) => (
-              <div key={q.id}>
-                <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
-                  {i + 1}. {q.questionText}
-                </label>
-                <textarea
-                  value={answers[q.id] ?? ""}
-                  onChange={(e) =>
-                    setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))
-                  }
-                  rows={3}
-                  className={inputCls + " resize-none"}
-                  placeholder="Your answer..."
-                />
-              </div>
-            ))
+            visibleQuestions.map((q, i) => {
+              const text = q.questionText.trim();
+
+              if (text === MODE_Q) {
+                return (
+                  <div key={q.id}>
+                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+                      {i + 1}. {q.questionText}
+                    </label>
+                    {renderChoice(q.id, ["Online", "Offline"])}
+                  </div>
+                );
+              }
+
+              if (text === CONDUCTED_BY_Q) {
+                return (
+                  <div key={q.id}>
+                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+                      {i + 1}. {q.questionText}
+                    </label>
+                    {renderChoice(q.id, ["Chairman HRD", "Team HRD"])}
+                  </div>
+                );
+              }
+
+              if (text === TIMING_NOTES_Q) {
+                return (
+                  <div key={q.id}>
+                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+                      {i + 1}. {q.questionText}
+                    </label>
+                    <input
+                      type="text"
+                      value={answers[q.id] ?? ""}
+                      onChange={(e) => setAnswer(q.id, e.target.value)}
+                      className={inputCls}
+                      placeholder="e.g. Prefer after 5pm, or no change"
+                    />
+                  </div>
+                );
+              }
+
+              // Default (includes the Venue question, which is fine as a
+              // long-text box) and any other custom question HRD has added.
+              return (
+                <div key={q.id}>
+                  <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+                    {i + 1}. {q.questionText}
+                  </label>
+                  <textarea
+                    value={answers[q.id] ?? ""}
+                    onChange={(e) => setAnswer(q.id, e.target.value)}
+                    rows={3}
+                    className={inputCls + " resize-none"}
+                    placeholder="Your answer..."
+                  />
+                </div>
+              );
+            })
           )}
 
           <button
