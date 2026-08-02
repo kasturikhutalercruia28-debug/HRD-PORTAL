@@ -131,13 +131,22 @@ export default async function DcmDashboardPage() {
   // a dcmRecordId is linked, or if the GitHub data fetch fails.
   const emptyProgress = computeDcmProgress("__none__", { installations: [], ocvs: [], projects: [] });
   let progress: ReturnType<typeof computeDcmProgress> = emptyProgress;
+  let debugInfo = "";
   if (dcmRecordId) {
     try {
       const data = await getAllCriteriaData();
       progress = computeDcmProgress(dcmRecordId, data);
-    } catch {
+      const allAttendeeIds = [
+        ...data.installations.flatMap((r) => r.attendeeDcmIds),
+        ...data.ocvs.flatMap((r) => r.attendeeDcmIds),
+      ];
+      debugInfo = `dcmRecordId: ${dcmRecordId} | installations loaded: ${data.installations.length} | ocvs loaded: ${data.ocvs.length} | projects loaded: ${data.projects.length} | your ID found in records: ${allAttendeeIds.includes(dcmRecordId)}`;
+    } catch (e) {
       progress = emptyProgress; // GitHub token/config missing or unreachable — show zeros, not nothing
+      debugInfo = `dcmRecordId: ${dcmRecordId} | fetch error: ${(e as Error).message}`;
     }
+  } else {
+    debugInfo = "dcmRecordId: NOT LINKED (session has no dcmRecordId)";
   }
 
   const stats = CRITERIA_META.map((m) => ({ ...m, ...(progress[m.key as keyof typeof progress] as Stat) }));
@@ -208,6 +217,9 @@ export default async function DcmDashboardPage() {
 
         <p className="text-[10px] text-[#180F04]/40 mt-4">
           Council & DRR-Pres-Sec meeting attendance and quarterly district projects aren't tracked here yet.
+        </p>
+        <p className="text-[9px] text-red-400 mt-2 font-mono break-all">
+          DEBUG (temporary): {debugInfo}
         </p>
       </div>
     </div>
