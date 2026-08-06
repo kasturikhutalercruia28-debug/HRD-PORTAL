@@ -24,5 +24,23 @@
       "cmq30hfa8003v135f64xe7o3r"
     ],
     "createdAt": "2026-08-02T05:49:51.034Z"
+  },
+  {
+    "id": "inst_1786037770291_i1vvr9",
+    "clubName": "RC Bombay Kandivli",
+    "date": "2026-06-26",
+    "attendeeDcmIds": [
+      "cmq30h0bt001f135fj0mee4cd",
+      "cmq30h1j8001n135fothiw06g",
+      "cmq30h308001x135fq68smtsz",
+      "cmq30h50f0027135fxhfgsose",
+      "cmq30hdgs003h135fhmu47iho",
+      "cmq30hfa8003v135f64xe7o3r",
+      "cmq30hld7004n135foiogutvm",
+      "cmq30hncb0051135fwsyaojrv",
+      "cmq30hs9e005x135ffll57c1k",
+      "cmq30huuj006f135fwtm7zjrk"
+    ],
+    "createdAt": "2026-08-06T17:36:10.291Z"
   }
 ]
