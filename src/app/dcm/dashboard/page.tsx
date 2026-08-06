@@ -12,9 +12,9 @@ import {
   Crown,
   Users,
   Star,
-  CheckCircle2,
 } from "lucide-react";
 import { getAllCriteriaData, computeDcmProgress } from "@/lib/criteria";
+import CriteriaGrid, { type CriteriaEntry, type CriteriaStat } from "./CriteriaGrid";
 
 type Stat = { done: number; target: number };
 
@@ -66,57 +66,6 @@ function RadialProgress({ percent }: { percent: number }) {
   );
 }
 
-function CriteriaTile({
-  label,
-  done,
-  target,
-  Icon,
-}: {
-  label: string;
-  done: number;
-  target: number;
-  Icon: typeof Building2;
-}) {
-  const pct = Math.min(100, Math.round((done / target) * 100));
-  const complete = done >= target;
-
-  return (
-    <div
-      className={`relative rounded-xl border p-4 transition-colors ${
-        complete
-          ? "bg-emerald-50/60 border-emerald-200"
-          : "bg-[#FBF7EE]/60 border-black/5"
-      }`}
-    >
-      <div className="flex items-start justify-between mb-3">
-        <div
-          className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-            complete ? "bg-emerald-500/15" : "bg-[#D4A017]/15"
-          }`}
-        >
-          <Icon size={17} className={complete ? "text-emerald-600" : "text-[#D4A017]"} />
-        </div>
-        {complete && <CheckCircle2 size={18} className="text-emerald-500" />}
-      </div>
-      <p className="text-xs font-medium text-[#180F04]/70 mb-1.5">{label}</p>
-      <div className="flex items-end justify-between mb-2">
-        <span className={`text-xl font-bold ${complete ? "text-emerald-600" : "text-[#180F04]"}`}>
-          {done}
-          <span className="text-xs font-medium text-[#180F04]/40"> / {target}</span>
-        </span>
-      </div>
-      <div className="w-full h-1.5 bg-white rounded-full overflow-hidden">
-        <div
-          className={`h-full rounded-full transition-all duration-700 ${
-            complete ? "bg-emerald-500" : "bg-[#D4A017]"
-          }`}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
 export default async function DcmDashboardPage() {
   const session = await auth();
   const userId = session?.user?.id;
@@ -129,27 +78,69 @@ export default async function DcmDashboardPage() {
 
   // Default to all-zero progress so the card is ALWAYS shown — even before
   // a dcmRecordId is linked, or if the GitHub data fetch fails.
-  const emptyProgress = computeDcmProgress("__none__", { installations: [], ocvs: [], projects: [] });
+  const emptyData: Awaited<ReturnType<typeof getAllCriteriaData>> = {
+    installations: [],
+    ocvs: [],
+    projects: [],
+  };
+  const emptyProgress = computeDcmProgress("__none__", emptyData);
   let progress: ReturnType<typeof computeDcmProgress> = emptyProgress;
-  let debugInfo = "";
+  let criteriaData: Awaited<ReturnType<typeof getAllCriteriaData>> = emptyData;
   if (dcmRecordId) {
     try {
-      const data = await getAllCriteriaData();
-      progress = computeDcmProgress(dcmRecordId, data);
-      const allAttendeeIds = [
-        ...data.installations.flatMap((r) => r.attendeeDcmIds),
-        ...data.ocvs.flatMap((r) => r.attendeeDcmIds),
-      ];
-      debugInfo = `dcmRecordId: ${dcmRecordId} | installations loaded: ${data.installations.length} | ocvs loaded: ${data.ocvs.length} | projects loaded: ${data.projects.length} | your ID found in records: ${allAttendeeIds.includes(dcmRecordId)}`;
-    } catch (e) {
+      criteriaData = await getAllCriteriaData();
+      progress = computeDcmProgress(dcmRecordId, criteriaData);
+    } catch {
       progress = emptyProgress; // GitHub token/config missing or unreachable — show zeros, not nothing
-      debugInfo = `dcmRecordId: ${dcmRecordId} | fetch error: ${(e as Error).message}`;
     }
-  } else {
-    debugInfo = "dcmRecordId: NOT LINKED (session has no dcmRecordId)";
   }
 
-  const stats = CRITERIA_META.map((m) => ({ ...m, ...(progress[m.key as keyof typeof progress] as Stat) }));
+  const dcmId = dcmRecordId ?? "__none__";
+
+  // Per-entry breakdown so a DCM can expand a tile and see exactly which
+  // installation/OCV/project counted towards them, and which didn't — the
+  // same source records HRD uses, just filtered/marked for this DCM.
+  const entriesByKey: Record<(typeof CRITERIA_META)[number]["key"], CriteriaEntry[]> = {
+    installations: criteriaData.installations.map((r) => ({
+      id: r.id,
+      title: r.clubName,
+      date: r.date,
+      attended: r.attendeeDcmIds.includes(dcmId),
+    })),
+    ocvs: criteriaData.ocvs.map((r) => ({
+      id: r.id,
+      title: r.clubName,
+      date: r.date,
+      attended: r.attendeeDcmIds.includes(dcmId),
+    })),
+    chairProjects: criteriaData.projects.map((p) => ({
+      id: p.id,
+      title: p.name,
+      subtitle: p.avenue,
+      date: p.date,
+      attended: p.chairDcmIds.includes(dcmId),
+    })),
+    coreProjects: criteriaData.projects.map((p) => ({
+      id: p.id,
+      title: p.name,
+      subtitle: p.avenue,
+      date: p.date,
+      attended: p.coreDcmIds.includes(dcmId),
+    })),
+    hodProjects: criteriaData.projects.map((p) => ({
+      id: p.id,
+      title: p.name,
+      subtitle: p.avenue,
+      date: p.date,
+      attended: p.hodDcmIds.includes(dcmId),
+    })),
+  };
+
+  const stats: CriteriaStat[] = CRITERIA_META.map((m) => ({
+    ...m,
+    ...(progress[m.key as keyof typeof progress] as Stat),
+    entries: entriesByKey[m.key],
+  }));
   const overallPct = Math.round(
     stats.reduce((sum, s) => sum + Math.min(100, (s.done / s.target) * 100), 0) / stats.length
   );
@@ -209,17 +200,11 @@ export default async function DcmDashboardPage() {
           <RadialProgress percent={overallPct} />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {stats.map((s) => (
-            <CriteriaTile key={s.label} label={s.label} done={s.done} target={s.target} Icon={s.icon} />
-          ))}
-        </div>
+        <CriteriaGrid stats={stats} />
 
         <p className="text-[10px] text-[#180F04]/40 mt-4">
-          Council & DRR-Pres-Sec meeting attendance and quarterly district projects aren't tracked here yet.
-        </p>
-        <p className="text-[9px] text-red-400 mt-2 font-mono break-all">
-          DEBUG (temporary): {debugInfo}
+          Tap a card to see exactly which ones counted. Council & DRR-Pres-Sec meeting attendance and
+          quarterly district projects aren't tracked here yet.
         </p>
       </div>
     </div>
