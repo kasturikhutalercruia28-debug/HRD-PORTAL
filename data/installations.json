@@ -71,15 +71,18 @@
     "createdAt": "2026-08-06T17:40:41.152Z"
   },
   {
-    "id": "inst_1786039253895_jzg391",
-    "clubName": "RC LSRC",
-    "date": "2026-07-14",
+    "id": "inst_1786039309459_k55pyl",
+    "clubName": "RC TSEC",
+    "date": "2026-07-15",
     "attendeeDcmIds": [
-      "cmq30h0bt001f135fj0mee4cd",
-      "cmq30h50f0027135fxhfgsose",
-      "cmq30h37c001z135fiwxzwlhu",
-      "cmq30hvn0006j135fjvb42bdy"
+      "cmq30hkks004h135f17hmbkjj",
+      "cmq30hlol004p135fej5hu4n0",
+      "cmq30hjgx0049135f8680qza9",
+      "cmq30hid40043135f0yd43lfp",
+      "cmq30h61f002b135flmwybqjb",
+      "cmq30hlzy004r135foep66z6l",
+      "cmq30h0bt001f135fj0mee4cd"
     ],
-    "createdAt": "2026-08-06T18:00:53.895Z"
+    "createdAt": "2026-08-06T18:01:49.459Z"
   }
 ]
