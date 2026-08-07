@@ -26,9 +26,10 @@
     "clubName": "Rotaract Club of Virar",
     "date": "2026-07-19",
     "attendeeDcmIds": [
-      "cmq30hs9e005x135ffll57c1k",
       "cmq30h50f0027135fxhfgsose",
-      "cmq30hfa8003v135f64xe7o3r"
+      "cmq30hwj0006p135f3lb1300c",
+      "cmq30hvbl006h135f5bc6a6ma",
+      "cmq30hclg003b135f4exd7a1c"
     ],
     "createdAt": "2026-08-02T05:49:51.034Z"
   },
@@ -110,23 +111,5 @@
       "cmq30hvbl006h135f5bc6a6ma"
     ],
     "createdAt": "2026-08-06T18:08:05.414Z"
-  },
-  {
-    "id": "inst_1786119175833_ncscrx",
-    "clubName": "Rotaract Club of Bombay Kandivli",
-    "date": "2026-06-21",
-    "attendeeDcmIds": [
-      "cmq30h0bt001f135fj0mee4cd",
-      "cmq30h1j8001n135fothiw06g",
-      "cmq30h308001x135fq68smtsz",
-      "cmq30h50f0027135fxhfgsose",
-      "cmq30hdgs003h135fhmu47iho",
-      "cmq30hfa8003v135f64xe7o3r",
-      "cmq30hld7004n135foiogutvm",
-      "cmq30hncb0051135fwsyaojrv",
-      "cmq30hs9e005x135ffll57c1k",
-      "cmq30huuj006f135fwtm7zjrk"
-    ],
-    "createdAt": "2026-08-07T16:12:55.833Z"
   }
 ]
