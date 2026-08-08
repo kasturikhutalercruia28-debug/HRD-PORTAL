@@ -37,8 +37,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { data } = await readJsonFile<InstallationRecord[]>(INSTALLATIONS_PATH, []);
-
   const record: InstallationRecord = {
     id: `inst_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     clubName,
@@ -47,9 +45,18 @@ export async function POST(req: NextRequest) {
     createdAt: new Date().toISOString(),
   };
 
-  const updated = [...data, record];
   try {
-    await writeJsonFile(INSTALLATIONS_PATH, updated, token, `Mark installation attendance: ${clubName} (${date})`);
+    // `mutate` reads the truly-latest array itself (right before writing) —
+    // this must NOT be built from an earlier snapshot, or two quick
+    // successive "mark attendance" submits can silently overwrite each
+    // other's addition (lost-update race).
+    await writeJsonFile<InstallationRecord[]>(
+      INSTALLATIONS_PATH,
+      (current) => [...current, record],
+      [],
+      token,
+      `Mark installation attendance: ${clubName} (${date})`
+    );
   } catch (e) {
     return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
   }

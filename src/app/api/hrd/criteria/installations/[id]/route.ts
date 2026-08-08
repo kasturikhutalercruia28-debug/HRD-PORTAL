@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { readJsonFile, writeJsonFile } from "@/lib/githubStore";
+import { writeJsonFile } from "@/lib/githubStore";
 import { INSTALLATIONS_PATH, InstallationRecord } from "@/lib/criteria";
 
 export const dynamic = "force-dynamic";
@@ -25,21 +25,28 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: "clubName, date, and at least one attendeeDcmId are required" }, { status: 400 });
   }
 
-  const { data } = await readJsonFile<InstallationRecord[]>(INSTALLATIONS_PATH, []);
-  const idx = data.findIndex((r) => r.id === params.id);
-  if (idx === -1) return NextResponse.json({ error: "Record not found" }, { status: 404 });
-
-  const updatedRecord: InstallationRecord = { ...data[idx], clubName, date, attendeeDcmIds };
-  const updated = [...data];
-  updated[idx] = updatedRecord;
-
+  let resultRecord: InstallationRecord | null = null;
   try {
-    await writeJsonFile(INSTALLATIONS_PATH, updated, token, `Edit installation attendance: ${clubName} (${date})`);
+    await writeJsonFile<InstallationRecord[]>(
+      INSTALLATIONS_PATH,
+      (current) => {
+        const idx = current.findIndex((r) => r.id === params.id);
+        if (idx === -1) return current;
+        const next = [...current];
+        next[idx] = { ...next[idx], clubName, date, attendeeDcmIds };
+        resultRecord = next[idx];
+        return next;
+      },
+      [],
+      token,
+      `Edit installation attendance: ${clubName} (${date})`
+    );
   } catch (e) {
     return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
   }
 
-  return NextResponse.json(updatedRecord);
+  if (!resultRecord) return NextResponse.json({ error: "Record not found" }, { status: 404 });
+  return NextResponse.json(resultRecord);
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
@@ -52,16 +59,23 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     return NextResponse.json({ error: "Missing GitHub token — set it up once from the DCM Criteria page." }, { status: 400 });
   }
 
-  const { data } = await readJsonFile<InstallationRecord[]>(INSTALLATIONS_PATH, []);
-  const record = data.find((r) => r.id === params.id);
-  if (!record) return NextResponse.json({ error: "Record not found" }, { status: 404 });
-
-  const updated = data.filter((r) => r.id !== params.id);
+  let found = false;
   try {
-    await writeJsonFile(INSTALLATIONS_PATH, updated, token, `Delete installation attendance: ${record.clubName} (${record.date})`);
+    await writeJsonFile<InstallationRecord[]>(
+      INSTALLATIONS_PATH,
+      (current) => {
+        if (!current.some((r) => r.id === params.id)) return current;
+        found = true;
+        return current.filter((r) => r.id !== params.id);
+      },
+      [],
+      token,
+      `Delete installation attendance record ${params.id}`
+    );
   } catch (e) {
     return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
   }
 
+  if (!found) return NextResponse.json({ error: "Record not found" }, { status: 404 });
   return NextResponse.json({ success: true });
 }
