@@ -2,7 +2,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, CheckCircle2, Circle, type LucideIcon, MessageCircleWarning } from "lucide-react";
+import {
+  ChevronDown,
+  CheckCircle2,
+  Circle,
+  MessageCircleWarning,
+  Building2,
+  Eye,
+  Crown,
+  Users,
+  Star,
+  type LucideIcon,
+} from "lucide-react";
+
+const ICONS: Record<string, LucideIcon> = {
+  installations: Building2,
+  ocvs: Eye,
+  chairProjects: Crown,
+  coreProjects: Users,
+  hodProjects: Star,
+};
 
 export interface CriteriaEntry {
   id: string;
@@ -15,7 +34,6 @@ export interface CriteriaEntry {
 export interface CriteriaStat {
   key: string;
   label: string;
-  icon: LucideIcon;
   done: number;
   target: number;
   entries: CriteriaEntry[];
@@ -30,7 +48,8 @@ function fmtDate(d: string) {
 
 function CriteriaTile({ stat }: { stat: CriteriaStat }) {
   const [open, setOpen] = useState(false);
-  const { label, done, target, icon: Icon, entries } = stat;
+  const { label, done, target, entries } = stat;
+  const Icon = ICONS[stat.key] ?? Building2;
   const pct = Math.min(100, Math.round((done / target) * 100));
   const complete = done >= target;
 

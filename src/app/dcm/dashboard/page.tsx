@@ -7,11 +7,6 @@ import {
   MessageCircleWarning,
   ClipboardList,
   Award,
-  Building2,
-  Eye,
-  Crown,
-  Users,
-  Star,
 } from "lucide-react";
 import { getAllCriteriaData, computeDcmProgress } from "@/lib/criteria";
 import CriteriaGrid, { type CriteriaEntry, type CriteriaStat } from "./CriteriaGrid";
@@ -19,11 +14,11 @@ import CriteriaGrid, { type CriteriaEntry, type CriteriaStat } from "./CriteriaG
 type Stat = { done: number; target: number };
 
 const CRITERIA_META = [
-  { key: "installations", label: "Installations Attended", icon: Building2 },
-  { key: "ocvs", label: "OCVs Attended", icon: Eye },
-  { key: "chairProjects", label: "Projects Chaired", icon: Crown },
-  { key: "coreProjects", label: "Core Team Projects", icon: Users },
-  { key: "hodProjects", label: "HoD Projects", icon: Star },
+  { key: "installations", label: "Installations Attended" },
+  { key: "ocvs", label: "OCVs Attended" },
+  { key: "chairProjects", label: "Projects Chaired" },
+  { key: "coreProjects", label: "Core Team Projects" },
+  { key: "hodProjects", label: "HoD Projects" },
 ] as const;
 
 function RadialProgress({ percent }: { percent: number }) {
