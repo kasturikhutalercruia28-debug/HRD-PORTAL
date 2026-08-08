@@ -37,8 +37,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { data } = await readJsonFile<OcvRecord[]>(OCVS_PATH, []);
-
   const record: OcvRecord = {
     id: `ocv_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     clubName,
@@ -47,9 +45,14 @@ export async function POST(req: NextRequest) {
     createdAt: new Date().toISOString(),
   };
 
-  const updated = [...data, record];
   try {
-    await writeJsonFile(OCVS_PATH, updated, token, `Mark OCV attendance: ${clubName} (${date})`);
+    await writeJsonFile<OcvRecord[]>(
+      OCVS_PATH,
+      (current) => [...current, record],
+      [],
+      token,
+      `Mark OCV attendance: ${clubName} (${date})`
+    );
   } catch (e) {
     return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
   }
