@@ -35,35 +35,67 @@ export async function readJsonFile<T>(path: string, fallback: T): Promise<{ data
 
 // Authenticated write — requires a GitHub token with repo-write access,
 // passed in by the caller (from the HRD user's own browser storage).
-export async function writeJsonFile<T>(path: string, data: T, token: string, message: string): Promise<void> {
+//
+// This does its OWN read of the current file (via the same authenticated
+// Contents API call whose sha it's about to reuse) right before writing,
+// then retries a few times on a 409 conflict. This matters because two
+// requests fired close together (e.g. marking attendance for two
+// installations back-to-back) would otherwise both compute their "updated"
+// array from the same stale snapshot — whichever commits second would
+// silently overwrite the first one's addition, since a plain array
+// replace has no way to merge. Passing a `mutate` function instead of a
+// pre-built array means every attempt starts from the truly-latest data.
+export async function writeJsonFile<T>(
+  path: string,
+  mutate: (current: T) => T,
+  fallback: T,
+  token: string,
+  message: string
+): Promise<void> {
   const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
   const authHeaders = {
     Authorization: `Bearer ${token}`,
     Accept: "application/vnd.github+json",
   };
 
-  // Fetch the current sha (required by GitHub to update an existing file).
-  let sha: string | undefined;
-  const current = await fetch(`${apiUrl}?ref=${GITHUB_BRANCH}`, { headers: authHeaders, cache: "no-store" });
-  if (current.ok) {
-    sha = (await current.json()).sha;
-  } else if (current.status !== 404) {
-    throw new Error(`GitHub sha lookup failed for ${path}: ${current.status} ${await current.text()}`);
-  }
+  const MAX_ATTEMPTS = 4;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    // Read the current file + its sha from the SAME call, so what we
+    // mutate is guaranteed to match the sha we send back with the write.
+    let sha: string | undefined;
+    let current: T = fallback;
+    const currentRes = await fetch(`${apiUrl}?ref=${GITHUB_BRANCH}`, {
+      headers: authHeaders,
+      cache: "no-store",
+    });
+    if (currentRes.ok) {
+      const json = await currentRes.json();
+      sha = json.sha;
+      const decoded = Buffer.from(json.content, "base64").toString("utf-8");
+      current = decoded.trim() ? JSON.parse(decoded) : fallback;
+    } else if (currentRes.status !== 404) {
+      throw new Error(`GitHub sha lookup failed for ${path}: ${currentRes.status} ${await currentRes.text()}`);
+    }
 
-  const content = Buffer.from(JSON.stringify(data, null, 2) + "\n").toString("base64");
-  const res = await fetch(apiUrl, {
-    method: "PUT",
-    headers: { ...authHeaders, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message,
-      content,
-      branch: GITHUB_BRANCH,
-      ...(sha ? { sha } : {}),
-    }),
-  });
+    const updated = mutate(current);
+    const content = Buffer.from(JSON.stringify(updated, null, 2) + "\n").toString("base64");
+    const res = await fetch(apiUrl, {
+      method: "PUT",
+      headers: { ...authHeaders, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        content,
+        branch: GITHUB_BRANCH,
+        ...(sha ? { sha } : {}),
+      }),
+    });
 
-  if (!res.ok) {
+    if (res.ok) return;
+
+    // Someone else committed between our read and our write — retry with
+    // fresh data instead of failing outright.
+    if (res.status === 409 && attempt < MAX_ATTEMPTS) continue;
+
     throw new Error(`GitHub write failed for ${path}: ${res.status} ${await res.text()}`);
   }
 }
