@@ -34,8 +34,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "name, date, and avenue are required" }, { status: 400 });
   }
 
-  const { data } = await readJsonFile<ProjectRecord[]>(PROJECTS_PATH, []);
-
   const record: ProjectRecord = {
     id: `proj_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     name,
@@ -47,9 +45,14 @@ export async function POST(req: NextRequest) {
     createdAt: new Date().toISOString(),
   };
 
-  const updated = [...data, record];
   try {
-    await writeJsonFile(PROJECTS_PATH, updated, token, `Add project: ${name} (${date})`);
+    await writeJsonFile<ProjectRecord[]>(
+      PROJECTS_PATH,
+      (current) => [...current, record],
+      [],
+      token,
+      `Add project: ${name} (${date})`
+    );
   } catch (e) {
     return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
   }

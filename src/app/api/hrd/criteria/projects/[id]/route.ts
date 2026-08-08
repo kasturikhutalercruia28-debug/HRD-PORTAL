@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { readJsonFile, writeJsonFile } from "@/lib/githubStore";
+import { writeJsonFile } from "@/lib/githubStore";
 import { PROJECTS_PATH, ProjectRecord } from "@/lib/criteria";
 
 export const dynamic = "force-dynamic";
@@ -25,29 +25,36 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: "name, date, and avenue are required" }, { status: 400 });
   }
 
-  const { data } = await readJsonFile<ProjectRecord[]>(PROJECTS_PATH, []);
-  const idx = data.findIndex((r) => r.id === params.id);
-  if (idx === -1) return NextResponse.json({ error: "Record not found" }, { status: 404 });
-
-  const updatedRecord: ProjectRecord = {
-    ...data[idx],
-    name,
-    date,
-    avenue,
-    chairDcmIds: Array.isArray(chairDcmIds) ? chairDcmIds : [],
-    coreDcmIds: Array.isArray(coreDcmIds) ? coreDcmIds : [],
-    hodDcmIds: Array.isArray(hodDcmIds) ? hodDcmIds : [],
-  };
-  const updated = [...data];
-  updated[idx] = updatedRecord;
-
+  let resultRecord: ProjectRecord | null = null;
   try {
-    await writeJsonFile(PROJECTS_PATH, updated, token, `Edit project: ${name} (${date})`);
+    await writeJsonFile<ProjectRecord[]>(
+      PROJECTS_PATH,
+      (current) => {
+        const idx = current.findIndex((r) => r.id === params.id);
+        if (idx === -1) return current;
+        const next = [...current];
+        next[idx] = {
+          ...next[idx],
+          name,
+          date,
+          avenue,
+          chairDcmIds: Array.isArray(chairDcmIds) ? chairDcmIds : [],
+          coreDcmIds: Array.isArray(coreDcmIds) ? coreDcmIds : [],
+          hodDcmIds: Array.isArray(hodDcmIds) ? hodDcmIds : [],
+        };
+        resultRecord = next[idx];
+        return next;
+      },
+      [],
+      token,
+      `Edit project: ${name} (${date})`
+    );
   } catch (e) {
     return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
   }
 
-  return NextResponse.json(updatedRecord);
+  if (!resultRecord) return NextResponse.json({ error: "Record not found" }, { status: 404 });
+  return NextResponse.json(resultRecord);
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
@@ -60,16 +67,23 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     return NextResponse.json({ error: "Missing GitHub token — set it up once from the DCM Criteria page." }, { status: 400 });
   }
 
-  const { data } = await readJsonFile<ProjectRecord[]>(PROJECTS_PATH, []);
-  const record = data.find((r) => r.id === params.id);
-  if (!record) return NextResponse.json({ error: "Record not found" }, { status: 404 });
-
-  const updated = data.filter((r) => r.id !== params.id);
+  let found = false;
   try {
-    await writeJsonFile(PROJECTS_PATH, updated, token, `Delete project: ${record.name} (${record.date})`);
+    await writeJsonFile<ProjectRecord[]>(
+      PROJECTS_PATH,
+      (current) => {
+        if (!current.some((r) => r.id === params.id)) return current;
+        found = true;
+        return current.filter((r) => r.id !== params.id);
+      },
+      [],
+      token,
+      `Delete project record ${params.id}`
+    );
   } catch (e) {
     return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
   }
 
+  if (!found) return NextResponse.json({ error: "Record not found" }, { status: 404 });
   return NextResponse.json({ success: true });
 }
