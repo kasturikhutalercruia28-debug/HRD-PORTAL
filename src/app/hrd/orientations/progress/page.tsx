@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ArrowLeft, Download, Plus, Loader2, Pencil, Trash2, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Download, Plus, Loader2, Pencil, Trash2, X, ChevronDown, ChevronUp } from "lucide-react";
 import { getGithubToken } from "@/lib/clientGithubToken";
 
 type Stage = "pres_sec" | "core" | "bod" | "everyone";
@@ -192,10 +191,6 @@ export default function OrientationProgressPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
-      <Link href="/hrd/criteria" className="inline-flex items-center gap-1.5 text-sm text-[#180F04]/50 hover:text-[#180F04] transition-colors">
-        <ArrowLeft size={14} /> Back
-      </Link>
-
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Orientation Progress Tracking</h1>
