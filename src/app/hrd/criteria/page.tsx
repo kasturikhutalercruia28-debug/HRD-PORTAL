@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Building2, Handshake, FolderKanban, ArrowRight, KeyRound, Check, Eye, EyeOff, ClipboardList } from "lucide-react";
+import { Building2, Handshake, FolderKanban, ArrowRight, KeyRound, Check, Eye, EyeOff } from "lucide-react";
 import { getGithubToken, setGithubToken, clearGithubToken } from "@/lib/clientGithubToken";
 
 const SECTIONS = [
@@ -22,12 +22,6 @@ const SECTIONS = [
     label: "Projects",
     desc: "Add a project and assign Chair / Core Team / HoD",
     icon: FolderKanban,
-  },
-  {
-    href: "/hrd/orientations/progress",
-    label: "Orientation Progress Tracking",
-    desc: "Log Pres/Sec, Core, BOD & Everyone orientation calls per club",
-    icon: ClipboardList,
   },
 ];
 
