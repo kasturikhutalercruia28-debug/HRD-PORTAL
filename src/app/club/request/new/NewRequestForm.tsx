@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Loader2, CalendarDays, Users, MessageSquare, CheckCircle2 } from "lucide-react";
 
@@ -56,6 +56,14 @@ export default function NewRequestForm({ questionsByType }: Props) {
   ]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [gating, setGating] = useState<{ presSecCompleted: boolean; coreCompleted: boolean } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/club/orientation-status")
+      .then((r) => (r.ok ? r.json() : { presSecCompleted: true, coreCompleted: true }))
+      .then(setGating)
+      .catch(() => setGating({ presSecCompleted: true, coreCompleted: true }));
+  }, []);
 
   const questions = orientationType ? (questionsByType[orientationType] ?? []) : [];
   const today = new Date().toISOString().split("T")[0];
@@ -190,31 +198,49 @@ export default function NewRequestForm({ questionsByType }: Props) {
           <p className="text-[#180F04] font-semibold font-['Geist'] text-sm mb-4">
             What type of orientation are you requesting?
           </p>
-          {TYPE_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => setOrientationType(opt.value)}
-              className={`w-full text-left flex items-start gap-4 p-4 rounded-xl border transition-all ${
-                orientationType === opt.value
-                  ? "border-[#D4A017] bg-[#D4A017]/5 shadow-sm"
-                  : "border-black/10 bg-white hover:border-black/20"
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 flex-shrink-0 ${
-                  orientationType === opt.value ? "border-[#180F04] bg-[#180F04]" : "border-black/20"
-                }`}
-              >
-                {orientationType === opt.value && (
-                  <div className="w-2 h-2 rounded-full bg-[#D4A017]" />
-                )}
+          {TYPE_OPTIONS.map((opt) => {
+            const locked =
+              (opt.value === "core_member" && gating && !gating.presSecCompleted) ||
+              (opt.value === "bod" && gating && !gating.coreCompleted);
+            const lockMessage =
+              opt.value === "core_member"
+                ? "Complete your Pres/Sec orientation call with HRD first."
+                : "Complete your Core orientation first.";
+            return (
+              <div key={opt.value}>
+                <button
+                  onClick={() => !locked && setOrientationType(opt.value)}
+                  disabled={!!locked}
+                  className={`w-full text-left flex items-start gap-4 p-4 rounded-xl border transition-all ${
+                    locked
+                      ? "border-black/5 bg-black/[0.02] opacity-60 cursor-not-allowed"
+                      : orientationType === opt.value
+                      ? "border-[#D4A017] bg-[#D4A017]/5 shadow-sm"
+                      : "border-black/10 bg-white hover:border-black/20"
+                  }`}
+                >
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 flex-shrink-0 ${
+                      orientationType === opt.value ? "border-[#180F04] bg-[#180F04]" : "border-black/20"
+                    }`}
+                  >
+                    {orientationType === opt.value && (
+                      <div className="w-2 h-2 rounded-full bg-[#D4A017]" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm text-[#180F04] font-['Geist']">{opt.label}</p>
+                    <p className="text-[#180F04]/50 text-xs font-['Geist'] mt-0.5">{opt.desc}</p>
+                    {locked && (
+                      <p className="text-amber-600 text-xs font-['Geist'] mt-1.5 flex items-center gap-1">
+                        🔒 {lockMessage}
+                      </p>
+                    )}
+                  </div>
+                </button>
               </div>
-              <div>
-                <p className="font-semibold text-sm text-[#180F04] font-['Geist']">{opt.label}</p>
-                <p className="text-[#180F04]/50 text-xs font-['Geist'] mt-0.5">{opt.desc}</p>
-              </div>
-            </button>
-          ))}
+            );
+          })}
 
           <button
             disabled={!orientationType}
