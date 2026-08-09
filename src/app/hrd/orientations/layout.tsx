@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ListChecks, CalendarDays, Building2, HelpCircle, MessageSquare, BookOpen } from "lucide-react";
+import { ListChecks, CalendarDays, Building2, HelpCircle, MessageSquare, BookOpen, ClipboardList } from "lucide-react";
 
 const SUB_NAV = [
   { href: "/hrd/orientations/requests", label: "Requests", icon: ListChecks },
+  { href: "/hrd/orientations/progress", label: "Progress Tracking", icon: ClipboardList },
   { href: "/hrd/orientations/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/hrd/orientations/clubs", label: "Clubs", icon: Building2 },
   { href: "/hrd/orientations/questions", label: "Questions", icon: HelpCircle },
