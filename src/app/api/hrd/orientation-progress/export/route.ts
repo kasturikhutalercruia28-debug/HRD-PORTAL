@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 import { getAllProgress, STAGE_LABELS } from "@/lib/orientationProgress";
 import ExcelJS from "exceljs";
 
@@ -8,24 +9,44 @@ export const dynamic = "force-dynamic";
 const CLUB_COLORS = ["FFE8A9A5", "FFA9C6F0", "FFF5D6A8", "FFB8E0C4", "FFD8B8E8", "FFF0C9DC"];
 const CLUB_COLORS_LIGHT = ["FFF3D4D2", "FFD4E3F7", "FFFAEBD3", "FFDCF0E1", "FFECD9F3", "FFF8E1EC"];
 
+const REQUEST_TYPE_TO_STAGE: Record<string, string> = {
+  core_member: "core",
+  bod: "bod",
+  everyone: "everyone",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  requested: "Requested (pending)",
+  rejected: "Rejected",
+  scheduled: "Scheduled",
+  conducted: "Conducted",
+  feedback_submitted: "Feedback Submitted",
+  certificate_generated: "Certificate Generated",
+};
+
+function fmtDate(d: Date | null) {
+  return d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "TBD";
+}
+
 export async function GET() {
   const session = await auth();
   if (!session || (session.user as { role?: string }).role !== "HRD") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const entries = await getAllProgress();
+  const progressEntries = await getAllProgress();
+  const bookedRequests = await prisma.orientationRequest.findMany({
+    include: { club: { select: { name: true } } },
+    orderBy: { createdAt: "asc" },
+  });
 
-  // Group by club name, keep stage order pres_sec -> core -> bod -> everyone
   const stageOrder = ["pres_sec", "core", "bod", "everyone"];
-  const byClub = new Map<string, typeof entries>();
-  for (const e of entries) {
-    if (!byClub.has(e.clubName)) byClub.set(e.clubName, []);
-    byClub.get(e.clubName)!.push(e);
-  }
-  for (const list of byClub.values()) {
-    list.sort((a, b) => stageOrder.indexOf(a.stage) - stageOrder.indexOf(b.stage));
-  }
+
+  // Union of every club name appearing in either source.
+  const allClubNames = new Set<string>([
+    ...progressEntries.map((e) => e.clubName),
+    ...bookedRequests.map((r) => r.club.name),
+  ]);
 
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet("Orientation Progress");
@@ -34,7 +55,6 @@ export async function GET() {
   sheet.getColumn(3).width = 20;
   sheet.getColumn(4).width = 20;
 
-  // Title row
   sheet.mergeCells("B1:D1");
   const title = sheet.getCell("B1");
   title.value = "ORIENTATION PROGRESS TRACKING";
@@ -46,12 +66,19 @@ export async function GET() {
   let row = 2;
   let clubIndex = 0;
 
-  for (const [clubName, clubEntries] of byClub.entries()) {
+  for (const clubName of Array.from(allClubNames).sort()) {
+    const clubProgress = progressEntries
+      .filter((e) => e.clubName === clubName)
+      .sort((a, b) => stageOrder.indexOf(a.stage) - stageOrder.indexOf(b.stage));
+    const clubBookings = bookedRequests.filter((r) => r.club.name === clubName);
+
+    // Skip clubs with nothing at all recorded.
+    if (clubProgress.length === 0 && clubBookings.length === 0) continue;
+
     const color = CLUB_COLORS[clubIndex % CLUB_COLORS.length];
     const lightColor = CLUB_COLORS_LIGHT[clubIndex % CLUB_COLORS_LIGHT.length];
     clubIndex++;
 
-    // Club header row
     sheet.getCell(`A${row}`).value = clubIndex;
     sheet.getCell(`A${row}`).font = { bold: true };
     sheet.mergeCells(`B${row}:D${row}`);
@@ -63,68 +90,86 @@ export async function GET() {
     });
     row++;
 
-    for (const entry of clubEntries) {
-      const stageLabel = STAGE_LABELS[entry.stage];
-      const meetings = entry.meetings.length > 0 ? entry.meetings : [];
+    for (const stage of stageOrder) {
+      const entry = clubProgress.find((e) => e.stage === stage);
+      const stageLabel = STAGE_LABELS[stage as keyof typeof STAGE_LABELS];
+      const booking = clubBookings.find((r) => REQUEST_TYPE_TO_STAGE[r.orientationType] === stage);
 
-      meetings.forEach((m, mi) => {
-        // Meeting N Date row
-        sheet.mergeCells(`B${row}:D${row}`);
-        const dateCell = sheet.getCell(`B${row}`);
-        if (m.isRevertAwaited) {
-          dateCell.value = {
-            richText: [
-              { font: { bold: true }, text: `${stageLabel} — Meeting ${mi + 1} Date: ` },
-              { text: "Revert Awaited" },
-            ],
-          } as ExcelJS.CellRichTextValue;
-        } else {
-          const dateStr = m.date
-            ? new Date(m.date).toLocaleDateString("en-IN", { day: "numeric", month: "long" })
-            : "TBD";
-          dateCell.value = {
-            richText: [
-              { font: { bold: true }, text: `${stageLabel} — Meeting ${mi + 1} Date: ` },
-              { text: `${dateStr}${m.mode ? ` [${m.mode === "online" ? "Online" : "Offline"}]` : ""}` },
-            ],
-          } as ExcelJS.CellRichTextValue;
-        }
-        dateCell.font = { ...(dateCell.font ?? {}) };
-        dateCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: lightColor } };
-        row++;
+      if (!entry && !booking) continue; // nothing recorded for this stage — skip it entirely
 
-        if (!m.isRevertAwaited) {
-          if (m.meetingWith || m.takenBy) {
-            sheet.mergeCells(`B${row}:D${row}`);
-            const c = sheet.getCell(`B${row}`);
-            c.value = {
+      // Call-log meetings (Pres/Sec etc., tracked manually by HRD)
+      if (entry) {
+        const meetings = entry.meetings.length > 0 ? entry.meetings : [];
+        meetings.forEach((m, mi) => {
+          sheet.mergeCells(`B${row}:D${row}`);
+          const dateCell = sheet.getCell(`B${row}`);
+          if (m.isRevertAwaited) {
+            dateCell.value = {
               richText: [
-                { font: { bold: true }, text: "Meeting with: " },
-                { text: `${m.meetingWith || "—"} || ` },
-                { font: { bold: true }, text: "Meeting taken by: " },
-                { text: m.takenBy || "—" },
+                { font: { bold: true }, text: `${stageLabel} — Meeting ${mi + 1} Date: ` },
+                { text: "Revert Awaited" },
               ],
             } as ExcelJS.CellRichTextValue;
-            row++;
-          }
-          if (m.discussion) {
-            sheet.mergeCells(`B${row}:D${row}`);
-            const c = sheet.getCell(`B${row}`);
-            c.value = {
+          } else {
+            const dateStr = m.date ? fmtDate(new Date(m.date)) : "TBD";
+            dateCell.value = {
               richText: [
-                { font: { bold: true }, text: "Discussion: " },
-                { text: m.discussion },
+                { font: { bold: true }, text: `${stageLabel} — Meeting ${mi + 1} Date: ` },
+                { text: `${dateStr}${m.mode ? ` [${m.mode === "online" ? "Online" : "Offline"}]` : ""}` },
               ],
             } as ExcelJS.CellRichTextValue;
-            row++;
           }
-        }
-      });
+          dateCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: lightColor } };
+          row++;
 
-      if (meetings.length === 0) {
+          if (!m.isRevertAwaited) {
+            if (m.meetingWith || m.takenBy) {
+              sheet.mergeCells(`B${row}:D${row}`);
+              sheet.getCell(`B${row}`).value = {
+                richText: [
+                  { font: { bold: true }, text: "Meeting with: " },
+                  { text: `${m.meetingWith || "—"} || ` },
+                  { font: { bold: true }, text: "Meeting taken by: " },
+                  { text: m.takenBy || "—" },
+                ],
+              } as ExcelJS.CellRichTextValue;
+              row++;
+            }
+            if (m.discussion) {
+              sheet.mergeCells(`B${row}:D${row}`);
+              sheet.getCell(`B${row}`).value = {
+                richText: [{ font: { bold: true }, text: "Discussion: " }, { text: m.discussion }],
+              } as ExcelJS.CellRichTextValue;
+              row++;
+            }
+          }
+        });
+
+        if (meetings.length === 0) {
+          sheet.mergeCells(`B${row}:D${row}`);
+          const c = sheet.getCell(`B${row}`);
+          c.value = { richText: [{ font: { bold: true }, text: `${stageLabel}: ` }, { text: "No meetings logged yet" }] } as ExcelJS.CellRichTextValue;
+          c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: lightColor } };
+          row++;
+        }
+      }
+
+      // Formal booking made through SYNC (Core / BOD / Everyone)
+      if (booking) {
         sheet.mergeCells(`B${row}:D${row}`);
         const c = sheet.getCell(`B${row}`);
-        c.value = { richText: [{ font: { bold: true }, text: `${stageLabel}: ` }, { text: "No meetings logged yet" }] } as ExcelJS.CellRichTextValue;
+        const statusLabel = STATUS_LABELS[booking.status] ?? booking.status;
+        const scheduled = booking.scheduledDate ? fmtDate(booking.scheduledDate) : null;
+        c.value = {
+          richText: [
+            { font: { bold: true }, text: `${stageLabel} — Booked via SYNC: ` },
+            {
+              text: scheduled
+                ? `${scheduled}${booking.scheduledTime ? ` (${booking.scheduledTime})` : ""} · ${statusLabel}`
+                : `${statusLabel} — awaiting scheduling`,
+            },
+          ],
+        } as ExcelJS.CellRichTextValue;
         c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: lightColor } };
         row++;
       }
