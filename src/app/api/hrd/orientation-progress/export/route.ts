@@ -77,7 +77,7 @@ export async function GET() {
               { font: { bold: true }, text: `${stageLabel} — Meeting ${mi + 1} Date: ` },
               { text: "Revert Awaited" },
             ],
-          };
+          } as ExcelJS.CellRichTextValue;
         } else {
           const dateStr = m.date
             ? new Date(m.date).toLocaleDateString("en-IN", { day: "numeric", month: "long" })
@@ -87,7 +87,7 @@ export async function GET() {
               { font: { bold: true }, text: `${stageLabel} — Meeting ${mi + 1} Date: ` },
               { text: `${dateStr}${m.mode ? ` [${m.mode === "online" ? "Online" : "Offline"}]` : ""}` },
             ],
-          };
+          } as ExcelJS.CellRichTextValue;
         }
         dateCell.font = { ...(dateCell.font ?? {}) };
         dateCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: lightColor } };
@@ -104,7 +104,7 @@ export async function GET() {
                 { font: { bold: true }, text: "Meeting taken by: " },
                 { text: m.takenBy || "—" },
               ],
-            };
+            } as ExcelJS.CellRichTextValue;
             row++;
           }
           if (m.discussion) {
@@ -115,7 +115,7 @@ export async function GET() {
                 { font: { bold: true }, text: "Discussion: " },
                 { text: m.discussion },
               ],
-            };
+            } as ExcelJS.CellRichTextValue;
             row++;
           }
         }
@@ -124,7 +124,7 @@ export async function GET() {
       if (meetings.length === 0) {
         sheet.mergeCells(`B${row}:D${row}`);
         const c = sheet.getCell(`B${row}`);
-        c.value = { richText: [{ font: { bold: true }, text: `${stageLabel}: ` }, { text: "No meetings logged yet" }] };
+        c.value = { richText: [{ font: { bold: true }, text: `${stageLabel}: ` }, { text: "No meetings logged yet" }] } as ExcelJS.CellRichTextValue;
         c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: lightColor } };
         row++;
       }
