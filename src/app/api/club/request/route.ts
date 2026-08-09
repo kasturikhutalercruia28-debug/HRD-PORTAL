@@ -1,6 +1,7 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getAllProgress, isStageCompleted } from "@/lib/orientationProgress";
 
 export const dynamic = 'force-dynamic';
 
@@ -33,6 +34,43 @@ export async function POST(req: NextRequest) {
     !preferredDate3 || !preferredTime3
   ) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  }
+
+  // Enforce the sequencing rule server-side too (not just in the UI):
+  // Core requires a completed Pres/Sec call; BOD requires a completed Core.
+  const club = await prisma.club.findUnique({ where: { id: user.clubId } });
+  if (!club) return NextResponse.json({ error: "Club not found" }, { status: 404 });
+
+  if (orientationType === "core_member") {
+    let presSecDone = true;
+    try {
+      const progress = await getAllProgress();
+      presSecDone = isStageCompleted(progress, club.name, "pres_sec");
+    } catch {
+      presSecDone = true; // fail open if the tracker is unreachable
+    }
+    if (!presSecDone) {
+      return NextResponse.json(
+        { error: "Complete your Pres/Sec orientation call with HRD before booking Core orientation." },
+        { status: 400 }
+      );
+    }
+  }
+
+  if (orientationType === "bod") {
+    const completedCore = await prisma.orientationRequest.findFirst({
+      where: {
+        clubId: user.clubId,
+        orientationType: "core_member",
+        status: { in: ["conducted", "feedback_submitted", "certificate_generated"] },
+      },
+    });
+    if (!completedCore) {
+      return NextResponse.json(
+        { error: "Complete your Core orientation before booking BOD orientation." },
+        { status: 400 }
+      );
+    }
   }
 
   const request = await prisma.$transaction(async (tx) => {
