@@ -289,5 +289,23 @@
       "cmq30hlzy004r135foep66z6l"
     ],
     "createdAt": "2026-08-10T15:55:45.623Z"
+  },
+  {
+    "id": "inst_1786377459849_5syrk0",
+    "clubName": "RC Bombay Chembur West",
+    "date": "2026-08-02",
+    "attendeeDcmIds": [
+      "cmq30h308001x135fq68smtsz",
+      "cmq30h42a0025135f6tgd24dz",
+      "cmq30h61f002b135flmwybqjb",
+      "cmq30hlzy004r135foep66z6l",
+      "cmq30h83d002f135fnpw7oq9i",
+      "cmq30hf1n003t135fpwzdl7s7",
+      "cmq30hid40043135f0yd43lfp",
+      "cmq30hjzb004d135fkblz1b65",
+      "cmq30hw9r006n135fihbzpy0b",
+      "cmq30hwj0006p135f3lb1300c"
+    ],
+    "createdAt": "2026-08-10T15:57:39.849Z"
   }
 ]
