@@ -277,5 +277,17 @@
       "cmq30hwj0006p135f3lb1300c"
     ],
     "createdAt": "2026-08-10T15:54:31.399Z"
+  },
+  {
+    "id": "inst_1786377345623_p87gha",
+    "clubName": "RC Mulund Hills",
+    "date": "2026-08-02",
+    "attendeeDcmIds": [
+      "cmq30hwj0006p135f3lb1300c",
+      "cmq30hf1n003t135fpwzdl7s7",
+      "cmq30h61f002b135flmwybqjb",
+      "cmq30hlzy004r135foep66z6l"
+    ],
+    "createdAt": "2026-08-10T15:55:45.623Z"
   }
 ]
