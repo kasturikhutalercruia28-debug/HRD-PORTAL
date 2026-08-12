@@ -42,3 +42,55 @@
     font-family: 'Fraunces', serif;
   }
 }
+
+/*
+ * Dark mode retrofit
+ * ───────────────────
+ * Colors across this app are hardcoded hex utility classes (bg-[#FBF7EE],
+ * text-[#180F04]/50, etc.) rather than semantic tokens, so there's no
+ * single "surface" or "foreground" variable to flip. Rewriting every
+ * component to use theme-aware tokens is a much bigger job than "add a
+ * dark mode button" — so for now this uses attribute selectors to
+ * substring-match those exact utility classes wherever they appear and
+ * swap them under html.dark, covering the shared shell (sidebars, page
+ * backgrounds, card surfaces, body text) without touching every file.
+ * Specific opacity variants are listed AFTER the bare-color fallback so
+ * they win the (equal-specificity) cascade.
+ *
+ * This covers the common cases well; a handful of one-off components with
+ * unusual colors may still look off in dark mode — flag those and they
+ * can get bespoke dark: classes as they come up.
+ */
+@layer base {
+  html.dark {
+    color-scheme: dark;
+  }
+
+  /* Page / card surfaces */
+  .dark [class*="bg-[#FBF7EE]"] { background-color: #14100a !important; }
+  .dark [class*="bg-white"] { background-color: #1c150e !important; }
+  .dark [class*="bg-[#FBF7EE]/60"] { background-color: rgba(28, 21, 14, 0.6) !important; }
+
+  /* Borders */
+  .dark [class*="border-black/5"] { border-color: rgba(255, 255, 255, 0.08) !important; }
+  .dark [class*="border-black/10"] { border-color: rgba(255, 255, 255, 0.12) !important; }
+  .dark [class*="border-black/15"] { border-color: rgba(255, 255, 255, 0.16) !important; }
+  .dark [class*="border-black/20"] { border-color: rgba(255, 255, 255, 0.2) !important; }
+
+  /* Primary ink text + its opacity variants (fallback first, specific after) */
+  .dark [class*="text-[#180F04]"] { color: #F5EFE3 !important; }
+  .dark [class*="text-[#180F04]/70"] { color: rgba(245, 239, 227, 0.75) !important; }
+  .dark [class*="text-[#180F04]/60"] { color: rgba(245, 239, 227, 0.65) !important; }
+  .dark [class*="text-[#180F04]/50"] { color: rgba(245, 239, 227, 0.55) !important; }
+  .dark [class*="text-[#180F04]/45"] { color: rgba(245, 239, 227, 0.5) !important; }
+  .dark [class*="text-[#180F04]/40"] { color: rgba(245, 239, 227, 0.45) !important; }
+  .dark [class*="text-[#180F04]/35"] { color: rgba(245, 239, 227, 0.4) !important; }
+  .dark [class*="text-[#180F04]/30"] { color: rgba(245, 239, 227, 0.35) !important; }
+  .dark [class*="text-[#180F04]/25"] { color: rgba(245, 239, 227, 0.3) !important; }
+  .dark [class*="text-[#180F04]/20"] { color: rgba(245, 239, 227, 0.25) !important; }
+
+  /* Inputs typed into on a dark surface still need a visible background */
+  .dark input, .dark textarea, .dark select {
+    color-scheme: dark;
+  }
+}
