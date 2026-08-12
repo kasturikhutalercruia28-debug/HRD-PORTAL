@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ListChecks, CalendarDays, Building2, HelpCircle, MessageSquare, BookOpen, ClipboardList } from "lucide-react";
+import { ListChecks, CalendarDays, Building2, HelpCircle, MessageSquare, BookOpen } from "lucide-react";
 
 const SUB_NAV = [
-  { href: "/hrd/orientations/requests", label: "Requests", icon: ListChecks },
-  { href: "/hrd/orientations/progress", label: "Progress Tracking", icon: ClipboardList },
+  { href: "/hrd/orientations", label: "Overview", icon: ListChecks },
   { href: "/hrd/orientations/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/hrd/orientations/clubs", label: "Clubs", icon: Building2 },
   { href: "/hrd/orientations/questions", label: "Questions", icon: HelpCircle },
@@ -23,7 +22,7 @@ export default function OrientationsLayout({ children }: { children: React.React
       <div className="bg-white border-b border-black/5 px-6 overflow-x-auto">
         <div className="flex items-center gap-1 min-w-max">
           {SUB_NAV.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href || pathname.startsWith(href + "/");
+            const active = href === "/hrd/orientations" ? pathname === href : pathname.startsWith(href);
             return (
               <Link
                 key={href}
