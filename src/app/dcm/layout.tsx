@@ -18,6 +18,7 @@ import {
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
 import SidebarLogo from "@/components/SidebarLogo";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const NAV_LINKS = [
   { href: "/dcm/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -82,6 +83,9 @@ export default function DcmLayout({ children }: { children: React.ReactNode }) {
             </button>
           </div>
         )}
+        <div className="flex items-center justify-end mt-3">
+          <ThemeToggle />
+        </div>
       </div>
     </div>
   );
