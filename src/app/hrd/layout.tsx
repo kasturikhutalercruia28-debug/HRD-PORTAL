@@ -112,7 +112,8 @@ export default function HRDLayout({ children }: { children: React.ReactNode }) {
             </button>
           </div>
         )}
-        <div className="flex items-center justify-end mt-3">
+        <div className="flex items-center justify-end gap-1 mt-3">
+          <NotificationBell />
           <ThemeToggle />
         </div>
       </div>
@@ -156,8 +157,9 @@ export default function HRDLayout({ children }: { children: React.ReactNode }) {
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <span className="font-['Fraunces'] font-bold text-[#D4A017] text-lg">SYNC</span>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-1">
             <NotificationBell />
+            <ThemeToggle />
           </div>
         </header>
 
