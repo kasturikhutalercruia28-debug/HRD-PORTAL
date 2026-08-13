@@ -112,6 +112,12 @@ export async function PATCH(
   }
 
   if (action === "toggle_certificate") {
+    if (request.orientationType === "core_member") {
+      return NextResponse.json(
+        { error: "Certificates are issued after BOD orientation completes, not after Core." },
+        { status: 400 }
+      );
+    }
     const updated = await prisma.orientationRequest.update({
       where: { id: params.id },
       data: {
