@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import {
   ChevronDown, ChevronUp, Loader2, Plus, Pencil, Trash2, X, Check,
-  Clock, CalendarCheck, CheckCircle2, XCircle, Award, Download,
+  Clock, CalendarCheck, CheckCircle2, XCircle, Award, Download, Search,
 } from "lucide-react";
 import { getGithubToken } from "@/lib/clientGithubToken";
 
@@ -74,6 +74,7 @@ function emptyMeeting(): MeetingLog {
   return { id: "", date: "", isRevertAwaited: false, mode: "online", meetingWith: "", takenBy: "", discussion: "" };
 }
 
+
 // ---------- Main Page ----------
 export default function OrientationsOverviewPage() {
   const [clubs, setClubs] = useState<Club[]>([]);
@@ -82,6 +83,8 @@ export default function OrientationsOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<"all" | "pending_pres_sec" | "pending_core" | "pending_bod" | "completed">("all");
 
   async function loadAll() {
     setLoading(true);
@@ -112,6 +115,34 @@ export default function OrientationsOverviewPage() {
     URL.revokeObjectURL(url);
   }
 
+  function computeCategory(clubId: string, clubName: string): "pending_pres_sec" | "pending_core" | "pending_bod" | "completed" {
+    const presSec = progress.find((p) => p.clubName === clubName && p.stage === "pres_sec");
+    const presSecDone = presSec?.status === "completed";
+    const clubReqs = requests.filter((r) => r.clubId === clubId);
+    const latestOf = (t: ReqType) => clubReqs.filter((r) => r.orientationType === t).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0];
+    const core = latestOf("core_member");
+    const bod = latestOf("bod");
+    const everyone = latestOf("everyone");
+    const isDone = (r?: OrientationRequest) => r && ["conducted", "feedback_submitted", "certificate_generated"].includes(r.status);
+
+    if (isDone(bod) || isDone(everyone)) return "completed";
+    if (!presSecDone) return "pending_pres_sec";
+    if (!isDone(core)) return "pending_core";
+    return "pending_bod";
+  }
+
+  const FILTER_LABELS: Record<string, string> = {
+    all: "All Clubs",
+    pending_pres_sec: "Pending Pres/Sec",
+    pending_core: "Ready for Core",
+    pending_bod: "Ready for BOD",
+    completed: "Completed",
+  };
+
+  const visibleClubs = clubs
+    .filter((c) => c.name.toLowerCase().includes(search.trim().toLowerCase()))
+    .filter((c) => filter === "all" || computeCategory(c.id, c.name) === filter);
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -130,11 +161,39 @@ export default function OrientationsOverviewPage() {
         </div>
       </div>
 
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#180F04]/30" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search club by name…"
+          className="w-full border border-black/10 rounded-lg pl-9 pr-3 py-2 text-sm bg-white focus:outline-none focus:border-[#D4A017]"
+        />
+      </div>
+
+      <div className="flex gap-2 flex-wrap">
+        {(["all", "pending_pres_sec", "pending_core", "pending_bod", "completed"] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+              filter === f ? "bg-[#180F04] text-[#D4A017]" : "bg-white border border-black/10 text-[#180F04]/60 hover:bg-[#FBF7EE]"
+            }`}
+          >
+            {FILTER_LABELS[f]}
+          </button>
+        ))}
+      </div>
+
       {loading ? (
         <div className="flex justify-center py-12"><Loader2 size={22} className="animate-spin text-[#180F04]/30" /></div>
+      ) : visibleClubs.length === 0 ? (
+        <div className="bg-white rounded-xl border border-black/5 px-5 py-10 text-center text-sm text-[#180F04]/40">
+          No clubs match this search/filter.
+        </div>
       ) : (
         <div className="space-y-3">
-          {clubs.map((club) => (
+          {visibleClubs.map((club) => (
             <ClubCard
               key={club.id}
               club={club}
@@ -221,8 +280,8 @@ function PresSecSection({ clubName, entry, reload }: { clubName: string; entry: 
     const payload = {
       clubName, stage: "pres_sec", status,
       meetings: meetings
-        .filter((m) => m.isRevertAwaited || m.date || m.meetingWith || m.takenBy || m.discussion)
-        .map((m) => ({ ...m, date: m.isRevertAwaited ? null : m.date || null })),
+        .filter((m) => m.date)
+        .map((m) => ({ ...m, date: m.date || null, isRevertAwaited: false, meetingWith: "", takenBy: "", discussion: "" })),
     };
     const url = entry ? `/api/hrd/orientation-progress/${entry.id}` : "/api/hrd/orientation-progress";
     const res = await fetch(url, {
@@ -272,10 +331,8 @@ function PresSecSection({ clubName, entry, reload }: { clubName: string; entry: 
           ) : entry.meetings.map((m, i) => (
             <div key={m.id || i} className="text-xs text-[#180F04]/60 bg-[#FBF7EE] rounded-lg p-2">
               <p className="font-medium text-[#180F04]">
-                Meeting {i + 1}: {m.isRevertAwaited ? "Revert Awaited" : `${fmtDate(m.date)} [${m.mode}]`}
+                Meeting {i + 1}: {fmtDate(m.date)} [{m.mode}]
               </p>
-              {!m.isRevertAwaited && (m.meetingWith || m.takenBy) && <p>With: {m.meetingWith || "—"} · Taken by: {m.takenBy || "—"}</p>}
-              {!m.isRevertAwaited && m.discussion && <p className="mt-0.5">{m.discussion}</p>}
             </div>
           ))}
         </div>
@@ -298,24 +355,13 @@ function PresSecSection({ clubName, entry, reload }: { clubName: string; entry: 
                   <X size={12} />
                 </button>
               )}
-              <label className="flex items-center gap-1.5 text-xs">
-                <input type="checkbox" checked={m.isRevertAwaited} onChange={(e) => updateMeeting(i, "isRevertAwaited", e.target.checked)} className="accent-[#D4A017]" />
-                Revert Awaited
-              </label>
-              {!m.isRevertAwaited && (
-                <>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    <input type="date" value={m.date ?? ""} onChange={(e) => updateMeeting(i, "date", e.target.value)} className="border border-black/15 rounded px-2 py-1 text-xs" />
-                    <select value={m.mode ?? "online"} onChange={(e) => updateMeeting(i, "mode", e.target.value)} className="border border-black/15 rounded px-2 py-1 text-xs bg-white">
-                      <option value="online">Online</option>
-                      <option value="offline">Offline</option>
-                    </select>
-                  </div>
-                  <input placeholder="Meeting with" value={m.meetingWith} onChange={(e) => updateMeeting(i, "meetingWith", e.target.value)} className="w-full border border-black/15 rounded px-2 py-1 text-xs" />
-                  <input placeholder="Taken by" value={m.takenBy} onChange={(e) => updateMeeting(i, "takenBy", e.target.value)} className="w-full border border-black/15 rounded px-2 py-1 text-xs" />
-                  <textarea placeholder="Discussion" value={m.discussion} onChange={(e) => updateMeeting(i, "discussion", e.target.value)} rows={2} className="w-full border border-black/15 rounded px-2 py-1 text-xs resize-none" />
-                </>
-              )}
+              <div className="grid grid-cols-2 gap-1.5">
+                <input type="date" value={m.date ?? ""} onChange={(e) => updateMeeting(i, "date", e.target.value)} className="border border-black/15 rounded px-2 py-1 text-xs" />
+                <select value={m.mode ?? "online"} onChange={(e) => updateMeeting(i, "mode", e.target.value)} className="border border-black/15 rounded px-2 py-1 text-xs bg-white">
+                  <option value="online">Online</option>
+                  <option value="offline">Offline</option>
+                </select>
+              </div>
             </div>
           ))}
           <button onClick={() => setMeetings((prev) => [...prev, emptyMeeting()])} className="text-xs text-[#D4A017] font-semibold flex items-center gap-1">
@@ -335,8 +381,9 @@ function PresSecSection({ clubName, entry, reload }: { clubName: string; entry: 
 }
 
 // ---------- Request Section (Core/BOD/Everyone — approve/schedule/conduct) ----------
-function RequestSection({ label, requests, club, reload }: { label: string; type: ReqType; requests: OrientationRequest[]; club: Club; reload: () => void }) {
+function RequestSection({ label, type, requests, club, reload }: { label: string; type: ReqType; requests: OrientationRequest[]; club: Club; reload: () => void }) {
   const latest = requests[0];
+  const canCertify = type === "bod" || type === "everyone";
   const [busy, setBusy] = useState(false);
   const [showSchedule, setShowSchedule] = useState(false);
   const [chosenDate, setChosenDate] = useState("");
@@ -440,10 +487,14 @@ function RequestSection({ label, requests, club, reload }: { label: string; type
           )}
 
           {(latest.status === "conducted" || latest.status === "feedback_submitted" || latest.status === "certificate_generated") && (
-            <button onClick={() => act("toggle_certificate")} disabled={busy} className={`text-xs px-3 py-1 rounded-md font-semibold flex items-center gap-1 ${latest.certificateGenerated ? "bg-emerald-100 text-emerald-700" : "border border-black/15 text-[#180F04]"}`}>
-              {busy && <Loader2 size={11} className="animate-spin" />}
-              {latest.certificateGenerated ? <><Check size={11} /> Certificate Issued</> : "Generate Certificate"}
-            </button>
+            canCertify ? (
+              <button onClick={() => act("toggle_certificate")} disabled={busy} className={`text-xs px-3 py-1 rounded-md font-semibold flex items-center gap-1 ${latest.certificateGenerated ? "bg-emerald-100 text-emerald-700" : "border border-black/15 text-[#180F04]"}`}>
+                {busy && <Loader2 size={11} className="animate-spin" />}
+                {latest.certificateGenerated ? <><Check size={11} /> Certificate Issued</> : "Generate Certificate"}
+              </button>
+            ) : (
+              <p className="text-xs text-[#180F04]/40">Conducted — certificate is issued after BOD orientation completes.</p>
+            )
           )}
 
           {latest.status === "rejected" && (
