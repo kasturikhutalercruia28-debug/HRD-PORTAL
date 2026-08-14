@@ -123,12 +123,16 @@ export default function OrientationsOverviewPage() {
     const core = latestOf("core_member");
     const bod = latestOf("bod");
     const everyone = latestOf("everyone");
-    const isDone = (r?: OrientationRequest) => r && ["conducted", "feedback_submitted", "certificate_generated"].includes(r.status);
+    const isDone = (r?: OrientationRequest) => !!r && ["conducted", "feedback_submitted", "certificate_generated"].includes(r.status);
+    const hasActivity = (r?: OrientationRequest) => !!r; // any request at all, any status
 
+    // Reflect actual furthest progress made — not strict gating. Gating only
+    // controls what a club is ALLOWED to newly submit, not what's already happened.
     if (isDone(bod) || isDone(everyone)) return "completed";
-    if (!presSecDone) return "pending_pres_sec";
-    if (!isDone(core)) return "pending_core";
-    return "pending_bod";
+    if (hasActivity(bod) || isDone(core)) return "pending_bod";
+    if (hasActivity(core)) return "pending_core";
+    if (presSecDone) return "pending_core";
+    return "pending_pres_sec";
   }
 
   const FILTER_LABELS: Record<string, string> = {
@@ -142,6 +146,14 @@ export default function OrientationsOverviewPage() {
   const visibleClubs = clubs
     .filter((c) => c.name.toLowerCase().includes(search.trim().toLowerCase()))
     .filter((c) => filter === "all" || computeCategory(c.id, c.name) === filter);
+
+  const categoryCounts = { pending_pres_sec: 0, pending_core: 0, pending_bod: 0, completed: 0 };
+  clubs.forEach((c) => { categoryCounts[computeCategory(c.id, c.name)]++; });
+
+  const pendingApprovals = requests.filter((r) => r.status === "requested");
+  const upcomingScheduled = requests
+    .filter((r) => r.status === "scheduled")
+    .sort((a, b) => (a.scheduledDate ?? "") < (b.scheduledDate ?? "") ? -1 : 1);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
@@ -160,6 +172,48 @@ export default function OrientationsOverviewPage() {
           </button>
         </div>
       </div>
+
+      {!loading && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {([
+            ["pending_pres_sec", "Pending Pres/Sec", "text-amber-600"],
+            ["pending_core", "Ready for Core", "text-blue-600"],
+            ["pending_bod", "Ready for BOD", "text-purple-600"],
+            ["completed", "Completed", "text-emerald-600"],
+          ] as const).map(([key, label, color]) => (
+            <button key={key} onClick={() => setFilter(key)} className="bg-white rounded-xl border border-black/5 p-3 text-left hover:border-[#D4A017] transition-colors">
+              <p className={`text-2xl font-bold ${color}`}>{categoryCounts[key]}</p>
+              <p className="text-[10px] text-[#180F04]/50 font-medium">{label}</p>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {!loading && (pendingApprovals.length > 0 || upcomingScheduled.length > 0) && (
+        <div className="bg-white rounded-xl border border-amber-200 overflow-hidden">
+          <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-100">
+            <p className="text-xs font-semibold text-amber-800">Needs Your Attention</p>
+          </div>
+          <div className="divide-y divide-black/5">
+            {pendingApprovals.map((r) => (
+              <button key={r.id} onClick={() => setExpanded(r.clubId)} className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#FBF7EE]/40 text-left">
+                <span className="text-xs text-[#180F04]">
+                  <span className="font-semibold">{r.club.name}</span> requested {REQ_TYPE_LABELS[r.orientationType]} orientation
+                </span>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Needs Approval</span>
+              </button>
+            ))}
+            {upcomingScheduled.map((r) => (
+              <button key={r.id} onClick={() => setExpanded(r.clubId)} className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#FBF7EE]/40 text-left">
+                <span className="text-xs text-[#180F04]">
+                  <span className="font-semibold">{r.club.name}</span> — {REQ_TYPE_LABELS[r.orientationType]} scheduled {fmtDate(r.scheduledDate)}
+                </span>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">{r.scheduledTime}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="relative">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#180F04]/30" />
