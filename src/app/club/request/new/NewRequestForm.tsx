@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Loader2, CalendarDays, Users, MessageSquare, CheckCircle2 } from "lucide-react";
 
 type OrientationType = "core_member" | "bod" | "everyone";
+type OrientationType = "pres_sec" | "core_member" | "bod" | "everyone";
 type TimePeriod = "morning" | "afternoon" | "evening";
 
 const TYPE_OPTIONS: { value: OrientationType; label: string; desc: string }[] = [
+  { value: "pres_sec", label: "Pres/Sec", desc: "Orientation for club President & Secretary" },
   { value: "core_member", label: "Core Member", desc: "Orientation for core team members" },
   { value: "bod", label: "Board of Directors", desc: "Orientation for BOD" },
   { value: "everyone", label: "Everyone", desc: "Full club-wide orientation" },
@@ -204,7 +206,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
               (opt.value === "bod" && gating && !gating.coreCompleted);
             const lockMessage =
               opt.value === "core_member"
-                ? "Complete your Pres/Sec orientation call with HRD first."
+                ? "Complete your Pres/Sec orientation first."
                 : "Complete your Core orientation first.";
             return (
               <div key={opt.value}>
