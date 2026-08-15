@@ -5,11 +5,9 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Loader2, CalendarDays, Users, MessageSquare, CheckCircle2 } from "lucide-react";
 
 type OrientationType = "core_member" | "bod" | "everyone";
-type OrientationType = "pres_sec" | "core_member" | "bod" | "everyone";
 type TimePeriod = "morning" | "afternoon" | "evening";
 
 const TYPE_OPTIONS: { value: OrientationType; label: string; desc: string }[] = [
-  { value: "pres_sec", label: "Pres/Sec", desc: "Orientation for club President & Secretary" },
   { value: "core_member", label: "Core Member", desc: "Orientation for core team members" },
   { value: "bod", label: "Board of Directors", desc: "Orientation for BOD" },
   { value: "everyone", label: "Everyone", desc: "Full club-wide orientation" },
@@ -206,7 +204,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
               (opt.value === "bod" && gating && !gating.coreCompleted);
             const lockMessage =
               opt.value === "core_member"
-                ? "Complete your Pres/Sec orientation first."
+                ? "Complete your Pres/Sec orientation call with HRD first."
                 : "Complete your Core orientation first.";
             return (
               <div key={opt.value}>
@@ -278,7 +276,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
               if (text === MODE_Q) {
                 return (
                   <div key={q.id}>
-                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2 whitespace-pre-line">
                       {i + 1}. {q.questionText}
                     </label>
                     {renderChoice(q.id, ["Online", "Offline"])}
@@ -289,7 +287,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
               if (text === CONDUCTED_BY_Q) {
                 return (
                   <div key={q.id}>
-                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2 whitespace-pre-line">
                       {i + 1}. {q.questionText}
                     </label>
                     {renderChoice(q.id, ["Chairman HRD", "Team HRD"])}
@@ -300,7 +298,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
               if (text === TIMING_NOTES_Q) {
                 return (
                   <div key={q.id}>
-                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+                    <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2 whitespace-pre-line">
                       {i + 1}. {q.questionText}
                     </label>
                     <input
@@ -318,7 +316,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
               // long-text box) and any other custom question HRD has added.
               return (
                 <div key={q.id}>
-                  <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+                  <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2 whitespace-pre-line">
                     {i + 1}. {q.questionText}
                   </label>
                   <textarea
@@ -383,7 +381,7 @@ export default function NewRequestForm({ questionsByType }: Props) {
           ))}
 
           <div>
-            <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2">
+            <label className="block text-sm text-[#180F04] font-['Geist'] font-medium mb-2 whitespace-pre-line">
               Expected Attendance
             </label>
             <input
