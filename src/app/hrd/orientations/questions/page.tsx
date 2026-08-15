@@ -118,29 +118,36 @@ export default function HRDQuestionsPage() {
               </span>
               {editingId === q.id ? (
                 <div className="flex-1 flex items-start gap-2">
-                  <textarea
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                    rows={2}
-                    className="flex-1 border border-[#D4A017] rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none resize-none"
-                    autoFocus
-                  />
-                  <button
-                    onClick={() => handleEdit(q.id)}
-                    className="text-[#180F04] hover:text-[#D4A017] transition-colors"
-                  >
-                    <Check size={16} />
-                  </button>
-                  <button
-                    onClick={() => setEditingId(null)}
-                    className="text-[#180F04]/30 hover:text-[#180F04] transition-colors"
-                  >
-                    <X size={16} />
-                  </button>
+                  <div className="flex-1">
+                    <textarea
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      rows={4}
+                      className="w-full border border-[#D4A017] rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none resize-none"
+                      autoFocus
+                    />
+                    <p className="text-[10px] text-[#180F04]/35 mt-1">
+                      Tip: press Enter for line breaks — useful for numbered lists like logistics items.
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2 pt-2">
+                    <button
+                      onClick={() => handleEdit(q.id)}
+                      className="text-[#180F04] hover:text-[#D4A017] transition-colors"
+                    >
+                      <Check size={16} />
+                    </button>
+                    <button
+                      onClick={() => setEditingId(null)}
+                      className="text-[#180F04]/30 hover:text-[#180F04] transition-colors"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="flex-1 flex items-start justify-between gap-3">
-                  <p className="text-sm text-[#180F04] font-['Geist']">{q.questionText}</p>
+                  <p className="text-sm text-[#180F04] font-['Geist'] whitespace-pre-line">{q.questionText}</p>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <button
                       onClick={() => { setEditingId(q.id); setEditText(q.questionText); }}
@@ -168,14 +175,20 @@ export default function HRDQuestionsPage() {
 
           {addingFor === activeType ? (
             <div className="px-5 py-4 border-t border-black/5 flex items-start gap-2">
-              <textarea
-                value={newText}
-                onChange={(e) => setNewText(e.target.value)}
-                rows={2}
-                placeholder="New question..."
-                className="flex-1 border border-[#D4A017] rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none resize-none"
-                autoFocus
-              />
+              <div className="flex-1">
+                <textarea
+                  value={newText}
+                  onChange={(e) => setNewText(e.target.value)}
+                  rows={4}
+                  placeholder="New question..."
+                  className="w-full border border-[#D4A017] rounded-lg px-3 py-2 text-sm font-['Geist'] focus:outline-none resize-none"
+                  autoFocus
+                />
+                <p className="text-[10px] text-[#180F04]/35 mt-1">
+                  Tip: press Enter for line breaks — useful for numbered lists like logistics items.
+                </p>
+              </div>
+              <div className="flex items-start gap-2 pt-2">
               <button
                 onClick={handleAdd}
                 disabled={saving}
@@ -189,6 +202,7 @@ export default function HRDQuestionsPage() {
               >
                 <X size={16} />
               </button>
+              </div>
             </div>
           ) : (
             <div className="px-5 py-3 border-t border-black/5">
