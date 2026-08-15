@@ -1,14 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import {
-  ChevronDown, ChevronUp, Loader2, Plus, Pencil, Trash2, X, Check,
+  ChevronDown, ChevronUp, Loader2, Check,
   Clock, CalendarCheck, CheckCircle2, XCircle, Award, Download, Search,
 } from "lucide-react";
-import { getGithubToken } from "@/lib/clientGithubToken";
+import { getEffectiveStage, type EffectiveStage } from "@/lib/orientationStage";
 
 // ---------- Types ----------
-type Stage = "pres_sec" | "core" | "bod" | "everyone";
-type ReqType = "core_member" | "bod" | "everyone";
+type ReqType = "pres_sec" | "core_member" | "bod" | "everyone";
 type TimePeriod = "morning" | "afternoon" | "evening";
 
 interface Club { id: string; name: string; }
@@ -30,29 +29,7 @@ interface OrientationRequest {
   createdAt: string;
 }
 
-interface MeetingLog {
-  id: string;
-  date: string | null;
-  isRevertAwaited: boolean;
-  mode: "online" | "offline" | null;
-  meetingWith: string;
-  takenBy: string;
-  discussion: string;
-}
-interface ProgressEntry {
-  id: string;
-  clubName: string;
-  stage: Stage;
-  status: "in_progress" | "completed";
-  meetings: MeetingLog[];
-}
-
-const REQ_TYPE_LABELS: Record<ReqType, string> = {
-  core_member: "Core",
-  bod: "BOD",
-  everyone: "Everyone",
-};
-const STAGE_LABELS: Record<Stage, string> = {
+const STAGE_LABELS: Record<EffectiveStage, string> = {
   pres_sec: "Pres/Sec",
   core: "Core",
   bod: "BOD",
@@ -70,16 +47,12 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; icon: typeof
 function fmtDate(d: string | null) {
   return d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—";
 }
-function emptyMeeting(): MeetingLog {
-  return { id: "", date: "", isRevertAwaited: false, mode: "online", meetingWith: "", takenBy: "", discussion: "" };
-}
 
 
 // ---------- Main Page ----------
 export default function OrientationsOverviewPage() {
   const [clubs, setClubs] = useState<Club[]>([]);
   const [requests, setRequests] = useState<OrientationRequest[]>([]);
-  const [progress, setProgress] = useState<ProgressEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
@@ -88,14 +61,12 @@ export default function OrientationsOverviewPage() {
 
   async function loadAll() {
     setLoading(true);
-    const [clubsRes, reqRes, progRes] = await Promise.all([
+    const [clubsRes, reqRes] = await Promise.all([
       fetch("/api/hrd/orientations/clubs"),
       fetch("/api/hrd/orientations/requests"),
-      fetch("/api/hrd/orientation-progress"),
     ]);
     setClubs(await clubsRes.json());
     setRequests(await reqRes.json());
-    setProgress(await progRes.json());
     setLoading(false);
   }
 
@@ -115,23 +86,23 @@ export default function OrientationsOverviewPage() {
     URL.revokeObjectURL(url);
   }
 
-  function computeCategory(clubId: string, clubName: string): "pending_pres_sec" | "pending_core" | "pending_bod" | "completed" {
-    const presSec = progress.find((p) => p.clubName === clubName && p.stage === "pres_sec");
-    const presSecDone = presSec?.status === "completed";
+  function computeCategory(clubId: string): "pending_pres_sec" | "pending_core" | "pending_bod" | "completed" {
     const clubReqs = requests.filter((r) => r.clubId === clubId);
-    const latestOf = (t: ReqType) => clubReqs.filter((r) => r.orientationType === t).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0];
-    const core = latestOf("core_member");
+    const latestOf = (stage: EffectiveStage) =>
+      clubReqs.filter((r) => getEffectiveStage(r) === stage).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0];
+    const presSec = latestOf("pres_sec");
+    const core = latestOf("core");
     const bod = latestOf("bod");
     const everyone = latestOf("everyone");
     const isDone = (r?: OrientationRequest) => !!r && ["conducted", "feedback_submitted", "certificate_generated"].includes(r.status);
-    const hasActivity = (r?: OrientationRequest) => !!r; // any request at all, any status
+    const hasActivity = (r?: OrientationRequest) => !!r;
 
     // Reflect actual furthest progress made — not strict gating. Gating only
     // controls what a club is ALLOWED to newly submit, not what's already happened.
     if (isDone(bod) || isDone(everyone)) return "completed";
     if (hasActivity(bod) || isDone(core)) return "pending_bod";
     if (hasActivity(core)) return "pending_core";
-    if (presSecDone) return "pending_core";
+    if (isDone(presSec)) return "pending_core";
     return "pending_pres_sec";
   }
 
@@ -145,10 +116,10 @@ export default function OrientationsOverviewPage() {
 
   const visibleClubs = clubs
     .filter((c) => c.name.toLowerCase().includes(search.trim().toLowerCase()))
-    .filter((c) => filter === "all" || computeCategory(c.id, c.name) === filter);
+    .filter((c) => filter === "all" || computeCategory(c.id) === filter);
 
   const categoryCounts = { pending_pres_sec: 0, pending_core: 0, pending_bod: 0, completed: 0 };
-  clubs.forEach((c) => { categoryCounts[computeCategory(c.id, c.name)]++; });
+  clubs.forEach((c) => { categoryCounts[computeCategory(c.id)]++; });
 
   const pendingApprovals = requests.filter((r) => r.status === "requested");
   const upcomingScheduled = requests
@@ -198,7 +169,7 @@ export default function OrientationsOverviewPage() {
             {pendingApprovals.map((r) => (
               <button key={r.id} onClick={() => setExpanded(r.clubId)} className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#FBF7EE]/40 text-left">
                 <span className="text-xs text-[#180F04]">
-                  <span className="font-semibold">{r.club.name}</span> requested {REQ_TYPE_LABELS[r.orientationType]} orientation
+                  <span className="font-semibold">{r.club.name}</span> requested {STAGE_LABELS[getEffectiveStage(r)]} orientation
                 </span>
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Needs Approval</span>
               </button>
@@ -206,7 +177,7 @@ export default function OrientationsOverviewPage() {
             {upcomingScheduled.map((r) => (
               <button key={r.id} onClick={() => setExpanded(r.clubId)} className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#FBF7EE]/40 text-left">
                 <span className="text-xs text-[#180F04]">
-                  <span className="font-semibold">{r.club.name}</span> — {REQ_TYPE_LABELS[r.orientationType]} scheduled {fmtDate(r.scheduledDate)}
+                  <span className="font-semibold">{r.club.name}</span> — {STAGE_LABELS[getEffectiveStage(r)]} scheduled {fmtDate(r.scheduledDate)}
                 </span>
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">{r.scheduledTime}</span>
               </button>
@@ -266,178 +237,58 @@ export default function OrientationsOverviewPage() {
 
 // ---------- Club Card ----------
 function ClubCard({
-  club, requests, progressEntry, expanded, onToggle, reload,
+  club, requests, expanded, onToggle, reload,
 }: {
   club: Club;
   requests: OrientationRequest[];
-  progressEntry: ProgressEntry | null;
   expanded: boolean;
   onToggle: () => void;
   reload: () => void;
 }) {
-  const byType = (t: ReqType) => requests.filter((r) => r.orientationType === t).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  const byStage = (s: EffectiveStage) => requests.filter((r) => getEffectiveStage(r) === s).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  const presSec = byStage("pres_sec");
+  const core = byStage("core");
+  const bod = byStage("bod");
+  const everyone = byStage("everyone");
 
   return (
     <div className="bg-white rounded-xl border border-black/5 overflow-hidden">
       <button onClick={onToggle} className="w-full flex items-center justify-between px-5 py-3 hover:bg-[#FBF7EE]/40 transition-colors">
         <span className="font-semibold text-sm text-[#180F04]">{club.name}</span>
         <div className="flex items-center gap-1.5">
-          <StageBadge label="Pres/Sec" status={progressEntry?.status} />
-          <StageBadge label="Core" status={byType("core_member")[0]?.status} isRequest />
-          <StageBadge label="BOD" status={byType("bod")[0]?.status} isRequest />
-          <StageBadge label="Everyone" status={byType("everyone")[0]?.status} isRequest />
+          <StageBadge label="Pres/Sec" status={presSec[0]?.status} />
+          <StageBadge label="Core" status={core[0]?.status} />
+          <StageBadge label="BOD" status={bod[0]?.status} />
+          <StageBadge label="Everyone" status={everyone[0]?.status} />
           {expanded ? <ChevronUp size={15} className="text-[#180F04]/40 ml-1" /> : <ChevronDown size={15} className="text-[#180F04]/40 ml-1" />}
         </div>
       </button>
 
       {expanded && (
         <div className="border-t border-black/5 divide-y divide-black/5">
-          <PresSecSection clubName={club.name} entry={progressEntry} reload={reload} />
-          <RequestSection label="Core" type="core_member" requests={byType("core_member")} club={club} reload={reload} />
-          <RequestSection label="BOD" type="bod" requests={byType("bod")} club={club} reload={reload} />
-          <RequestSection label="Everyone" type="everyone" requests={byType("everyone")} club={club} reload={reload} />
+          <RequestSection label="Pres/Sec" stage="pres_sec" requests={presSec} reload={reload} />
+          <RequestSection label="Core" stage="core" requests={core} reload={reload} />
+          <RequestSection label="BOD" stage="bod" requests={bod} reload={reload} />
+          <RequestSection label="Everyone" stage="everyone" requests={everyone} reload={reload} />
         </div>
       )}
     </div>
   );
 }
 
-function StageBadge({ label, status, isRequest }: { label: string; status?: string; isRequest?: boolean }) {
+function StageBadge({ label, status }: { label: string; status?: string }) {
   if (!status) {
     return <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-black/5 text-[#180F04]/30">{label}</span>;
   }
-  const cfg = isRequest ? STATUS_CONFIG[status] : status === "completed"
-    ? { label: "Completed", color: "bg-emerald-100 text-emerald-700", icon: CheckCircle2 }
-    : { label: "In Progress", color: "bg-amber-100 text-amber-700", icon: Clock };
+  const cfg = STATUS_CONFIG[status];
   if (!cfg) return null;
   return <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${cfg.color}`}>{label}</span>;
 }
 
-// ---------- Pres/Sec Section (call-log tracking) ----------
-function PresSecSection({ clubName, entry, reload }: { clubName: string; entry: ProgressEntry | null; reload: () => void }) {
-  const [showForm, setShowForm] = useState(false);
-  const [meetings, setMeetings] = useState<MeetingLog[]>(entry?.meetings.length ? entry.meetings.map(m => ({...m, date: m.date ? m.date.slice(0,10) : ""})) : [emptyMeeting()]);
-  const [status, setStatus] = useState<"in_progress" | "completed">(entry?.status ?? "in_progress");
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const [deleting, setDeleting] = useState(false);
-
-  function updateMeeting(idx: number, field: keyof MeetingLog, val: string | boolean) {
-    setMeetings((prev) => { const next = [...prev]; next[idx] = { ...next[idx], [field]: val }; return next; });
-  }
-
-  async function handleSave() {
-    setError("");
-    const token = getGithubToken();
-    if (!token) { setError("Set up your GitHub token first (below)."); return; }
-    setSaving(true);
-    const payload = {
-      clubName, stage: "pres_sec", status,
-      meetings: meetings
-        .filter((m) => m.date)
-        .map((m) => ({ ...m, date: m.date || null, isRevertAwaited: false, meetingWith: "", takenBy: "", discussion: "" })),
-    };
-    const url = entry ? `/api/hrd/orientation-progress/${entry.id}` : "/api/hrd/orientation-progress";
-    const res = await fetch(url, {
-      method: entry ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json", "x-hrd-github-token": token },
-      body: JSON.stringify(payload),
-    });
-    setSaving(false);
-    if (res.ok) { setShowForm(false); reload(); }
-    else { const d = await res.json(); setError(d.error ?? "Failed to save"); }
-  }
-
-  async function handleDelete() {
-    if (!entry) return;
-    const token = getGithubToken();
-    if (!token) { alert("Set up your GitHub token first."); return; }
-    if (!confirm("Delete Pres/Sec record?")) return;
-    setDeleting(true);
-    const res = await fetch(`/api/hrd/orientation-progress/${entry.id}`, { method: "DELETE", headers: { "x-hrd-github-token": token } });
-    setDeleting(false);
-    if (res.ok) reload(); else alert("Failed to delete");
-  }
-
-  return (
-    <div className="px-5 py-3">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-semibold text-[#180F04]">Pres/Sec</span>
-        <div className="flex items-center gap-1">
-          {entry && <Pencil size={13} className="text-[#180F04]/40 hover:text-[#D4A017] cursor-pointer" onClick={() => setShowForm(true)} />}
-          {!entry && (
-            <button onClick={() => setShowForm(true)} className="text-xs text-[#D4A017] font-semibold flex items-center gap-1">
-              <Plus size={12} /> Log a meeting
-            </button>
-          )}
-          {entry && (
-            <button onClick={handleDelete} disabled={deleting} className="text-[#180F04]/40 hover:text-red-500">
-              {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
-            </button>
-          )}
-        </div>
-      </div>
-
-      {entry && !showForm && (
-        <div className="space-y-1.5">
-          {entry.meetings.length === 0 ? (
-            <p className="text-xs text-[#180F04]/30">No meetings logged</p>
-          ) : entry.meetings.map((m, i) => (
-            <div key={m.id || i} className="text-xs text-[#180F04]/60 bg-[#FBF7EE] rounded-lg p-2">
-              <p className="font-medium text-[#180F04]">
-                Meeting {i + 1}: {fmtDate(m.date)} [{m.mode}]
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {showForm && (
-        <div className="space-y-3 bg-[#FBF7EE] rounded-lg p-3">
-          <div className="flex gap-2">
-            {(["in_progress", "completed"] as const).map((s) => (
-              <button key={s} type="button" onClick={() => setStatus(s)}
-                className={`px-3 py-1 rounded-md text-xs font-semibold border ${status === s ? "bg-[#180F04] text-[#D4A017] border-[#180F04]" : "border-black/15 text-[#180F04] bg-white"}`}>
-                {s === "in_progress" ? "In Progress" : "Completed"}
-              </button>
-            ))}
-          </div>
-          {meetings.map((m, i) => (
-            <div key={i} className="border border-black/10 rounded-lg p-2.5 space-y-1.5 relative bg-white">
-              {meetings.length > 1 && (
-                <button onClick={() => setMeetings((prev) => prev.filter((_, idx) => idx !== i))} className="absolute top-1.5 right-1.5 text-[#180F04]/30 hover:text-red-500">
-                  <X size={12} />
-                </button>
-              )}
-              <div className="grid grid-cols-2 gap-1.5">
-                <input type="date" value={m.date ?? ""} onChange={(e) => updateMeeting(i, "date", e.target.value)} className="border border-black/15 rounded px-2 py-1 text-xs" />
-                <select value={m.mode ?? "online"} onChange={(e) => updateMeeting(i, "mode", e.target.value)} className="border border-black/15 rounded px-2 py-1 text-xs bg-white">
-                  <option value="online">Online</option>
-                  <option value="offline">Offline</option>
-                </select>
-              </div>
-            </div>
-          ))}
-          <button onClick={() => setMeetings((prev) => [...prev, emptyMeeting()])} className="text-xs text-[#D4A017] font-semibold flex items-center gap-1">
-            <Plus size={11} /> Add another meeting
-          </button>
-          {error && <p className="text-red-500 text-xs">{error}</p>}
-          <div className="flex gap-2">
-            <button onClick={() => setShowForm(false)} className="flex-1 border border-black/15 rounded-md py-1.5 text-xs text-[#180F04]/60">Cancel</button>
-            <button onClick={handleSave} disabled={saving} className="flex-1 bg-[#180F04] text-[#D4A017] rounded-md py-1.5 text-xs font-semibold flex items-center justify-center gap-1.5">
-              {saving && <Loader2 size={12} className="animate-spin" />} Save
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ---------- Request Section (Core/BOD/Everyone — approve/schedule/conduct) ----------
-function RequestSection({ label, type, requests, club, reload }: { label: string; type: ReqType; requests: OrientationRequest[]; club: Club; reload: () => void }) {
+// ---------- Request Section (Pres/Sec, Core, BOD, Everyone — approve/schedule/conduct) ----------
+function RequestSection({ label, stage, requests, reload }: { label: string; stage: EffectiveStage; requests: OrientationRequest[]; reload: () => void }) {
   const latest = requests[0];
-  const canCertify = type === "bod" || type === "everyone";
+  const canCertify = stage === "bod" || stage === "everyone";
   const [busy, setBusy] = useState(false);
   const [showSchedule, setShowSchedule] = useState(false);
   const [chosenDate, setChosenDate] = useState("");
