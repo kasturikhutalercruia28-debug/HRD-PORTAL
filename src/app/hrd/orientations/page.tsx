@@ -54,6 +54,7 @@ export default function OrientationsOverviewPage() {
   const [clubs, setClubs] = useState<Club[]>([]);
   const [requests, setRequests] = useState<OrientationRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [search, setSearch] = useState("");
@@ -61,13 +62,25 @@ export default function OrientationsOverviewPage() {
 
   async function loadAll() {
     setLoading(true);
-    const [clubsRes, reqRes] = await Promise.all([
-      fetch("/api/hrd/orientations/clubs"),
-      fetch("/api/hrd/orientations/requests"),
-    ]);
-    setClubs(await clubsRes.json());
-    setRequests(await reqRes.json());
-    setLoading(false);
+    setLoadError("");
+    try {
+      const [clubsRes, reqRes] = await Promise.all([
+        fetch("/api/hrd/orientations/clubs"),
+        fetch("/api/hrd/orientations/requests"),
+      ]);
+      if (!clubsRes.ok) throw new Error(`Failed to load clubs (${clubsRes.status})`);
+      if (!reqRes.ok) throw new Error(`Failed to load requests (${reqRes.status})`);
+      setClubs(await clubsRes.json());
+      setRequests(await reqRes.json());
+    } catch (e) {
+      // Without this, a single failed/odd-shaped response left the spinner
+      // spinning forever — setLoading(false) below never ran because the
+      // throw skipped past it. Surfacing the message here instead of a
+      // silent infinite spinner.
+      setLoadError(e instanceof Error ? e.message : "Failed to load orientations.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => { loadAll(); }, []);
@@ -144,7 +157,7 @@ export default function OrientationsOverviewPage() {
         </div>
       </div>
 
-      {!loading && (
+      {!loading && !loadError && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {([
             ["pending_pres_sec", "Pending Pres/Sec", "text-amber-600"],
@@ -160,7 +173,7 @@ export default function OrientationsOverviewPage() {
         </div>
       )}
 
-      {!loading && (pendingApprovals.length > 0 || upcomingScheduled.length > 0) && (
+      {!loading && !loadError && (pendingApprovals.length > 0 || upcomingScheduled.length > 0) && (
         <div className="bg-white rounded-xl border border-amber-200 overflow-hidden">
           <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-100">
             <p className="text-xs font-semibold text-amber-800">Needs Your Attention</p>
@@ -212,6 +225,16 @@ export default function OrientationsOverviewPage() {
 
       {loading ? (
         <div className="flex justify-center py-12"><Loader2 size={22} className="animate-spin text-[#180F04]/30" /></div>
+      ) : loadError ? (
+        <div className="bg-white rounded-xl border border-red-200 px-5 py-8 text-center space-y-3">
+          <p className="text-sm text-red-600 font-medium">{loadError}</p>
+          <button
+            onClick={loadAll}
+            className="text-xs font-semibold bg-[#180F04] text-[#D4A017] px-4 py-2 rounded-lg hover:bg-[#180F04]/80 transition-colors"
+          >
+            Try again
+          </button>
+        </div>
       ) : visibleClubs.length === 0 ? (
         <div className="bg-white rounded-xl border border-black/5 px-5 py-10 text-center text-sm text-[#180F04]/40">
           No clubs match this search/filter.
@@ -223,7 +246,6 @@ export default function OrientationsOverviewPage() {
               key={club.id}
               club={club}
               requests={requests.filter((r) => r.clubId === club.id)}
-              progressEntry={progress.find((p) => p.clubName === club.name && p.stage === "pres_sec") ?? null}
               expanded={expanded === club.id}
               onToggle={() => setExpanded(expanded === club.id ? null : club.id)}
               reload={loadAll}
