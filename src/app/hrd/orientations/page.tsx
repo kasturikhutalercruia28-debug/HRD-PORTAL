@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import {
   ChevronDown, ChevronUp, Loader2, Check,
-  Clock, CalendarCheck, CheckCircle2, XCircle, Award, Download, Search,
+  Clock, CalendarCheck, CheckCircle2, XCircle, Award, Download, Search, X,
 } from "lucide-react";
 import { getEffectiveStage, type EffectiveStage } from "@/lib/orientationStage";
 
@@ -54,33 +54,21 @@ export default function OrientationsOverviewPage() {
   const [clubs, setClubs] = useState<Club[]>([]);
   const [requests, setRequests] = useState<OrientationRequest[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "pending_pres_sec" | "pending_core" | "pending_bod" | "completed">("all");
+  const [showSummary, setShowSummary] = useState(false);
 
   async function loadAll() {
     setLoading(true);
-    setLoadError("");
-    try {
-      const [clubsRes, reqRes] = await Promise.all([
-        fetch("/api/hrd/orientations/clubs"),
-        fetch("/api/hrd/orientations/requests"),
-      ]);
-      if (!clubsRes.ok) throw new Error(`Failed to load clubs (${clubsRes.status})`);
-      if (!reqRes.ok) throw new Error(`Failed to load requests (${reqRes.status})`);
-      setClubs(await clubsRes.json());
-      setRequests(await reqRes.json());
-    } catch (e) {
-      // Without this, a single failed/odd-shaped response left the spinner
-      // spinning forever — setLoading(false) below never ran because the
-      // throw skipped past it. Surfacing the message here instead of a
-      // silent infinite spinner.
-      setLoadError(e instanceof Error ? e.message : "Failed to load orientations.");
-    } finally {
-      setLoading(false);
-    }
+    const [clubsRes, reqRes] = await Promise.all([
+      fetch("/api/hrd/orientations/clubs"),
+      fetch("/api/hrd/orientations/requests"),
+    ]);
+    setClubs(await clubsRes.json());
+    setRequests(await reqRes.json());
+    setLoading(false);
   }
 
   useEffect(() => { loadAll(); }, []);
@@ -139,12 +127,31 @@ export default function OrientationsOverviewPage() {
     .filter((r) => r.status === "scheduled")
     .sort((a, b) => (a.scheduledDate ?? "") < (b.scheduledDate ?? "") ? -1 : 1);
 
+  const DONE = ["conducted", "feedback_submitted", "certificate_generated"];
+  const doneCountByStage = (stage: EffectiveStage) =>
+    new Set(requests.filter((r) => getEffectiveStage(r) === stage && DONE.includes(r.status)).map((r) => r.clubId)).size;
+  const doneCounts = {
+    pres_sec: doneCountByStage("pres_sec"),
+    core: doneCountByStage("core"),
+    bod: doneCountByStage("bod"),
+    everyone: doneCountByStage("everyone"),
+  };
+  const totalDone = doneCounts.pres_sec + doneCounts.core + doneCounts.bod + doneCounts.everyone;
+
+  function goToClub(clubId: string) {
+    setFilter("all");
+    setSearch("");
+    setExpanded(clubId);
+    setTimeout(() => {
+      document.getElementById(`club-${clubId}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Orientations</h1>
-          <p className="text-[#180F04]/60 text-sm mt-1">Every club, every stage — Pres/Sec, Core, BOD & Everyone — in one place.</p>
         </div>
         <div className="flex gap-2">
           <a href="/hrd/orientations/requests/new" className="flex items-center gap-1.5 bg-[#D4A017] text-[#180F04] px-3 py-2 rounded-lg text-xs font-semibold hover:bg-[#b8860b] transition-colors">
@@ -157,7 +164,20 @@ export default function OrientationsOverviewPage() {
         </div>
       </div>
 
-      {!loading && !loadError && (
+      {!loading && (
+        <button
+          onClick={() => setShowSummary(true)}
+          className="w-full bg-gradient-to-r from-[#180F04] to-[#2a1a08] rounded-xl p-4 flex items-center justify-between text-left hover:opacity-95 transition-opacity"
+        >
+          <div>
+            <p className="text-[10px] text-[#D4A017]/70 font-semibold uppercase tracking-wide">Total Orientations Done</p>
+            <p className="text-3xl font-bold text-[#D4A017]">{totalDone}</p>
+          </div>
+          <span className="text-xs text-white/50">View breakdown →</span>
+        </button>
+      )}
+
+      {!loading && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {([
             ["pending_pres_sec", "Pending Pres/Sec", "text-amber-600"],
@@ -173,14 +193,14 @@ export default function OrientationsOverviewPage() {
         </div>
       )}
 
-      {!loading && !loadError && (pendingApprovals.length > 0 || upcomingScheduled.length > 0) && (
+      {!loading && (pendingApprovals.length > 0 || upcomingScheduled.length > 0) && (
         <div className="bg-white rounded-xl border border-amber-200 overflow-hidden">
           <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-100">
             <p className="text-xs font-semibold text-amber-800">Needs Your Attention</p>
           </div>
           <div className="divide-y divide-black/5">
             {pendingApprovals.map((r) => (
-              <button key={r.id} onClick={() => setExpanded(r.clubId)} className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#FBF7EE]/40 text-left">
+              <button key={r.id} onClick={() => goToClub(r.clubId)} className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#FBF7EE]/40 text-left">
                 <span className="text-xs text-[#180F04]">
                   <span className="font-semibold">{r.club.name}</span> requested {STAGE_LABELS[getEffectiveStage(r)]} orientation
                 </span>
@@ -188,13 +208,41 @@ export default function OrientationsOverviewPage() {
               </button>
             ))}
             {upcomingScheduled.map((r) => (
-              <button key={r.id} onClick={() => setExpanded(r.clubId)} className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#FBF7EE]/40 text-left">
+              <button key={r.id} onClick={() => goToClub(r.clubId)} className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#FBF7EE]/40 text-left">
                 <span className="text-xs text-[#180F04]">
                   <span className="font-semibold">{r.club.name}</span> — {STAGE_LABELS[getEffectiveStage(r)]} scheduled {fmtDate(r.scheduledDate)}
                 </span>
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">{r.scheduledTime}</span>
               </button>
             ))}
+          </div>
+        </div>
+      )}
+
+      {showSummary && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/5">
+              <h2 className="font-['Fraunces'] font-bold text-[#180F04] text-lg">Orientations Breakdown</h2>
+              <button onClick={() => setShowSummary(false)} className="text-[#180F04]/30 hover:text-[#180F04]"><X size={18} /></button>
+            </div>
+            <div className="px-6 py-5 space-y-3">
+              {([
+                ["Pres/Sec Done", doneCounts.pres_sec, "text-amber-600"],
+                ["Core Done", doneCounts.core, "text-blue-600"],
+                ["BOD Done", doneCounts.bod, "text-purple-600"],
+                ["Everyone Done", doneCounts.everyone, "text-emerald-600"],
+              ] as const).map(([label, count, color]) => (
+                <div key={label} className="flex items-center justify-between py-1.5 border-b border-black/5 last:border-none">
+                  <span className="text-sm text-[#180F04]">{label}</span>
+                  <span className={`text-lg font-bold ${color}`}>{count}</span>
+                </div>
+              ))}
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-sm font-semibold text-[#180F04]">Total</span>
+                <span className="text-xl font-bold text-[#180F04]">{totalDone}</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -225,16 +273,6 @@ export default function OrientationsOverviewPage() {
 
       {loading ? (
         <div className="flex justify-center py-12"><Loader2 size={22} className="animate-spin text-[#180F04]/30" /></div>
-      ) : loadError ? (
-        <div className="bg-white rounded-xl border border-red-200 px-5 py-8 text-center space-y-3">
-          <p className="text-sm text-red-600 font-medium">{loadError}</p>
-          <button
-            onClick={loadAll}
-            className="text-xs font-semibold bg-[#180F04] text-[#D4A017] px-4 py-2 rounded-lg hover:bg-[#180F04]/80 transition-colors"
-          >
-            Try again
-          </button>
-        </div>
       ) : visibleClubs.length === 0 ? (
         <div className="bg-white rounded-xl border border-black/5 px-5 py-10 text-center text-sm text-[#180F04]/40">
           No clubs match this search/filter.
@@ -242,14 +280,15 @@ export default function OrientationsOverviewPage() {
       ) : (
         <div className="space-y-3">
           {visibleClubs.map((club) => (
-            <ClubCard
-              key={club.id}
-              club={club}
-              requests={requests.filter((r) => r.clubId === club.id)}
-              expanded={expanded === club.id}
-              onToggle={() => setExpanded(expanded === club.id ? null : club.id)}
-              reload={loadAll}
-            />
+            <div id={`club-${club.id}`} key={club.id}>
+              <ClubCard
+                club={club}
+                requests={requests.filter((r) => r.clubId === club.id)}
+                expanded={expanded === club.id}
+                onToggle={() => setExpanded(expanded === club.id ? null : club.id)}
+                reload={loadAll}
+              />
+            </div>
           ))}
         </div>
       )}
