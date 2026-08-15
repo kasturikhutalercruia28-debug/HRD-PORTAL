@@ -1,9 +1,10 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { getAllProgress, isStageCompleted } from "@/lib/orientationProgress";
 
 export const dynamic = 'force-dynamic';
+
+const DONE_STATUSES = ["conducted", "feedback_submitted", "certificate_generated"];
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -36,36 +37,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  // Enforce the sequencing rule server-side too (not just in the UI):
-  // Core requires a completed Pres/Sec call; BOD requires a completed Core.
   const club = await prisma.club.findUnique({ where: { id: user.clubId } });
   if (!club) return NextResponse.json({ error: "Club not found" }, { status: 404 });
 
+  // Enforce the sequencing rule server-side too (not just in the UI):
+  // Core requires a completed Pres/Sec; BOD requires a completed Core.
   if (orientationType === "core_member") {
-    let presSecDone = true;
-    try {
-      const progress = await getAllProgress();
-      presSecDone = isStageCompleted(progress, club.name, "pres_sec");
-    } catch {
-      presSecDone = true; // fail open if the tracker is unreachable
-    }
+    const presSecDone = await prisma.orientationRequest.findFirst({
+      where: { clubId: user.clubId, orientationType: "pres_sec", status: { in: DONE_STATUSES as never } },
+    });
     if (!presSecDone) {
       return NextResponse.json(
-        { error: "Complete your Pres/Sec orientation call with HRD before booking Core orientation." },
+        { error: "Complete your Pres/Sec orientation before booking Core orientation." },
         { status: 400 }
       );
     }
   }
 
   if (orientationType === "bod") {
-    const completedCore = await prisma.orientationRequest.findFirst({
-      where: {
-        clubId: user.clubId,
-        orientationType: "core_member",
-        status: { in: ["conducted", "feedback_submitted", "certificate_generated"] },
-      },
+    const coreDone = await prisma.orientationRequest.findFirst({
+      where: { clubId: user.clubId, orientationType: "core_member", status: { in: DONE_STATUSES as never } },
     });
-    if (!completedCore) {
+    if (!coreDone) {
       return NextResponse.json(
         { error: "Complete your Core orientation before booking BOD orientation." },
         { status: 400 }
