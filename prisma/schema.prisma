@@ -24,6 +24,7 @@ enum PerformanceCategory {
 }
 
 enum OrientationType {
+  pres_sec
   core_member
   bod
   everyone
