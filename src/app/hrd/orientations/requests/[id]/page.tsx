@@ -146,7 +146,7 @@ export default async function HRDRequestDetailPage({
           <div className="space-y-4">
             {request.answers.map((a) => (
               <div key={a.id}>
-                <p className="text-[#180F04]/50 text-xs font-['Geist'] mb-1">
+                <p className="text-[#180F04]/50 text-xs font-['Geist'] mb-1 whitespace-pre-line">
                   {a.question.questionText}
                 </p>
                 <p className="text-[#180F04] text-sm font-['Geist']">{a.answerText}</p>
@@ -163,7 +163,7 @@ export default async function HRDRequestDetailPage({
           <div className="space-y-4">
             {request.feedback.responses.map((r) => (
               <div key={r.id}>
-                <p className="text-[#180F04]/50 text-xs font-['Geist'] mb-1">
+                <p className="text-[#180F04]/50 text-xs font-['Geist'] mb-1 whitespace-pre-line">
                   {r.question.questionText}
                 </p>
                 <p className="text-[#180F04] text-sm font-['Geist']">{r.answerText}</p>
