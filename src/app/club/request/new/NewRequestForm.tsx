@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Loader2, CalendarDays, Users, MessageSquare, CheckCircle2 } from "lucide-react";
 
-type OrientationType = "core_member" | "bod" | "everyone";
+type OrientationType = "pres_sec" | "core_member" | "bod" | "everyone";
 type TimePeriod = "morning" | "afternoon" | "evening";
 
 const TYPE_OPTIONS: { value: OrientationType; label: string; desc: string }[] = [
+  { value: "pres_sec", label: "Pres/Sec", desc: "Onboarding call for President & Secretary" },
   { value: "core_member", label: "Core Member", desc: "Orientation for core team members" },
   { value: "bod", label: "Board of Directors", desc: "Orientation for BOD" },
   { value: "everyone", label: "Everyone", desc: "Full club-wide orientation" },
