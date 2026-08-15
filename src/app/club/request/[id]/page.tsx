@@ -151,7 +151,7 @@ export default async function ClubRequestDetailPage({
           <div className="space-y-4">
             {request.answers.map((a) => (
               <div key={a.id}>
-                <p className="text-[#180F04]/60 text-xs font-['Geist'] mb-1">
+                <p className="text-[#180F04]/60 text-xs font-['Geist'] mb-1 whitespace-pre-line">
                   {a.question.questionText}
                 </p>
                 <p className="text-[#180F04] text-sm font-['Geist']">{a.answerText}</p>
