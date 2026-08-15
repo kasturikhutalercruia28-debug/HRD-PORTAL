@@ -90,6 +90,7 @@ export default function NewPastOrientationPage() {
             onChange={(e) => setOrientationType(e.target.value)}
             className="w-full border border-black/15 rounded-lg px-3 py-2 text-sm text-[#180F04] bg-white focus:outline-none focus:border-[#D4A017]"
           >
+            <option value="pres_sec">Pres/Sec</option>
             <option value="core_member">Core Member</option>
             <option value="bod">BOD</option>
             <option value="everyone">Everyone</option>
