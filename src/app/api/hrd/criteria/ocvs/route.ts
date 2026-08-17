@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { readJsonFile, writeJsonFile } from "@/lib/githubStore";
-import { OCVS_PATH, OcvRecord } from "@/lib/criteria";
+import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -10,22 +9,14 @@ export async function GET() {
   if (!session || (session.user as { role?: string }).role !== "HRD") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { data } = await readJsonFile<OcvRecord[]>(OCVS_PATH, []);
-  return NextResponse.json(data.sort((a, b) => (a.date < b.date ? 1 : -1)));
+  const records = await prisma.ocv.findMany({ orderBy: { date: "desc" } });
+  return NextResponse.json(records);
 }
 
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session || (session.user as { role?: string }).role !== "HRD") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const token = req.headers.get("x-hrd-github-token");
-  if (!token) {
-    return NextResponse.json(
-      { error: "Missing GitHub token — set it up once from the DCM Criteria page." },
-      { status: 400 }
-    );
   }
 
   const body = await req.json();
@@ -37,25 +28,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const record: OcvRecord = {
-    id: `ocv_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-    clubName,
-    date,
-    attendeeDcmIds,
-    createdAt: new Date().toISOString(),
-  };
-
-  try {
-    await writeJsonFile<OcvRecord[]>(
-      OCVS_PATH,
-      (current) => [...current, record],
-      [],
-      token,
-      `Mark OCV attendance: ${clubName} (${date})`
-    );
-  } catch (e) {
-    return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
-  }
+  const record = await prisma.ocv.create({
+    data: { clubName, date: new Date(date), attendeeDcmIds },
+  });
 
   return NextResponse.json(record, { status: 201 });
 }
