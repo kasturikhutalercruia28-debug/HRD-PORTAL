@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, Check, Search, Pencil, Trash2, X } from "lucide-react";
-import { getGithubToken } from "@/lib/clientGithubToken";
 
 interface Club {
   id: string;
@@ -81,16 +80,10 @@ export default function OCVsPage() {
   }
 
   async function handleDelete(id: string) {
-    const token = getGithubToken();
-    if (!token) {
-      setError("Set up your GitHub token first from the DCM Criteria home page.");
-      return;
-    }
     if (!confirm("Delete this OCV record?")) return;
     setDeletingId(id);
     const res = await fetch(`/api/hrd/criteria/ocvs/${id}`, {
       method: "DELETE",
-      headers: { "x-hrd-github-token": token },
     });
     setDeletingId(null);
     if (res.ok) {
@@ -109,16 +102,11 @@ export default function OCVsPage() {
       setError("Select a club, date, and at least one DCM.");
       return;
     }
-    const token = getGithubToken();
-    if (!token) {
-      setError("Set up your GitHub token first from the DCM Criteria home page.");
-      return;
-    }
     setSaving(true);
     const url = editingId ? `/api/hrd/criteria/ocvs/${editingId}` : "/api/hrd/criteria/ocvs";
     const res = await fetch(url, {
       method: editingId ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json", "x-hrd-github-token": token },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ clubName, date, attendeeDcmIds: Array.from(selected) }),
     });
     setSaving(false);

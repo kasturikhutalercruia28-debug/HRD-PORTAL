@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, Check, Search, Pencil, Trash2, X } from "lucide-react";
-import { getGithubToken } from "@/lib/clientGithubToken";
 
 interface Avenue {
   id: string;
@@ -139,16 +138,10 @@ export default function ProjectsPage() {
   }
 
   async function handleDelete(id: string) {
-    const token = getGithubToken();
-    if (!token) {
-      setError("Set up your GitHub token first from the DCM Criteria home page.");
-      return;
-    }
     if (!confirm("Delete this project?")) return;
     setDeletingId(id);
     const res = await fetch(`/api/hrd/criteria/projects/${id}`, {
       method: "DELETE",
-      headers: { "x-hrd-github-token": token },
     });
     setDeletingId(null);
     if (res.ok) {
@@ -167,16 +160,11 @@ export default function ProjectsPage() {
       setError("Project name, date, and avenue are required.");
       return;
     }
-    const token = getGithubToken();
-    if (!token) {
-      setError("Set up your GitHub token first from the DCM Criteria home page.");
-      return;
-    }
     setSaving(true);
     const url = editingId ? `/api/hrd/criteria/projects/${editingId}` : "/api/hrd/criteria/projects";
     const res = await fetch(url, {
       method: editingId ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json", "x-hrd-github-token": token },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
         date,
