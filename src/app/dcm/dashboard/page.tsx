@@ -86,7 +86,7 @@ export default async function DcmDashboardPage() {
       criteriaData = await getAllCriteriaData();
       progress = computeDcmProgress(dcmRecordId, criteriaData);
     } catch {
-      progress = emptyProgress; // GitHub token/config missing or unreachable — show zeros, not nothing
+      progress = emptyProgress; // DB fetch failed unexpectedly — show zeros, not nothing
     }
   }
 
