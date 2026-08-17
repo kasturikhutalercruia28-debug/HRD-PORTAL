@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { readJsonFile, writeJsonFile } from "@/lib/githubStore";
-import { PROJECTS_PATH, ProjectRecord } from "@/lib/criteria";
+import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -10,8 +9,8 @@ export async function GET() {
   if (!session || (session.user as { role?: string }).role !== "HRD") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { data } = await readJsonFile<ProjectRecord[]>(PROJECTS_PATH, []);
-  return NextResponse.json(data.sort((a, b) => (a.date < b.date ? 1 : -1)));
+  const records = await prisma.project.findMany({ orderBy: { date: "desc" } });
+  return NextResponse.json(records);
 }
 
 export async function POST(req: NextRequest) {
@@ -20,42 +19,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const token = req.headers.get("x-hrd-github-token");
-  if (!token) {
-    return NextResponse.json(
-      { error: "Missing GitHub token — set it up once from the DCM Criteria page." },
-      { status: 400 }
-    );
-  }
-
   const body = await req.json();
   const { name, date, avenue, chairDcmIds, coreDcmIds, hodDcmIds } = body;
   if (!name || !date || !avenue) {
     return NextResponse.json({ error: "name, date, and avenue are required" }, { status: 400 });
   }
 
-  const record: ProjectRecord = {
-    id: `proj_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-    name,
-    date,
-    avenue,
-    chairDcmIds: Array.isArray(chairDcmIds) ? chairDcmIds : [],
-    coreDcmIds: Array.isArray(coreDcmIds) ? coreDcmIds : [],
-    hodDcmIds: Array.isArray(hodDcmIds) ? hodDcmIds : [],
-    createdAt: new Date().toISOString(),
-  };
-
-  try {
-    await writeJsonFile<ProjectRecord[]>(
-      PROJECTS_PATH,
-      (current) => [...current, record],
-      [],
-      token,
-      `Add project: ${name} (${date})`
-    );
-  } catch (e) {
-    return NextResponse.json({ error: `GitHub save failed: ${(e as Error).message}` }, { status: 502 });
-  }
+  const record = await prisma.project.create({
+    data: {
+      name,
+      date: new Date(date),
+      avenue,
+      chairDcmIds: Array.isArray(chairDcmIds) ? chairDcmIds : [],
+      coreDcmIds: Array.isArray(coreDcmIds) ? coreDcmIds : [],
+      hodDcmIds: Array.isArray(hodDcmIds) ? hodDcmIds : [],
+    },
+  });
 
   return NextResponse.json(record, { status: 201 });
 }
