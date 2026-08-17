@@ -1,31 +1,4 @@
-import { readJsonFile } from "@/lib/githubStore";
-
-export interface InstallationRecord {
-  id: string;
-  clubName: string;
-  date: string; // ISO date
-  attendeeDcmIds: string[];
-  createdAt: string;
-}
-
-export interface OcvRecord {
-  id: string;
-  clubName: string;
-  date: string;
-  attendeeDcmIds: string[];
-  createdAt: string;
-}
-
-export interface ProjectRecord {
-  id: string;
-  name: string;
-  date: string;
-  avenue: string;
-  chairDcmIds: string[];
-  coreDcmIds: string[];
-  hodDcmIds: string[];
-  createdAt: string;
-}
+import { prisma } from "@/lib/db";
 
 export const CRITERIA_TARGETS = {
   chairProjects: 1,
@@ -35,26 +8,18 @@ export const CRITERIA_TARGETS = {
   ocvs: 8,
 };
 
-export const INSTALLATIONS_PATH = "data/installations.json";
-export const OCVS_PATH = "data/ocvs.json";
-export const PROJECTS_PATH = "data/projects.json";
-
 export async function getAllCriteriaData() {
   const [installations, ocvs, projects] = await Promise.all([
-    readJsonFile<InstallationRecord[]>(INSTALLATIONS_PATH, []),
-    readJsonFile<OcvRecord[]>(OCVS_PATH, []),
-    readJsonFile<ProjectRecord[]>(PROJECTS_PATH, []),
+    prisma.installation.findMany({ orderBy: { date: "desc" } }),
+    prisma.ocv.findMany({ orderBy: { date: "desc" } }),
+    prisma.project.findMany({ orderBy: { date: "desc" } }),
   ]);
-  return {
-    installations: installations.data,
-    ocvs: ocvs.data,
-    projects: projects.data,
-  };
+  return { installations, ocvs, projects };
 }
 
 export function computeDcmProgress(
   dcmId: string,
-  data: { installations: InstallationRecord[]; ocvs: OcvRecord[]; projects: ProjectRecord[] }
+  data: Awaited<ReturnType<typeof getAllCriteriaData>>
 ) {
   const installationsAttended = data.installations.filter((r) => r.attendeeDcmIds.includes(dcmId)).length;
   const ocvsAttended = data.ocvs.filter((r) => r.attendeeDcmIds.includes(dcmId)).length;
