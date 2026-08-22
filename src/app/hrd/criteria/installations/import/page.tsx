@@ -83,7 +83,7 @@ export default function InstallationsImportPage() {
       ]);
       if (!dcmRes.ok) throw new Error("Couldn't load DCM list — check /api/hrd/dcms exists.");
       if (!clubRes.ok) throw new Error("Couldn't load Club list.");
-      const dcms: Dcm[] = await dcmRes.json();
+      const dcms: Dcm[] = (await dcmRes.json()).dcms ?? [];
       const clubOpts: ClubOpt[] = await clubRes.json();
 
       const buf = await file.arrayBuffer();

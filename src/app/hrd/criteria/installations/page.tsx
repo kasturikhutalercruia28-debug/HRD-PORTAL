@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, Check, Search, Pencil, Trash2, X } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Search, Pencil, Trash2, X, Upload } from "lucide-react";
 
 interface Club {
   id: string;
@@ -133,9 +133,18 @@ export default function InstallationsPage() {
         <ArrowLeft size={14} /> Back to Criteria
       </Link>
 
-      <div>
-        <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Installations</h1>
-        <p className="text-[#180F04]/60 text-sm mt-1">Mark which DCMs attended a club's installation.</p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="font-['Fraunces'] text-2xl font-bold text-[#180F04]">Installations</h1>
+          <p className="text-[#180F04]/60 text-sm mt-1">Mark which DCMs attended a club's installation.</p>
+        </div>
+        <Link
+          href="/hrd/criteria/installations/import"
+          className="flex items-center gap-1.5 border border-black/15 text-[#180F04] px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/5 transition-colors"
+        >
+          <Upload size={13} />
+          Upload Excel
+        </Link>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-black/5 p-5 space-y-4">
