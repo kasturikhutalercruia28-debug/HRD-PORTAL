@@ -14,6 +14,7 @@ import {
   X,
   LogOut,
   ChevronRight,
+  Award,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import NotificationBell from "@/components/NotificationBell";
@@ -23,6 +24,7 @@ const NAV_LINKS = [
   { href: "/drr/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/drr/rankings", label: "Rankings", icon: Trophy },
   { href: "/drr/audit", label: "Audit", icon: ClipboardCheck },
+  { href: "/drr/dcm-criteria", label: "DCM Criteria", icon: Award },
   { href: "/drr/complaints", label: "Complaints", icon: MessageCircleWarning },
   { href: "/drr/feedback", label: "Feedback", icon: ClipboardList },
 ];
