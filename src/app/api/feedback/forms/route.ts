@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { createNotificationsForRole } from "@/lib/notifications";
 import { DEFAULT_FEEDBACK_QUESTIONS } from "@/lib/feedbackTemplate";
+import { parseAsIST } from "@/lib/utils";
 
 export const dynamic = 'force-dynamic';
 
@@ -46,8 +47,8 @@ export async function POST(req: NextRequest) {
         eventDate: new Date(eventDate),
         isActive: isActive ?? false,
         allowResubmit: allowResubmit ?? false,
-        feedbackOpenAt: feedbackOpenAt ? new Date(feedbackOpenAt) : null,
-        feedbackCloseAt: feedbackCloseAt ? new Date(feedbackCloseAt) : null,
+        feedbackOpenAt: feedbackOpenAt ? parseAsIST(feedbackOpenAt) : null,
+        feedbackCloseAt: feedbackCloseAt ? parseAsIST(feedbackCloseAt) : null,
       },
     });
     if (useTemplate) {
