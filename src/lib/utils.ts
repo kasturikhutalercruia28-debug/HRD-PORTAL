@@ -52,3 +52,17 @@ export function getQuarterMonthsCalendarYear(
   }
   return monthMaps[quarter] ?? []
 }
+
+// HTML <input type="datetime-local"> gives a plain "YYYY-MM-DDTHH:mm" string
+// with no timezone info. `new Date(...)` on that string is parsed using the
+// SERVER's local timezone (UTC on Vercel), not the org's actual timezone
+// (India, UTC+5:30) — silently shifting every open/close time by 5:30 hours.
+// This treats the input as IST explicitly so the stored instant is correct
+// no matter where the server runs.
+export function parseAsIST(dateTimeLocal: string): Date {
+  // Already has timezone/zulu info — trust it as-is.
+  if (/[zZ]|[+-]\d{2}:?\d{2}$/.test(dateTimeLocal)) {
+    return new Date(dateTimeLocal);
+  }
+  return new Date(`${dateTimeLocal}+05:30`);
+}
