@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { createNotificationsForRole } from "@/lib/notifications";
+import { parseAsIST } from "@/lib/utils";
 
 export const dynamic = 'force-dynamic';
 
@@ -45,8 +46,8 @@ export async function PATCH(
       ...(body.eventDate !== undefined && { eventDate: new Date(body.eventDate) }),
       ...(body.isActive !== undefined && { isActive: body.isActive }),
       ...(body.allowResubmit !== undefined && { allowResubmit: body.allowResubmit }),
-      ...(body.feedbackOpenAt !== undefined && { feedbackOpenAt: body.feedbackOpenAt ? new Date(body.feedbackOpenAt) : null }),
-      ...(body.feedbackCloseAt !== undefined && { feedbackCloseAt: body.feedbackCloseAt ? new Date(body.feedbackCloseAt) : null }),
+      ...(body.feedbackOpenAt !== undefined && { feedbackOpenAt: body.feedbackOpenAt ? parseAsIST(body.feedbackOpenAt) : null }),
+      ...(body.feedbackCloseAt !== undefined && { feedbackCloseAt: body.feedbackCloseAt ? parseAsIST(body.feedbackCloseAt) : null }),
     },
   });
 
