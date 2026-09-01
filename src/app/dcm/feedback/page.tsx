@@ -6,13 +6,18 @@ import Link from "next/link";
 
 export default async function DcmFeedbackPage() {
   const session = await auth();
-  const userId = session?.user?.id;
+  const user = session?.user as { id?: string; avenueId?: string } | undefined;
+  const userId = user?.id;
 
   const forms = await prisma.eventFeedbackForm.findMany({
-    where: { isActive: true },
+    where: {
+      isActive: true,
+      OR: [{ avenueId: null }, { avenueId: user?.avenueId }],
+    },
     include: {
       _count: { select: { submissions: true } },
       submissions: { where: { submittedBy: userId }, select: { id: true } },
+      avenue: { select: { name: true } },
     },
     orderBy: { eventDate: "desc" },
   });
@@ -37,7 +42,14 @@ export default async function DcmFeedbackPage() {
               <div key={form.id} className="bg-white rounded-xl border border-black/5 p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h2 className="font-semibold text-[#180F04]">{form.eventName}</h2>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="font-semibold text-[#180F04]">{form.eventName}</h2>
+                      {form.avenue && (
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#D4A017]/15 text-[#180F04]">
+                          {form.avenue.name} only
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-[#180F04]/50 mt-0.5">
                       Event: {new Date(form.eventDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                     </p>
@@ -66,6 +78,14 @@ export default async function DcmFeedbackPage() {
                         className="text-xs text-[#180F04]/50 hover:text-[#180F04] underline"
                       >
                         Resubmit
+                      </Link>
+                    )}
+                    {form.avenueId && form.avenueId === user?.avenueId && (
+                      <Link
+                        href={`/dcm/feedback/${form.id}/responses`}
+                        className="text-xs text-[#180F04]/50 hover:text-[#180F04] underline"
+                      >
+                        View Responses ({form._count.submissions})
                       </Link>
                     )}
                   </div>
