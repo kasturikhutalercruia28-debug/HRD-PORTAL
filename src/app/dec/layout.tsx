@@ -7,6 +7,7 @@ import { signOut, useSession } from "next-auth/react";
 import {
   LayoutDashboard,
   ClipboardList,
+  ClipboardCheck,
   History,
   MessageCircleWarning,
   Menu,
@@ -25,6 +26,7 @@ import { hasDrrAccess } from "@/lib/access";
 const NAV_LINKS = [
   { href: "/dec/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dec/evaluate", label: "Evaluate", icon: ClipboardList },
+  { href: "/dec/feedback", label: "Feedback", icon: ClipboardCheck },
   { href: "/dec/history", label: "History", icon: History },
   { href: "/dec/complaints", label: "Complaints", icon: MessageCircleWarning },
   { href: "/dec/contact", label: "Contact Us", icon: Phone },
