@@ -35,6 +35,8 @@ type Form = {
   allowResubmit: boolean;
   feedbackOpenAt: string | null;
   feedbackCloseAt: string | null;
+  avenueId: string | null;
+  avenue: { id: string; name: string } | null;
   questions: Question[];
   _count: { submissions: number };
 };
@@ -46,6 +48,8 @@ type Submission = {
   responses: { questionId: string; answer: string; question: Question }[];
 };
 
+type Avenue = { id: string; name: string };
+
 export default function HrdFeedbackFormPage() {
   const { formId } = useParams<{ formId: string }>();
   const router = useRouter();
@@ -54,6 +58,8 @@ export default function HrdFeedbackFormPage() {
   const [tab, setTab] = useState<"overview" | "questions" | "responses" | "analytics">("questions");
   const [newQ, setNewQ] = useState({ questionText: "", questionType: "star_rating", options: "", isRequired: true });
   const [saving, setSaving] = useState(false);
+  const [avenues, setAvenues] = useState<Avenue[]>([]);
+  const [savingAvenue, setSavingAvenue] = useState(false);
 
   async function loadForm() {
     const [f, s] = await Promise.all([
@@ -65,6 +71,23 @@ export default function HrdFeedbackFormPage() {
   }
 
   useEffect(() => { loadForm(); }, [formId]);
+
+  useEffect(() => {
+    fetch("/api/hrd/avenues")
+      .then((r) => r.json())
+      .then((d) => setAvenues(d.avenues ?? []));
+  }, []);
+
+  async function updateAvenue(newAvenueId: string) {
+    setSavingAvenue(true);
+    await fetch(`/api/feedback/forms/${formId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avenueId: newAvenueId || null }),
+    });
+    setSavingAvenue(false);
+    loadForm();
+  }
 
   async function toggleActive() {
     if (!form) return;
@@ -190,6 +213,24 @@ export default function HrdFeedbackFormPage() {
           {form.feedbackCloseAt && (
             <p className="text-sm text-[#180F04]/60">Closes: {new Date(form.feedbackCloseAt).toLocaleString("en-IN")}</p>
           )}
+
+          <div className="bg-white rounded-xl border border-black/5 p-4">
+            <label className="block text-xs font-semibold text-[#180F04] mb-1.5">Avenue</label>
+            <select
+              value={form.avenueId ?? ""}
+              onChange={(e) => updateAvenue(e.target.value)}
+              disabled={savingAvenue}
+              className="w-full sm:w-72 border border-black/15 rounded-lg px-3 py-2 text-sm text-[#180F04] bg-white focus:outline-none focus:border-[#D4A017]"
+            >
+              <option value="">All avenues (visible to every DCM)</option>
+              {avenues.map((a) => (
+                <option key={a.id} value={a.id}>{a.name} only</option>
+              ))}
+            </select>
+            <p className="text-[10px] text-[#180F04]/40 mt-1">
+              If this form is set to one avenue, only that avenue's DCMs can see/fill it and view its results. Clubs always see it either way.
+            </p>
+          </div>
         </div>
       )}
 
