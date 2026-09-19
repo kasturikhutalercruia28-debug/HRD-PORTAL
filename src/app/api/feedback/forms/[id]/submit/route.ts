@@ -23,6 +23,9 @@ export async function POST(
   if (!form) return NextResponse.json({ error: "Form not found" }, { status: 404 });
   if (!form.isActive) return NextResponse.json({ error: "Form is not active" }, { status: 400 });
 
+  // Note: filling is intentionally open to every avenue's DCM — only
+  // VIEWING responses is avenue-restricted (see the responses route).
+
   // Check open/close dates
   const now = new Date();
   if (form.feedbackOpenAt && now < form.feedbackOpenAt) {
