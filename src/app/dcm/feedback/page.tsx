@@ -9,11 +9,10 @@ export default async function DcmFeedbackPage() {
   const user = session?.user as { id?: string; avenueId?: string } | undefined;
   const userId = user?.id;
 
+  // Filling stays open to every DCM regardless of avenue — only VIEWING
+  // responses is avenue-restricted (see the "View Responses" link below).
   const forms = await prisma.eventFeedbackForm.findMany({
-    where: {
-      isActive: true,
-      OR: [{ avenueId: null }, { avenueId: user?.avenueId }],
-    },
+    where: { isActive: true },
     include: {
       _count: { select: { submissions: true } },
       submissions: { where: { submittedBy: userId }, select: { id: true } },
@@ -46,7 +45,7 @@ export default async function DcmFeedbackPage() {
                       <h2 className="font-semibold text-[#180F04]">{form.eventName}</h2>
                       {form.avenue && (
                         <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#D4A017]/15 text-[#180F04]">
-                          {form.avenue.name} only
+                          {form.avenue.name}
                         </span>
                       )}
                     </div>
