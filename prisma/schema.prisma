@@ -80,8 +80,9 @@ model Avenue {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
 
-  users User[]
-  dcms  Dcm[]
+  users         User[]
+  dcms          Dcm[]
+  feedbackForms EventFeedbackForm[]
 }
 
 model Dcm {
@@ -330,9 +331,12 @@ model EventFeedbackForm {
   allowResubmit   Boolean   @default(false)
   feedbackOpenAt  DateTime?
   feedbackCloseAt DateTime?
+  avenueId        String?
+  isPublic        Boolean   @default(false)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
+  avenue      Avenue?                    @relation(fields: [avenueId], references: [id])
   questions   EventFeedbackQuestion[]
   submissions EventFeedbackSubmission[]
 }
@@ -351,13 +355,17 @@ model EventFeedbackQuestion {
 }
 
 model EventFeedbackSubmission {
-  id          String   @id @default(cuid())
-  formId      String
-  submittedBy String
-  submittedAt DateTime @default(now())
+  id                 String   @id @default(cuid())
+  formId             String
+  submittedBy        String?
+  respondentName     String?
+  respondentContact  String?
+  respondentClub     String?
+  respondentPosition String?
+  submittedAt        DateTime @default(now())
 
   form      EventFeedbackForm       @relation(fields: [formId], references: [id])
-  submitter User                    @relation("FeedbackSubmitter", fields: [submittedBy], references: [id])
+  submitter User?                   @relation("FeedbackSubmitter", fields: [submittedBy], references: [id])
   responses EventFeedbackResponse[]
 }
 
