@@ -11,14 +11,17 @@ interface Answer {
 interface Submission {
   id: string;
   submittedAt: string;
-  submitter: { name: string; role: string };
+  submitter: { name: string; role: string } | null;
+  respondentName: string | null;
+  respondentClub: string | null;
+  respondentPosition: string | null;
   responses: Answer[];
 }
 interface FormMeta {
   eventName: string;
 }
 
-export default function DcmFeedbackResponsesPage() {
+export default function FeedbackResponsesPage() {
   const { formId } = useParams<{ formId: string }>();
   const router = useRouter();
   const [form, setForm] = useState<FormMeta | null>(null);
@@ -69,7 +72,18 @@ export default function DcmFeedbackResponsesPage() {
               {submissions.map((sub) => (
                 <div key={sub.id} className="bg-white rounded-xl border border-black/5 p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-semibold text-[#180F04]">{sub.submitter.name} · {sub.submitter.role}</p>
+                    <div>
+                      <p className="text-sm font-semibold text-[#180F04]">
+                        {sub.submitter
+                          ? `${sub.submitter.name} · ${sub.submitter.role}`
+                          : `${sub.respondentName ?? "Anonymous"} · Public`}
+                      </p>
+                      {!sub.submitter && (sub.respondentClub || sub.respondentPosition) && (
+                        <p className="text-[10px] text-[#180F04]/50">
+                          {[sub.respondentClub, sub.respondentPosition].filter(Boolean).join(" · ")}
+                        </p>
+                      )}
+                    </div>
                     <p className="text-xs text-[#180F04]/40">
                       {new Date(sub.submittedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                     </p>
