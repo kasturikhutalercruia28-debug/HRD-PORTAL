@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const session = await auth();
-  const user = session?.user as { id?: string; role?: string } | undefined;
+  const user = session?.user as { id?: string } | undefined;
   if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const form = await prisma.eventFeedbackForm.findUnique({
@@ -19,6 +19,7 @@ export async function GET(
     include: {
       questions: { orderBy: { displayOrder: "asc" } },
       _count: { select: { submissions: true } },
+      avenue: { select: { id: true, name: true } },
     },
   });
   if (!form) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -48,30 +49,32 @@ export async function PATCH(
       ...(body.allowResubmit !== undefined && { allowResubmit: body.allowResubmit }),
       ...(body.feedbackOpenAt !== undefined && { feedbackOpenAt: body.feedbackOpenAt ? parseAsIST(body.feedbackOpenAt) : null }),
       ...(body.feedbackCloseAt !== undefined && { feedbackCloseAt: body.feedbackCloseAt ? parseAsIST(body.feedbackCloseAt) : null }),
+      ...(body.avenueId !== undefined && { avenueId: body.avenueId || null }),
+      ...(body.isPublic !== undefined && { isPublic: body.isPublic }),
     },
   });
 
-  // If just activated, notify users
+  // If just activated, notify users (DCMs scoped to the form's avenue, if set)
   if (body.isActive === true && !prev.isActive) {
     const msg = `A new feedback form is available: "${updated.eventName}"`;
-    await Promise.all([
-      createNotificationsForRole("CLUB", "New Feedback Form", msg, `/club/feedback/${params.id}`),
-      createNotificationsForRole("DCM", "New Feedback Form", msg, `/dcm/feedback/${params.id}`),
-    ]);
+    await createNotificationsForRole("CLUB", "New Feedback Form", msg, `/club/feedback/${params.id}`);
+    if (updated.avenueId) {
+      const avenueDcmUsers = await prisma.user.findMany({
+        where: { role: "DCM", avenueId: updated.avenueId, isActive: true },
+        select: { id: true },
+      });
+      await prisma.notification.createMany({
+        data: avenueDcmUsers.map((u) => ({
+          userId: u.id,
+          title: "New Feedback Form",
+          message: msg,
+          link: `/dcm/feedback/${params.id}`,
+        })),
+      });
+    } else {
+      await createNotificationsForRole("DCM", "New Feedback Form", msg, `/dcm/feedback/${params.id}`);
+    }
   }
 
   return NextResponse.json(updated);
-}
-
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const session = await auth();
-  const user = session?.user as { id?: string; role?: string } | undefined;
-  if (!user?.id || user.role !== "HRD") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  await prisma.eventFeedbackForm.delete({ where: { id: params.id } });
-  return NextResponse.json({ ok: true });
 }

@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { createNotificationsForRole } from "@/lib/notifications";
@@ -9,16 +9,19 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const session = await auth();
-  const user = session?.user as { id?: string; role?: string } | undefined;
-  if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const user = session?.user as { role?: string } | undefined;
+  if (!user || user.role !== "HRD") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { searchParams } = req.nextUrl;
-  const activeOnly = searchParams.get("active") === "true";
+  const activeOnly = searchParams.get("active") === "1";
 
   const forms = await prisma.eventFeedbackForm.findMany({
     where: activeOnly ? { isActive: true } : undefined,
     include: {
       _count: { select: { submissions: true, questions: true } },
+      avenue: { select: { id: true, name: true } },
     },
     orderBy: { eventDate: "desc" },
   });
@@ -28,16 +31,16 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const session = await auth();
-  const user = session?.user as { id?: string; role?: string } | undefined;
-  if (!user?.id || user.role !== "HRD") {
+  const user = session?.user as { role?: string } | undefined;
+  if (!user || user.role !== "HRD") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const body = await req.json();
-  const { eventName, eventDate, isActive, allowResubmit, feedbackOpenAt, feedbackCloseAt, useTemplate } = body;
+  const { eventName, eventDate, isActive, allowResubmit, feedbackOpenAt, feedbackCloseAt, useTemplate, avenueId, isPublic } = body;
 
   if (!eventName?.trim() || !eventDate) {
-    return NextResponse.json({ error: "eventName and eventDate required" }, { status: 400 });
+    return NextResponse.json({ error: "eventName and eventDate are required" }, { status: 400 });
   }
 
   const form = await prisma.$transaction(async (tx) => {
@@ -49,6 +52,8 @@ export async function POST(req: NextRequest) {
         allowResubmit: allowResubmit ?? false,
         feedbackOpenAt: feedbackOpenAt ? parseAsIST(feedbackOpenAt) : null,
         feedbackCloseAt: feedbackCloseAt ? parseAsIST(feedbackCloseAt) : null,
+        avenueId: avenueId || null,
+        isPublic: isPublic ?? false,
       },
     });
     if (useTemplate) {
@@ -59,13 +64,26 @@ export async function POST(req: NextRequest) {
     return f;
   });
 
-  // Notify clubs and DCMs if active
+  // Notify clubs (always) and DCMs (only in the targeted avenue, if set) if active
   if (isActive) {
     const msg = `A new feedback form is available: "${eventName.trim()}"`;
-    await Promise.all([
-      createNotificationsForRole("CLUB", "New Feedback Form", msg, `/club/feedback/${form.id}`),
-      createNotificationsForRole("DCM", "New Feedback Form", msg, `/dcm/feedback/${form.id}`),
-    ]);
+    await createNotificationsForRole("CLUB", "New Feedback Form", msg, `/club/feedback/${form.id}`);
+    if (avenueId) {
+      const avenueDcmUsers = await prisma.user.findMany({
+        where: { role: "DCM", avenueId, isActive: true },
+        select: { id: true },
+      });
+      await prisma.notification.createMany({
+        data: avenueDcmUsers.map((u) => ({
+          userId: u.id,
+          title: "New Feedback Form",
+          message: msg,
+          link: `/dcm/feedback/${form.id}`,
+        })),
+      });
+    } else {
+      await createNotificationsForRole("DCM", "New Feedback Form", msg, `/dcm/feedback/${form.id}`);
+    }
   }
 
   return NextResponse.json(form, { status: 201 });
