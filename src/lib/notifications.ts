@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { sendPushToUsers } from "@/lib/push";
 
 export async function createNotification(
   userId: string,
@@ -6,9 +7,11 @@ export async function createNotification(
   message: string,
   link?: string
 ) {
-  return prisma.notification.create({
+  const n = await prisma.notification.create({
     data: { userId, title, message, link: link ?? null },
   });
+  await sendPushToUsers([userId], { title, body: message, url: link ?? "/" });
+  return n;
 }
 
 export async function createNotificationsForRole(
@@ -30,4 +33,5 @@ export async function createNotificationsForRole(
       link: link ?? null,
     })),
   });
+  await sendPushToUsers(users.map((u) => u.id), { title, body: message, url: link ?? "/" });
 }
