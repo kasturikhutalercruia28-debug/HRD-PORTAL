@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { SessionProvider } from 'next-auth/react'
-import './globals.css'
+import { ThemeProvider } from '@/components/ThemeProvider'
 import PwaSetup from '@/components/PwaSetup'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'SYNC | Rotaract District 3141',
@@ -15,12 +16,27 @@ export const viewport: Viewport = {
   themeColor: '#180F04',
 }
 
+// Runs before React hydrates, so the correct theme class is on <html>
+// from the very first paint — no flash of the wrong theme.
+const themeInitScript = `
+(function () {
+  try {
+    var stored = localStorage.getItem('sync-theme');
+    var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
         <SessionProvider>
-          {children}
+          <ThemeProvider>{children}</ThemeProvider>
           <PwaSetup />
         </SessionProvider>
       </body>
